@@ -1,0 +1,169 @@
+{
+  "seo": {
+    "title": "Z21 — The zero→one AI shipping community",
+    "description": "From AI overwhelm to operating power. Install one production workflow and 10× your weekly output—without adding hours. Product: a 6-week Cohort; Platform: the Z21 community.",
+    "ogImage": "/og/z21-og.jpg",
+    "twitter": "@yourhandle"
+  },
+  "nav": {
+    "links": [
+      { "label": "VSL", "href": "#vsl" },
+      { "label": "Why now", "href": "#why" },
+      { "label": "Cohort", "href": "#cohort" },
+      { "label": "Proof", "href": "#proof" },
+      { "label": "FAQ", "href": "#faq" }
+    ]
+  },
+  "hero": {
+    "eyebrow": "Z21 — The zero→one AI shipping community",
+    "title": "From AI overwhelm to operating power.",
+    "sub": "We take you from uncertain and overwhelmed by the AI landscape → to an AI-powered operator, 10×ing your workflow without adding hours.",
+    "primaryCta": { "label": "Apply to Z21 Cohort", "href": "{{NEXT_PUBLIC_COHORT_URL}}" },
+    "secondaryCta": { "label": "Join Z21 Founders (lifetime)", "href": "{{NEXT_PUBLIC_FOUNDERS_URL}}" },
+    "tertiaryCta": { "label": "Watch the VSL", "href": "#vsl" },
+    "badges": ["Human-in-the-loop", "Privacy-safe defaults", "Proof > promises"]
+  },
+  "vsl": {
+    "id": "vsl",
+    "headline": "What it is • Why you need it • What you get • Why believe us • How to get it",
+    "poster": "/video/poster.jpg",
+    "src": "/video/z21-vsl.mp4",
+    "captions": "/video/z21-vsl.vtt",
+    "chapters": [
+      { "t": 0, "label": "What it is" },
+      { "t": 30, "label": "Why you need it" },
+      { "t": 75, "label": "What you get" },
+      { "t": 120, "label": "Why believe us" },
+      { "t": 160, "label": "How to get it" }
+    ]
+  },
+  "whatItIs": {
+    "title": "What Z21 is",
+    "kicker": "Community = platform • Cohort = product",
+    "copy": "Z21 is a founders' community that ships in public. The product is a 6-week Cohort that gets you live, then the community keeps you compounding.",
+    "bullets": [
+      "AI tool access, templates, and a living library",
+      "Zero-to-one live demos: we build workflows on screen",
+      "Weekly Ship Rooms for feedback and accountability",
+      "IRL workshops and wellness pop-ups"
+    ]
+  },
+  "whyYouNeedIt": {
+    "id": "why",
+    "title": "Why you need it (the 2025 gap)",
+    "points": [
+      "AI usage is high; ROI is uneven. Most teams stall at pilots. (Sources: McKinsey/Gartner)",
+      "Value follows workflow redesign and agentic systems—not one-off prompts.",
+      "Speed to a working, production workflow is the advantage right now."
+    ],
+    "note": "We aim your first workflow where adoption already pays—marketing, sales, service ops, or IT."
+  },
+  "cohort": {
+    "id": "cohort",
+    "title": "The Z21 Cohort (6 weeks)",
+    "subtitle": "Your time-to-value engine",
+    "outcomesTitle": "In 6 weeks you will:",
+    "outcomes": [
+      "Launch a live offer page with checkout",
+      "Publish a 90-second VSL",
+      "Book 2+ qualified calls",
+      "Deploy 1 production AI workflow (e.g., lead triage, inbox co-pilot, content OS, proposal generator)"
+    ],
+    "includesTitle": "What's inside",
+    "includes": [
+      "Live lessons + workshops + hot seats",
+      "Zero-to-one demo builds (n8n, GPT, content OS)",
+      "Scoreboard & Ship Rooms (proof every week)",
+      "Lifetime access to replays + community"
+    ],
+    "ctaPrimary": { "label": "Apply to Z21 Cohort", "href": "{{NEXT_PUBLIC_COHORT_URL}}" },
+    "ctaSecondary": { "label": "See Founders (lifetime)", "href": "{{NEXT_PUBLIC_FOUNDERS_URL}}" }
+  },
+  "whatYouGet": {
+    "title": "What you get",
+    "grid": [
+      { "title": "AI tools & templates", "desc": "Install the exact workflows we use—no fluff." },
+      { "title": "Live demo builds", "desc": "We build on screen so you can copy-ship." },
+      { "title": "Accountability", "desc": "Ship Rooms, public proof wall, and a shared scoreboard." },
+      { "title": "Lifetime library", "desc": "Replays and playbooks you keep after the sprint." }
+    ]
+  },
+  "proof": {
+    "id": "proof",
+    "title": "Why believe us",
+    "bullets": [
+      "Founder has onboarded growth, sales, product, and marketing teams into AI since early GPT.",
+      "We track boring, real metrics: assets shipped, calls booked, hours saved, workflows active @ 30/60/90 days.",
+      "Human-in-the-loop by design: you approve; we provide the leverage.",
+      "Privacy-safe defaults and simple governance patterns."
+    ],
+    "socials": [
+      { "label": "Talks & workshops", "href": "#" },
+      { "label": "Case snippets", "href": "#" }
+    ]
+  },
+  "howToGetIt": {
+    "id": "get",
+    "title": "How to get it",
+    "steps": [
+      "Watch the VSL to see the mechanism.",
+      "Apply to the Z21 Cohort (limited seats).",
+      "Not sprinting? Join Z21 Founders (lifetime tools & replays).",
+      "Teams: DM \"BUILD\" to plan your AI onboarding."
+    ],
+    "primaryCta": { "label": "Apply to Z21 Cohort", "href": "{{NEXT_PUBLIC_COHORT_URL}}" },
+    "secondaryCta": { "label": "Join Z21 Founders (lifetime)", "href": "{{NEXT_PUBLIC_FOUNDERS_URL}}" },
+    "newsletter": {
+      "label": "Get the Z21 Dispatch (free)",
+      "placeholder": "Enter your best email",
+      "button": "Subscribe"
+    }
+  },
+  "antipitchPreempts": {
+    "title": "Built to answer the hard questions",
+    "items": [
+      { "h": "Moat", "p": "Our moat is compounding proof: a results library, certification, and partner playbooks—not just another Slack." },
+      { "h": "Durability", "p": "We measure workflows still running at 30/60/90 days and re-install if needed." },
+      { "h": "Security", "p": "Clear data-handling defaults and redaction patterns; no sensitive data required to learn the mechanism." },
+      { "h": "Scale", "p": "Facilitator bench + async library covers 70% of delivery; live time is for hot seats and shipping." }
+    ]
+  },
+  "faq": {
+    "title": "FAQ",
+    "items": [
+      {
+        "q": "Is the community free?",
+        "a": "The newsletter is free. Z21 Founders is a one-time lifetime access. The Cohort is a paid, application-only sprint."
+      },
+      {
+        "q": "How much time do I need?",
+        "a": "Plan on 4–6 hours per week during the 6-week Cohort. The community rhythm is flexible."
+      },
+      {
+        "q": "What if I'm brand new to AI?",
+        "a": "Perfect. We start with one production workflow in a high-value area and build from there."
+      },
+      {
+        "q": "Refunds/guarantee?",
+        "a": "7-day no-questions entry refund. Do-the-work credit: complete the checklist and miss the KPIs—re-seat next cohort free."
+      },
+      {
+        "q": "Do I keep access after the Cohort?",
+        "a": "Yes—lifetime access to replays and the Z21 community."
+      }
+    ]
+  },
+  "footer": {
+    "smallprint": "Nothing here is financial or legal advice. Results vary by implementation and market conditions.",
+    "links": [
+      { "label": "Terms", "href": "#" },
+      { "label": "Privacy", "href": "#" },
+      { "label": "Contact", "href": "mailto:hey@z21.build" }
+    ],
+    "socials": [
+      { "label": "Instagram", "href": "#" },
+      { "label": "LinkedIn", "href": "#" },
+      { "label": "YouTube", "href": "#" }
+    ]
+  }
+}
