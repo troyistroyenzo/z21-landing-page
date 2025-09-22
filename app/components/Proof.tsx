@@ -145,7 +145,7 @@ export default function Proof() {
                     } else {
                       alert("That didn't look like an email. Mind trying again?");
                     }
-                  } catch (error) {
+                  } catch {
                     alert('An error occurred. Please try again.');
                   }
                 }}

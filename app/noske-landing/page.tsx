@@ -10,7 +10,6 @@ import FormulaCards from '@/app/components/FormulaCards';
 import DifferentiatorsSection from '@/app/components/DifferentiatorsSection';
 import RoadmapSection from '@/app/components/RoadmapSection';
 import FinalCTA from '@/app/components/FinalCTA';
-import Footer from '@/app/components/Footer';
 
 export default function NoskeLandingPage() {
   useEffect(() => {

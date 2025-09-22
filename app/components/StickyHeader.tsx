@@ -14,11 +14,11 @@ export default function StickyHeader() {
     seconds: 0,
   });
 
-  // Set countdown target (e.g., 7 days from now for cohort start)
-  const targetDate = new Date();
-  targetDate.setDate(targetDate.getDate() + 7);
-
   useEffect(() => {
+    // Set countdown target (e.g., 7 days from now for cohort start)
+    const targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + 7);
+    
     const calculateTimeLeft = () => {
       const difference = targetDate.getTime() - new Date().getTime();
       
