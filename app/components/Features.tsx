@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { motion } from 'framer-motion';
 import Container from './Container';
 import Section from './Section';
@@ -97,7 +98,7 @@ export default function Features() {
             className="max-w-5xl mx-auto"
           >
             <div className="text-center mb-12">
-              <h2 className="text-display text-paper mb-4">
+              <h2 className="text-display text-white mb-4">
                 {content.cohort.title}
               </h2>
               <p className="text-display-sm text-rust">
@@ -108,7 +109,7 @@ export default function Features() {
             <div className="grid lg:grid-cols-2 gap-8 mb-12">
               {/* Outcomes */}
               <div className="bg-paper/10 backdrop-blur rounded-xl p-8">
-                <h3 className="text-2xl font-bold text-paper mb-6">
+                <h3 className="text-2xl font-bold text-white mb-6">
                   {content.cohort.outcomesTitle}
                 </h3>
                 <div className="space-y-4">
@@ -122,7 +123,7 @@ export default function Features() {
                       className="flex items-start gap-3"
                     >
                       <Target className="w-5 h-5 text-rust mt-1 flex-shrink-0" />
-                      <p className="text-paper/90">{outcome}</p>
+                      <p className="text-white/80">{outcome}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -130,7 +131,7 @@ export default function Features() {
 
               {/* What's included */}
               <div className="bg-paper/10 backdrop-blur rounded-xl p-8">
-                <h3 className="text-2xl font-bold text-paper mb-6">
+                <h3 className="text-2xl font-bold text-white mb-6">
                   {content.cohort.includesTitle}
                 </h3>
                 <div className="space-y-4">
@@ -144,7 +145,7 @@ export default function Features() {
                       className="flex items-start gap-3"
                     >
                       <Package className="w-5 h-5 text-rust mt-1 flex-shrink-0" />
-                      <p className="text-paper/90">{include}</p>
+                      <p className="text-white/80">{include}</p>
                     </motion.div>
                   ))}
                 </div>

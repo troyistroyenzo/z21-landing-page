@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import Lenis from '@studio-freight/lenis';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -9,9 +9,19 @@ import Features from './components/Features';
 import Proof from './components/Proof';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
+import ObjectionsAccordion from './components/ObjectionsAccordion';
+import ProofWall from './components/ProofWall';
+import MechanismSection from './components/MechanismSection';
+import StickyMobileBar from './components/StickyMobileBar';
 
 export default function Home() {
   useEffect(() => {
+    // Check for reduced motion preference first
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mediaQuery.matches) {
+      return; // Skip Lenis initialization if reduced motion is preferred
+    }
+
     // Initialize Lenis smooth scrolling
     const lenis = new Lenis({
       duration: 1.2,
@@ -53,12 +63,6 @@ export default function Home() {
 
     document.addEventListener('click', handleAnchorClick);
 
-    // Check for reduced motion preference
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (mediaQuery.matches) {
-      lenis.destroy();
-    }
-
     // Cleanup
     return () => {
       lenis.destroy();
@@ -69,12 +73,18 @@ export default function Home() {
   return (
     <main className="bg-white">
       <Header />
-      <Hero />
+      <Suspense fallback={<div className="min-h-screen bg-paper" />}>
+        <Hero />
+      </Suspense>
       <VSL />
+      <MechanismSection />
       <Features />
+      <ObjectionsAccordion />
+      <ProofWall />
       <Proof />
       <FAQ />
       <Footer />
+      <StickyMobileBar />
     </main>
   );
 }

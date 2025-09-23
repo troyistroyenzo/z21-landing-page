@@ -1,13 +1,44 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Play } from 'lucide-react';
 import Container from './Container';
 import content from '@/app/content/z21.json';
+import { trackEvent } from '@/lib/analytics';
 
 export default function VSL() {
   const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [hasTracked50, setHasTracked50] = useState(false);
+  const [hasTracked90, setHasTracked90] = useState(false);
+
+  const handlePlay = () => {
+    setIsPlaying(true);
+    trackEvent('vsl_play');
+  };
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleTimeUpdate = () => {
+      const percentage = (video.currentTime / video.duration) * 100;
+      
+      if (percentage >= 50 && !hasTracked50) {
+        trackEvent('vsl_50');
+        setHasTracked50(true);
+      }
+      
+      if (percentage >= 90 && !hasTracked90) {
+        trackEvent('vsl_90');
+        setHasTracked90(true);
+      }
+    };
+
+    video.addEventListener('timeupdate', handleTimeUpdate);
+    return () => video.removeEventListener('timeupdate', handleTimeUpdate);
+  }, [hasTracked50, hasTracked90]);
 
   return (
     <section id={content.vsl.id} className="py-20 lg:py-32 bg-emerald-950">
@@ -20,7 +51,7 @@ export default function VSL() {
           className="max-w-5xl mx-auto"
         >
           {/* Section title */}
-          <p className="text-center text-paper/60 text-sm uppercase tracking-wider mb-8">
+          <p className="text-center text-white text-sm uppercase tracking-wider mb-8">
             {content.vsl.headline}
           </p>
 
@@ -41,7 +72,7 @@ export default function VSL() {
                   >
                     {/* Play button overlay */}
                     <button
-                      onClick={() => setIsPlaying(true)}
+                      onClick={handlePlay}
                       className="group relative"
                       aria-label="Play video"
                     >
@@ -54,7 +85,7 @@ export default function VSL() {
                   
                   {/* Caption fallback if video doesn't load */}
                   <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                    <p className="text-paper/80 text-sm">
+                    <p className="text-white/80 text-sm">
                       Click to watch: The complete Z21 mechanism explained
                     </p>
                   </div>
@@ -62,10 +93,13 @@ export default function VSL() {
               ) : (
                 /* Video player */
                 <video
+                  ref={videoRef}
                   className="absolute inset-0 w-full h-full"
                   src={content.vsl.src}
+                  poster={content.vsl.poster}
                   controls
                   autoPlay
+                  preload="metadata"
                   onEnded={() => setIsPlaying(false)}
                 >
                   {content.vsl.captions && (
@@ -86,18 +120,25 @@ export default function VSL() {
           {/* Chapter markers */}
           {content.vsl.chapters && content.vsl.chapters.length > 0 && (
             <div className="mt-8">
-              <div className="flex flex-wrap justify-center gap-4">
+              <h3 className="sr-only">Video Chapters</h3>
+              <div className="flex flex-wrap justify-center gap-2">
                 {content.vsl.chapters.map((chapter, index) => (
-                  <div
+                  <button
                     key={index}
-                    className="text-paper/60 text-sm"
+                    onClick={() => {
+                      if (videoRef.current && isPlaying) {
+                        videoRef.current.currentTime = chapter.t;
+                      }
+                    }}
+                    className="group flex items-center gap-2 px-3 py-1 rounded-full bg-paper/10 hover:bg-paper/20 transition-colors text-white/80 hover:text-white text-sm"
+                    aria-label={`Jump to ${chapter.label}`}
                   >
+                    <span className="w-2 h-2 rounded-full bg-rust group-hover:scale-125 transition-transform" />
                     <span className="text-rust font-medium">
                       {Math.floor(chapter.t / 60)}:{String(chapter.t % 60).padStart(2, '0')}
                     </span>
-                    {' - '}
                     <span>{chapter.label}</span>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>

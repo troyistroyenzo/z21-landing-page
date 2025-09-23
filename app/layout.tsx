@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
@@ -78,6 +79,70 @@ export default function RootLayout({
       <head>
         <link rel="canonical" href="https://z21founders.hq" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        
+        {/* Organization Schema */}
+        <Script
+          id="organization-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "Z21 Founders HQ",
+              "url": "https://z21founders.hq",
+              "logo": "https://z21founders.hq/og/z21-og.jpg",
+              "sameAs": [
+                content.seo.twitter
+              ],
+              "description": content.seo.description
+            })
+          }}
+        />
+        
+        {/* Course Schema */}
+        <Script
+          id="course-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Course",
+              "name": "Z21 Cohort — Zero→One AI Shipping (6 weeks)",
+              "description": "Install one production AI workflow, publish a 90s VSL, launch an offer page, and book 2+ qualified calls in 6 weeks.",
+              "provider": {
+                "@type": "Organization",
+                "name": "Z21",
+                "sameAs": "https://z21founders.hq"
+              },
+              "hasCourseInstance": {
+                "@type": "CourseInstance",
+                "courseMode": "online",
+                "duration": "P6W",
+                "courseWorkload": "PT6H"
+              }
+            })
+          }}
+        />
+        
+        {/* FAQ Schema */}
+        <Script
+          id="faq-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": content.faq.items.map(item => ({
+                "@type": "Question",
+                "name": item.q,
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": item.a
+                }
+              }))
+            })
+          }}
+        />
       </head>
       <body className="font-sans antialiased">
         {children}

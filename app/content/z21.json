@@ -21,7 +21,15 @@
     "primaryCta": { "label": "Apply to Z21 Cohort", "href": "{{NEXT_PUBLIC_COHORT_URL}}" },
     "secondaryCta": { "label": "Join Z21 Founders (lifetime)", "href": "{{NEXT_PUBLIC_FOUNDERS_URL}}" },
     "tertiaryCta": { "label": "Watch the VSL", "href": "#vsl" },
-    "badges": ["Human-in-the-loop", "Privacy-safe defaults", "Proof > promises"]
+    "badges": ["Human-in-the-loop", "Privacy-safe defaults", "Proof > promises"],
+    "ctaMicrotext": "Seats are limited • Application takes ~2 minutes",
+    "stickyMobileCTA": "Start the 6-week sprint",
+    "variantA": {
+      "title": "From AI overwhelm to operating power."
+    },
+    "variantB": {
+      "title": "Don't just use AI. Think like it. Ship one working workflow and 10× your output."
+    }
   },
   "vsl": {
     "id": "vsl",
@@ -152,6 +160,40 @@
         "a": "Yes—lifetime access to replays and the Z21 community."
       }
     ]
+  },
+  "objections": {
+    "title": "Before you ask…",
+    "items": [
+      { "q": "Isn't AI just prompts?", "a": "We install one production workflow (lead triage, inbox co-pilot, content OS, or proposal generator). Real usage, not theory." },
+      { "q": "Will this work for my small team?", "a": "Yes—designed for founders and lean teams with 4–6 hrs/week. We start where ROI is already proven (marketing/sales/service ops/IT)." },
+      { "q": "What if I fall behind?", "a": "You keep lifetime replays and community. Miss weekly targets? Ship Rooms + catch-up plans." },
+      { "q": "What if I do the work and don't see results?", "a": "Do-the-work credit: complete the checklist and miss the KPIs—re-seat next cohort free." },
+      { "q": "Security?", "a": "Human-in-the-loop, privacy-safe defaults, and no sensitive data required to learn the mechanism." }
+    ]
+  },
+  "proofWall": {
+    "title": "Receipts, not promises",
+    "metrics": ["Assets shipped", "Calls booked", "Hours saved", "Workflows active @ 30/60/90 days"],
+    "items": [
+      { "title": "Lead triage live", "result": "First qualified call in 48h", "badge": "48h", "by": "A. Santos — B2B Founder" },
+      { "title": "Content OS", "result": "7 clips/week from 1 long video", "badge": "×7", "by": "M. Lee — Creator" },
+      { "title": "Placeholder", "result": "Result coming soon", "badge": "TBD", "by": "Coming soon" },
+      { "title": "Placeholder", "result": "Result coming soon", "badge": "TBD", "by": "Coming soon" },
+      { "title": "Placeholder", "result": "Result coming soon", "badge": "TBD", "by": "Coming soon" },
+      { "title": "Placeholder", "result": "Result coming soon", "badge": "TBD", "by": "Coming soon" }
+    ]
+  },
+  "mechanism": {
+    "title": "Identity → System → Proof",
+    "steps": [
+      { "h": "Identity", "p": "Clarify positioning and offer." },
+      { "h": "System", "p": "Install one production AI workflow." },
+      { "h": "Proof", "p": "Publish weekly; compound results." }
+    ]
+  },
+  "legal": {
+    "disclaimer": "Nothing here is financial or legal advice. Results vary by implementation and market conditions.",
+    "guaranteeNote": "7-day entry refund. Do-the-work credit applies upon completion of the published checklist."
   },
   "footer": {
     "smallprint": "Nothing here is financial or legal advice. Results vary by implementation and market conditions.",

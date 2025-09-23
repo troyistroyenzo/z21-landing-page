@@ -1,19 +1,40 @@
 'use client';
 
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Container from './Container';
 import CTAButton from './CTAButton';
 import content from '@/app/content/z21.json';
 import { ChevronDown } from 'lucide-react';
 import { interpolateEnv } from '@/lib/utils';
+import { useSearchParams } from 'next/navigation';
 
 export default function Hero() {
+  const searchParams = useSearchParams();
+  const [variant, setVariant] = useState<'A' | 'B'>('A');
+
+  useEffect(() => {
+    const v = searchParams.get('v');
+    if (v === '2') {
+      setVariant('B');
+    }
+  }, [searchParams]);
+
   const scrollToVSL = () => {
     const vslSection = document.getElementById('vsl');
     if (vslSection) {
       vslSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  // Select copy based on variant
+  const heroTitle = variant === 'B' && content.hero.variantB?.title 
+    ? content.hero.variantB.title 
+    : content.hero.title;
+
+  const ctaLabel = variant === 'B' 
+    ? 'Start the 6-week sprint'
+    : content.hero.primaryCta.label;
 
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-paper pt-20">
@@ -42,7 +63,7 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
             className="text-display-lg lg:text-[80px] text-emerald-950 mb-6 leading-[0.95]"
           >
-            {content.hero.title}
+            {heroTitle}
           </motion.h1>
 
           {/* Subheadline */}
@@ -84,9 +105,9 @@ export default function Hero() {
               variant="primary"
               size="lg"
               external
-              trackingEvent="hero_apply_cta"
+              trackingEvent="cta_apply_click"
             >
-              {content.hero.primaryCta.label}
+              {ctaLabel}
             </CTAButton>
             
             <CTAButton
@@ -94,7 +115,7 @@ export default function Hero() {
               variant="secondary"
               size="lg"
               external
-              trackingEvent="hero_founders_cta"
+              trackingEvent="cta_founders_click"
             >
               {content.hero.secondaryCta.label}
             </CTAButton>
@@ -117,6 +138,18 @@ export default function Hero() {
               <ChevronDown className="w-5 h-5 animate-bounce" />
             </button>
           </motion.div>
+
+          {/* CTA Microtext */}
+          {content.hero.ctaMicrotext && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.7, ease: 'easeOut' }}
+              className="mt-4 text-sm text-emerald-950/60"
+            >
+              {content.hero.ctaMicrotext}
+            </motion.p>
+          )}
         </div>
       </Container>
     </section>

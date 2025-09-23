@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { motion } from 'framer-motion';
 import Container from './Container';
 import Section from './Section';
@@ -7,6 +8,7 @@ import content from '@/app/content/z21.json';
 import CTAButton from './CTAButton';
 import { interpolateEnv } from '@/lib/utils';
 import { CheckCircle, ExternalLink } from 'lucide-react';
+import { trackEvent } from '@/lib/analytics';
 
 export default function Proof() {
   return (
@@ -140,6 +142,7 @@ export default function Proof() {
                     });
                     
                     if (response.ok) {
+                      trackEvent('newsletter_submitted', { email });
                       alert("You're in. Check your inbox for the Z21 Dispatch.");
                       form.reset();
                     } else {
