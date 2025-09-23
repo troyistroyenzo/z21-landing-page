@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Container from './Container';
 import content from '@/app/content/z21.json';
@@ -83,7 +83,7 @@ export default function RoadmapSection() {
   ];
 
   return (
-    <section className="py-24 lg:py-32 gradient-dark">
+    <section className="py-24 lg:py-32 bg-dark-green">
       <Container>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -92,15 +92,15 @@ export default function RoadmapSection() {
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className="text-center mb-16"
         >
-          <h2 className="text-display-sm md:text-display text-off-white font-heading uppercase tracking-wide mb-4">
+          <h2 className="text-display-sm md:text-display text-off-white font-heading uppercase tracking-wider mb-4">
             6-Week Roadmap
           </h2>
-          <p className="text-muted-green text-lg">
+          <p className="text-muted-green text-lg leading-relaxed">
             Your transformation timeline from zero to production
           </p>
         </motion.div>
 
-        <div className="space-y-8">
+        <div className="space-y-12">
           {weeks.map((week, index) => {
             const Icon = week.icon;
             const isExpanded = expandedWeek === index;
@@ -116,9 +116,15 @@ export default function RoadmapSection() {
               >
                 {/* Week number */}
                 <div className="hidden lg:block">
-                  <span className="text-[5rem] font-heading font-black text-tan/20 leading-none">
+                  <motion.span
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 0.2, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 + 0.2 }}
+                    className="text-[8rem] font-heading font-black text-tan leading-none select-none"
+                  >
                     {week.number}
-                  </span>
+                  </motion.span>
                 </div>
 
                 {/* Content card */}
@@ -134,7 +140,7 @@ export default function RoadmapSection() {
 
                     {/* Week details */}
                     <div className="p-6 md:p-8">
-                      <h3 className="text-2xl font-heading font-bold uppercase tracking-wider text-tan mb-4">
+                      <h3 className="text-2xl font-heading font-bold uppercase tracking-widest text-tan mb-4">
                         Week {week.number.replace('0', '')}: {week.title}
                       </h3>
 
@@ -151,10 +157,10 @@ export default function RoadmapSection() {
                       {/* Tools included - expandable */}
                       <button
                         onClick={() => setExpandedWeek(isExpanded ? null : index)}
-                        className="flex items-center gap-2 text-tan/60 hover:text-tan transition-colors"
+                        className="flex items-center gap-2 text-tan/60 hover:text-tan transition-colors duration-300"
                       >
-                        <span className="text-sm uppercase tracking-wider">Tools included</span>
-                        <ChevronDown className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                        <span className="text-caption uppercase tracking-widest">Tools included</span>
+                        <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
                       </button>
 
                       {isExpanded && (

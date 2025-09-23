@@ -43,6 +43,8 @@ const config: Config = {
         'ultra': '.2em',
         'mega': '.15em',
         'wide': '.1em',
+        'wider': '.15em',
+        'widest': '.25em',
       },
       maxWidth: {
         'screen-xl': '1280px',
@@ -50,8 +52,11 @@ const config: Config = {
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.5s ease-out',
+        'slide-up-delayed': 'slideUp 0.5s ease-out 0.2s both',
         'pulse-subtle': 'pulseSubtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'marquee': 'marquee 25s linear infinite',
+        'number-fade': 'numberFade 0.6s ease-out',
+        'parallax-slow': 'parallaxSlow 1s ease-out',
       },
       keyframes: {
         fadeIn: {
@@ -70,11 +75,24 @@ const config: Config = {
           '0%': { transform: 'translateX(0%)' },
           '100%': { transform: 'translateX(-100%)' },
         },
+        numberFade: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '0.2', transform: 'translateY(0)' },
+        },
+        parallaxSlow: {
+          '0%': { transform: 'translateY(0px)' },
+          '100%': { transform: 'translateY(-10px)' },
+        },
       },
       boxShadow: {
         'card': '0 4px 20px rgba(0, 0, 0, 0.08)',
         'card-hover': '0 8px 30px rgba(0, 0, 0, 0.12)',
         'deep': '0 10px 40px rgba(0, 0, 0, 0.15)',
+        'noske': '0 20px 60px rgba(11, 55, 43, 0.15)',
+      },
+      transitionTimingFunction: {
+        'out-swift': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        'in-swift': 'cubic-bezier(0.55, 0.06, 0.68, 0.19)',
       },
     },
   },

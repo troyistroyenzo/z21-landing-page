@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { motion } from 'framer-motion';
 import Container from './Container';
 import content from '@/app/content/z21.json';
@@ -34,7 +35,7 @@ export default function FormulaCards() {
   ];
 
   return (
-    <section className="py-24 lg:py-32 gradient-dark">
+    <section className="py-24 lg:py-32 bg-dark-green">
       <Container>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -43,10 +44,10 @@ export default function FormulaCards() {
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className="text-center mb-16"
         >
-          <h2 className="text-display-sm md:text-display text-off-white font-heading uppercase tracking-wide mb-4">
+          <h2 className="text-display-sm md:text-display text-off-white font-heading uppercase tracking-wider mb-4">
             The Z21 Formula
           </h2>
-          <p className="text-muted-green text-lg">
+          <p className="text-muted-green text-lg leading-relaxed">
             Four phases to transform from AI-curious to AI-powered
           </p>
         </motion.div>
@@ -65,9 +66,15 @@ export default function FormulaCards() {
               >
                 <div className="relative bg-darker-green rounded-xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300">
                   {/* Large semi-transparent number */}
-                  <span className="absolute top-4 left-6 text-[6rem] font-heading font-black text-tan/10 leading-none select-none">
+                  <motion.span
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 0.2, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 + 0.2 }}
+                    className="absolute top-4 left-6 text-[6rem] font-heading font-black text-tan leading-none select-none animate-number-fade"
+                  >
                     {card.number}
-                  </span>
+                  </motion.span>
 
                   {/* Icon */}
                   <div className="absolute top-6 right-6">
@@ -76,7 +83,7 @@ export default function FormulaCards() {
 
                   {/* Content */}
                   <div className="relative z-10 pt-12">
-                    <h3 className="text-xl font-heading font-bold uppercase tracking-wider text-tan mb-3">
+                    <h3 className="text-xl font-heading font-bold uppercase tracking-widest text-tan mb-3">
                       {card.title}
                     </h3>
                     <p className="text-muted-green leading-relaxed">

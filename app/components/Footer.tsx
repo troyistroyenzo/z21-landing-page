@@ -1,18 +1,19 @@
 'use client';
 
+import React from 'react';
 import Container from './Container';
 import content from '@/app/content/z21.json';
 import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-emerald-950 text-paper py-12">
+    <footer className="bg-emerald-950 text-white py-12">
       <Container>
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           {/* Left side - Logo and smallprint */}
           <div className="text-center md:text-left">
             <div className="text-2xl font-bold mb-2">Z21</div>
-            <p className="text-paper/60 text-sm max-w-xs">
+            <p className="text-white/60 text-sm max-w-xs">
               {content.footer.smallprint}
             </p>
           </div>
@@ -24,7 +25,7 @@ export default function Footer() {
                 <a
                   key={index}
                   href={link.href}
-                  className="text-paper/60 hover:text-rust transition-colors text-sm"
+                  className="text-white/60 hover:text-rust transition-colors text-sm"
                 >
                   {link.label}
                 </a>
@@ -32,7 +33,7 @@ export default function Footer() {
                 <Link
                   key={index}
                   href={link.href}
-                  className="text-paper/60 hover:text-rust transition-colors text-sm"
+                  className="text-white/60 hover:text-rust transition-colors text-sm"
                 >
                   {link.label}
                 </Link>
@@ -48,7 +49,7 @@ export default function Footer() {
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-paper/60 hover:text-rust transition-colors"
+                className="text-white/60 hover:text-rust transition-colors"
                 aria-label={`Follow us on ${social.label}`}
               >
                 {social.label === 'Instagram' && (

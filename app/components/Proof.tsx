@@ -50,7 +50,7 @@ export default function Proof() {
                 <a
                   key={index}
                   href={social.href}
-                  className="inline-flex items-center gap-2 px-5 py-3 bg-emerald-950 text-paper rounded-lg hover:bg-emerald-950/90 transition-all"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-emerald-950 text-white rounded-lg hover:bg-emerald-950/90 transition-all"
                 >
                   <span>{social.label}</span>
                   <ExternalLink className="w-4 h-4" />
@@ -184,7 +184,7 @@ export default function Proof() {
             transition={{ duration: 0.5, ease: 'easeOut' }}
             className="max-w-5xl mx-auto"
           >
-            <h2 className="text-display text-paper mb-12 text-center">
+            <h2 className="text-display text-white mb-12 text-center">
               {content.antipitchPreempts.title}
             </h2>
 
@@ -201,7 +201,7 @@ export default function Proof() {
                   <h3 className="text-2xl font-bold text-rust mb-3">
                     {item.h}
                   </h3>
-                  <p className="text-paper/90">
+                  <p className="text-white/90">
                     {item.p}
                   </p>
                 </motion.div>

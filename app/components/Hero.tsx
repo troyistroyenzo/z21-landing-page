@@ -37,11 +37,11 @@ export default function Hero() {
     : content.hero.primaryCta.label;
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-paper pt-20">
-      {/* Optional gradient background - could be replaced with R3F blob */}
+    <section className="relative min-h-screen flex items-center justify-center bg-off-white pt-20">
+      {/* Subtle gradient background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] bg-rust/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -right-1/4 w-[600px] h-[600px] bg-emerald-950/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] bg-tan/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 -right-1/4 w-[600px] h-[600px] bg-dark-green/5 rounded-full blur-3xl" />
       </div>
 
       <Container className="relative z-10">
@@ -51,7 +51,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="text-sm uppercase tracking-wider text-rust mb-6"
+            className="text-caption uppercase tracking-widest text-tan font-medium mb-6"
           >
             {content.hero.eyebrow}
           </motion.p>
@@ -61,7 +61,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
-            className="text-display-lg lg:text-[80px] text-emerald-950 mb-6 leading-[0.95]"
+            className="font-heading text-display-lg lg:text-[80px] text-dark-green mb-6 leading-[0.9] uppercase tracking-wide font-black"
           >
             {heroTitle}
           </motion.h1>
@@ -71,7 +71,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
-            className="text-body-lg lg:text-2xl text-emerald-950/80 mb-8 max-w-3xl mx-auto"
+            className="font-body text-body-lg lg:text-xl text-muted-green mb-8 max-w-3xl mx-auto leading-relaxed"
           >
             {content.hero.sub}
           </motion.p>
@@ -86,7 +86,7 @@ export default function Hero() {
             {content.hero.badges.map((badge, index) => (
               <span
                 key={index}
-                className="px-3 py-1 bg-emerald-950/10 text-emerald-950 rounded-full text-sm"
+                className="px-4 py-2 bg-dark-green/10 text-dark-green rounded-full text-caption uppercase tracking-wide font-medium"
               >
                 {badge}
               </span>
@@ -130,9 +130,9 @@ export default function Hero() {
           >
             <button
               onClick={scrollToVSL}
-              className="group flex flex-col items-center gap-2 text-emerald-950/60 hover:text-rust transition-colors"
+              className="group flex flex-col items-center gap-2 text-muted-green hover:text-tan transition-colors duration-300"
             >
-              <span className="text-sm font-medium uppercase tracking-wider">
+              <span className="text-caption font-medium uppercase tracking-widest">
                 {content.hero.tertiaryCta.label}
               </span>
               <ChevronDown className="w-5 h-5 animate-bounce" />
@@ -145,7 +145,7 @@ export default function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.7, ease: 'easeOut' }}
-              className="mt-4 text-sm text-emerald-950/60"
+              className="mt-4 text-caption text-muted-green uppercase tracking-wider"
             >
               {content.hero.ctaMicrotext}
             </motion.p>
