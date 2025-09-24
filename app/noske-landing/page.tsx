@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Lenis from '@studio-freight/lenis';
 import StickyHeader from '@/app/components/StickyHeader';
 import HeroNoske from '@/app/components/HeroNoske';
@@ -60,7 +60,6 @@ export default function NoskeLandingPage() {
       <RoadmapSection />
       <FinalCTA />
       
-      {/* Custom Footer for Noske style */}
       <footer className="bg-dark-green text-off-white py-16">
         <div className="max-w-screen-xl mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-8">

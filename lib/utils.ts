@@ -1,3 +1,6 @@
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
 // Utility function to interpolate environment variables in strings
 export function interpolateEnv(str: string): string {
   if (typeof str !== 'string') return str;
@@ -8,7 +11,7 @@ export function interpolateEnv(str: string): string {
   });
 }
 
-// Class name helper
-export function cn(...inputs: (string | undefined | null | boolean)[]) {
-  return inputs.filter(Boolean).join(' ');
+// Modern class name helper with tailwind-merge support
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }

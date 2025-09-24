@@ -1,120 +1,121 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Container from './Container';
-import { motion } from 'framer-motion';
-import content from '@/app/content/z21.json';
-import { interpolateEnv } from '@/lib/utils';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
+import Button from './ui/Button';
+import { cn } from '@/lib/utils';
 
-export default function Header() {
+const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      setIsScrolled(window.scrollY > 0);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const navItems = [
+    { label: 'Features', href: '#features' },
+    { label: 'Proof', href: '#proof' },
+    { label: 'FAQ', href: '#faq' },
+  ];
+
   return (
     <motion.header
+      className={cn(
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        isScrolled 
+          ? 'glass border-b border-gray-200/20' 
+          : 'bg-transparent'
+      )}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-paper/80 backdrop-blur-lg border-b border-emerald-950/10'
-          : 'bg-transparent'
-      }`}
+      transition={{ duration: 0.6, ease: 'easeOut' }}
     >
-      <Container className="relative">
-        <nav className="flex items-center justify-between h-20">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link 
-            href="/" 
-            className="text-2xl font-bold text-emerald-950 hover:text-rust transition-colors"
+          <motion.div 
+            className="flex items-center space-x-2"
+            whileHover={{ scale: 1.05 }}
           >
-            Z21
-          </Link>
+            <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
+              <span className="text-background font-bold text-sm">Z21</span>
+            </div>
+            <span className="font-semibold text-lg">Founders</span>
+          </motion.div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            {content.nav.links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-emerald-950 hover:text-rust transition-colors font-medium"
-                onClick={() => setIsMobileMenuOpen(false)}
+          <nav className="hidden md:flex items-center space-x-8">
+            {navItems.map((item) => (
+              <motion.a
+                key={item.label}
+                href={item.href}
+                className="text-gray-600 hover:text-foreground transition-colors duration-200 text-sm font-medium"
+                whileHover={{ y: -1 }}
               >
-                {link.label}
-              </Link>
+                {item.label}
+              </motion.a>
             ))}
-            <Link
-              href={interpolateEnv(content.hero.primaryCta.href)}
-              className="px-5 py-2 bg-rust text-paper rounded-lg hover:bg-rust/90 transition-all font-medium"
-            >
+          </nav>
+
+          {/* CTA Button */}
+          <div className="hidden md:block">
+            <Button variant="primary" size="sm">
               Apply Now
-            </Link>
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
-          <button
+          <motion.button
+            className="md:hidden p-2"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden flex flex-col gap-1.5 p-2"
-            aria-label="Toggle menu"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
           >
-            <span
-              className={`block w-6 h-0.5 bg-emerald-950 transition-all ${
-                isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''
-              }`}
-            />
-            <span
-              className={`block w-6 h-0.5 bg-emerald-950 transition-all ${
-                isMobileMenuOpen ? 'opacity-0' : ''
-              }`}
-            />
-            <span
-              className={`block w-6 h-0.5 bg-emerald-950 transition-all ${
-                isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''
-              }`}
-            />
-          </button>
-        </nav>
+            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </motion.button>
+        </div>
+      </div>
 
-        {/* Mobile Menu */}
+      {/* Mobile Menu */}
+      <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-0 right-0 bg-paper shadow-lg md:hidden"
+            className="md:hidden glass border-t border-gray-200/20"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="flex flex-col gap-4 p-6">
-              {content.nav.links.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-emerald-950 hover:text-rust transition-colors font-medium text-lg"
+            <div className="max-w-6xl mx-auto px-6 py-4 space-y-4">
+              {navItems.map((item) => (
+                <motion.a
+                  key={item.label}
+                  href={item.href}
+                  className="block text-gray-600 hover:text-foreground transition-colors duration-200 py-2"
                   onClick={() => setIsMobileMenuOpen(false)}
+                  whileHover={{ x: 4 }}
                 >
-                  {link.label}
-                </Link>
+                  {item.label}
+                </motion.a>
               ))}
-              <Link
-                href={interpolateEnv(content.hero.primaryCta.href)}
-                className="px-5 py-3 bg-rust text-paper rounded-lg hover:bg-rust/90 transition-all font-medium text-center"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Apply Now
-              </Link>
+              <div className="pt-2">
+                <Button variant="primary" size="sm" className="w-full">
+                  Apply Now
+                </Button>
+              </div>
             </div>
           </motion.div>
         )}
-      </Container>
+      </AnimatePresence>
     </motion.header>
   );
-}
+};
+
+export default Header;
