@@ -8,13 +8,10 @@ import Button from './ui/Button';
 const Hero = () => {
   const { scrollY } = useScroll();
   
-  // Disable parallax on mobile for performance
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  
-  // Parallax transforms - disabled on mobile
-  const backgroundY = useTransform(scrollY, [0, 500], isMobile ? ['0%', '0%'] : ['0%', '20%']);
-  const contentY = useTransform(scrollY, [0, 500], isMobile ? ['0%', '0%'] : ['0%', '-10%']);
-  const opacity = useTransform(scrollY, [0, 400], isMobile ? [1, 1] : [1, 0.6]);
+  // Optimized parallax transforms for mobile performance
+  const backgroundY = useTransform(scrollY, [0, 800], ['0%', '15%']);
+  const contentY = useTransform(scrollY, [0, 600], ['0%', '-5%']);
+  const opacity = useTransform(scrollY, [0, 400], [1, 0.8]);
   
   const stats = [
     { icon: <LightningBoltIcon className="w-5 h-5" />, value: '6', label: 'Weeks' },

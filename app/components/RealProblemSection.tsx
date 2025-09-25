@@ -6,7 +6,7 @@ import { GearIcon } from '@radix-ui/react-icons';
 
 const RealProblemSection = () => {
   return (
-    <section className="py-24 bg-white">
+    <section className="py-24 bg-background">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid lg:grid-cols-3 gap-12 items-center">
           {/* Left Side - Content (2/3 width) */}
@@ -28,7 +28,7 @@ const RealProblemSection = () => {
             </h3>
 
             {/* Content */}
-            <div className="prose prose-lg max-w-none text-gray-700 space-y-6">
+            <div className="prose prose-lg max-w-none text-white space-y-6">
               <p>
                 Most zero→one efforts don&apos;t stall from lack of talent. They stall because the system is wrong.
               </p>

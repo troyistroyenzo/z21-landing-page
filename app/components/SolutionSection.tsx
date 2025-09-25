@@ -36,13 +36,13 @@ const SolutionSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative max-w-5xl mx-auto"
+          className="relative max-w-7xl mx-auto"
         >
-          <div className="relative bg-#F5EFE6 rounded-3xl p-8 ">
-            {/* Product Image Placeholder */}
-            <div className="aspect-[16/10] bg-#F5EFE6 rounded-2xl shadow-lg border border-gray-200 relative overflow-hidden">
+          <div className="relative bg-#F5EFE6 rounded-3xl p-4 md:p-6 lg:p-8">
+            {/* Product Image Placeholder - Increased Size */}
+            <div className="aspect-[16/9] md:aspect-[16/10] bg-#F5EFE6 relative overflow-hidden">
               <Image 
-                src="https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/ef842d96-0afc-4092-8210-6ddfd2eea3f6.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTQzMGYtOWVkOC1iNzY3YzU1NDM5YzMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvZWY4NDJkOTYtMGFmYy00MDkyLTgyMTAtNmRkZmQyZWVhM2Y2LnBuZyIsImlhdCI6MTc1ODc3MzIxMSwiZXhwIjoxNzkwMzA5MjExfQ.SfDUv0qcAhsF8ALuBZlphUTm1x7awTdweiG2gCJy_vY"
+                src="https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/f7fd4d46-2bed-491b-a4c3-c33f0db3adb5.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTQzMGYtOWVkOC1iNzY3YzU1NDM5YzMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvZjdmZDRkNDYtMmJlZC00OTFiLWE0YzMtYzMzZjBkYjNhZGI1LnBuZyIsImlhdCI6MTc1ODc3NzAyNSwiZXhwIjoxNzkwMzEzMDI1fQ._WbDvasTorIvVudnbtKYH7yyt8eNJ9d93R4QPqMKoW4"
                 alt="Z21 Program Dashboard"
                 fill
                 className="object-cover"
@@ -51,9 +51,10 @@ const SolutionSection = () => {
             </div>
           </div>
 
-          {/* Background Glow Effect */}
+          {/* Enhanced Background Glow Effect */}
           <div className="absolute inset-0 -z-10">
-            <div className="absolute inset-0 bg-green-200 rounded-3xl opacity-20 blur-3xl transform scale-110"></div>
+            <div className="absolute inset-0 bg-green-200 rounded-3xl opacity-20 blur-3xl transform scale-125"></div>
+            <div className="absolute inset-0 bg-emerald-300 rounded-3xl opacity-10 blur-2xl transform scale-110"></div>
           </div>
         </motion.div>
       </div>

@@ -4,10 +4,10 @@ import React, { useEffect, useState } from 'react';
 import Button from './ui/Button';
 import Logo from './ui/Logo';
 
-const targetDate = new Date('2025-01-31T23:59:59');
+const targetDate = new Date('2025-01-31T23:59:59-00:00'); // UTC time
 
-function getTimeLeft() {
-  const now = new Date();
+function getTimeLeft(currentTime?: Date) {
+  const now = currentTime || new Date();
   const diff = targetDate.getTime() - now.getTime();
 
   if (diff <= 0) {
@@ -24,13 +24,42 @@ function getTimeLeft() {
 
 const Countdown = () => {
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
+  const [currentTime, setCurrentTime] = useState<Date | null>(null);
+
+  // Fetch accurate time from API
+  useEffect(() => {
+    const fetchTime = async () => {
+      try {
+        const response = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC');
+        if (response.ok) {
+          const data = await response.json();
+          const serverTime = new Date(data.datetime);
+          setCurrentTime(serverTime);
+          setTimeLeft(getTimeLeft(serverTime));
+        }
+      } catch (error) {
+        console.log('Using local time as fallback');
+        // Fallback to local time
+        setTimeLeft(getTimeLeft());
+      }
+    };
+
+    fetchTime();
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(getTimeLeft());
+      if (currentTime) {
+        // Update based on server time
+        currentTime.setSeconds(currentTime.getSeconds() + 1);
+        setTimeLeft(getTimeLeft(currentTime));
+      } else {
+        // Fallback to local time
+        setTimeLeft(getTimeLeft());
+      }
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [currentTime]);
 
   return (
     <section className="w-full bg-emerald-900 text-white py-3 px-4 overflow-x-hidden">

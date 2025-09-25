@@ -3,10 +3,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import Image from 'next/image';
 
 const TrapSection = () => {
   return (
-    <section className="py-24 bg-gray-50">
+    <section className="py-24 bg-background">
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center mb-16">
           {/* Title */}
@@ -33,24 +34,18 @@ const TrapSection = () => {
         >
           <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200">
             {/* Image Placeholder Section */}
-            <div className="bg-gradient-to-br from-gray-100 to-gray-200 p-12">
+            
               <div className="aspect-[16/9] bg-gray-300 rounded-2xl flex items-center justify-center relative">
-                <div className="text-center">
-                  <ExclamationTriangleIcon className="w-16 h-16 mx-auto mb-4 text-gray-500" />
-                  <p className="text-gray-600 font-medium text-lg mb-2">Image Placeholder</p>
-                  <p className="text-sm text-gray-500 max-w-md mx-auto italic">
-                    "A founder at a laptop, tabs open: 'offer', 'VSL', 'automation,' staring at a half-finished workflow"
-                  </p>
-                </div>
+                <Image 
+                  src="https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/TWS_3517.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTQzMGYtOWVkOC1iNzY3YzU1NDM5YzMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvVFdTXzM1MTcuanBnIiwiaWF0IjoxNzU4Nzc3MjA4LCJleHAiOjE3OTAzMTMyMDh9.7HhCnGIt2q9Gj69vSMcm9KGhInBDlZDNorERXqD6po8"
+                  alt="Founders Program"
+                  className="object-cover rounded-2xl"
+                  fill
+                  priority
+                />
                 
-                {/* Decorative browser tabs */}
-                <div className="absolute top-4 left-4 flex gap-2">
-                  <div className="w-16 h-6 bg-gray-400 rounded-t text-xs text-white flex items-center justify-center">offer</div>
-                  <div className="w-16 h-6 bg-gray-400 rounded-t text-xs text-white flex items-center justify-center">VSL</div>
-                  <div className="w-20 h-6 bg-gray-400 rounded-t text-xs text-white flex items-center justify-center">automation</div>
-                </div>
               </div>
-            </div>
+            
 
             {/* Text Content Inside Card */}
             <div className="p-12">

@@ -39,8 +39,8 @@ const Header = () => {
         <div className="flex items-center justify-between h-24">
           {/* Logo - 3x larger on desktop, responsive on mobile */}
           <motion.div 
-            className="flex items-center space-x-4"
-            whileHover={{ scale: 1.05 }}
+            className="flex items-center" 
+            whileHover={{ scale: 0.05 }}
           >
             <div className="w-24 h-24 md:w-24 md:h-24 flex items-center justify-center">
               <Logo width={96} height={96} className="w-16 h-16 md:w-24 md:h-24" />
