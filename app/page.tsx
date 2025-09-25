@@ -5,6 +5,10 @@ import Lenis from '@studio-freight/lenis';
 import { motion } from 'framer-motion';
 import Header from './components/Header';
 import Hero from './components/Hero';
+import PainPointSection from './components/PainPointSection';
+import SolutionSection from './components/SolutionSection';
+import TrapSection from './components/TrapSection';
+import RealProblemSection from './components/RealProblemSection';
 import VSL from './components/VSL';
 import Features from './components/Features';
 import Proof from './components/Proof';
@@ -85,6 +89,10 @@ export default function Home() {
       <Header />
       <Suspense fallback={<PageLoading />}>
         <Hero />
+        <PainPointSection />
+        <SolutionSection />
+        <TrapSection />
+        <RealProblemSection />
         <VSL />
         <Features />
         <Proof />
