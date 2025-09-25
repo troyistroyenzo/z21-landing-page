@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import Button from './ui/Button';
+import Logo from './ui/Logo';
 import { cn } from '@/lib/utils';
 
 const Header = () => {
@@ -28,48 +29,53 @@ const Header = () => {
   return (
     <motion.header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        isScrolled 
-          ? 'glass border-b border-gray-200/20' 
-          : 'bg-transparent'
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent'
       )}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
     >
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex items-center justify-between h-24">
+          {/* Logo - 3x larger on desktop, responsive on mobile */}
           <motion.div 
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-4"
             whileHover={{ scale: 1.05 }}
           >
-            <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
-              <span className="text-background font-bold text-sm">Z21</span>
+            <div className="w-24 h-24 md:w-24 md:h-24 flex items-center justify-center">
+              <Logo width={96} height={96} className="w-16 h-16 md:w-24 md:h-24" />
             </div>
-            <span className="font-semibold text-lg">Founders</span>
+            <span 
+              className="font-bold text-2xl md:text-3xl"
+              style={{ color: '#AF977C' }}
+            >
+              Founders
+            </span>
           </motion.div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          {/* Desktop Navigation - Right aligned with larger text */}
+          <nav className="hidden md:flex items-center space-x-8 ml-auto">
             {navItems.map((item) => (
               <motion.a
                 key={item.label}
                 href={item.href}
-                className="text-gray-600 hover:text-foreground transition-colors duration-200 text-sm font-medium"
+                className="hover:text-foreground transition-colors duration-200 text-base lg:text-lg font-medium"
+                style={{ color: '#AF977C' }}
                 whileHover={{ y: -1 }}
               >
                 {item.label}
               </motion.a>
             ))}
-          </nav>
-
-          {/* CTA Button */}
-          <div className="hidden md:block">
-            <Button variant="primary" size="sm">
+            {/* Apply Now button inline with nav */}
+            <Button 
+              variant="primary" 
+              size="md"
+              className="bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90"
+              style={{ backgroundColor: '#C4A27A' }}
+            >
               Apply Now
             </Button>
-          </div>
+          </nav>
 
           {/* Mobile Menu Button */}
           <motion.button
@@ -78,12 +84,12 @@ const Header = () => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
           >
-            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </motion.button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Centered content */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -93,20 +99,26 @@ const Header = () => {
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="max-w-6xl mx-auto px-6 py-4 space-y-4">
+            <div className="max-w-6xl mx-auto px-6 py-6 space-y-6">
               {navItems.map((item) => (
                 <motion.a
                   key={item.label}
                   href={item.href}
-                  className="block text-gray-600 hover:text-foreground transition-colors duration-200 py-2"
+                  className="block text-center hover:text-foreground transition-colors duration-200 py-3 text-lg font-medium"
+                  style={{ color: '#AF977C' }}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  whileHover={{ x: 4 }}
+                  whileHover={{ scale: 1.05 }}
                 >
                   {item.label}
                 </motion.a>
               ))}
-              <div className="pt-2">
-                <Button variant="primary" size="sm" className="w-full">
+              <div className="pt-4">
+                <Button 
+                  variant="primary" 
+                  size="lg" 
+                  className="w-full bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90"
+                  style={{ backgroundColor: '#C4A27A' }}
+                >
                   Apply Now
                 </Button>
               </div>

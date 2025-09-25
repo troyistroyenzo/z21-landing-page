@@ -84,7 +84,7 @@ const VSL = () => {
               onLoadedMetadata={handleTimeUpdate}
               poster="/api/placeholder/800/450"
             >
-              <source src="/videos/z21-demo.mp4" type="video/mp4" />
+              <source src="https://www.youtube.com/watch?v=zZibCk4ZqHE" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
 

@@ -1,6 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
+/* Local Saa Series C D font */
+@font-face {
+  font-family: 'Saa Series C D Custom';
+  src: url('../assets/SaaSeriesCDOT.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
     /* Color system */
@@ -45,7 +54,8 @@
   }
 
   /* Typography */
-  h1, h2, h3, h4, h5, h6 {
+  h1, h2, h3, h4, h5, h6, strong, b {
+    font-family: 'Saa Series C D Custom', serif;
     font-weight: 600;
     line-height: 1.25;
     letter-spacing: -0.025em;

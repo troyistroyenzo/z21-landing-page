@@ -5,6 +5,7 @@ import Lenis from '@studio-freight/lenis';
 import { motion } from 'framer-motion';
 import Header from './components/Header';
 import Hero from './components/Hero';
+import Countdown from './components/Countdown';
 import PainPointSection from './components/PainPointSection';
 import SolutionSection from './components/SolutionSection';
 import TrapSection from './components/TrapSection';
@@ -32,15 +33,22 @@ export default function Home() {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (mediaQuery.matches) return;
 
-    // Initialize Lenis smooth scrolling
+    // Initialize Lenis smooth scrolling with ease-in-out
     const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      duration: 1.8,
+      easing: (t) => {
+        // Custom ease-in-out cubic bezier approximation
+        if (t < 0.5) {
+          return 4 * t * t * t;
+        } else {
+          return 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+      },
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 2,
+      wheelMultiplier: 0.8,
+      touchMultiplier: 1.5,
       infinite: false,
     });
 
@@ -64,7 +72,15 @@ export default function Home() {
           if (element) {
             lenis.scrollTo(element, {
               offset: -80,
-              duration: 1.5,
+              duration: 2,
+              easing: (t) => {
+                // Ease-in-out for anchor links
+                if (t < 0.5) {
+                  return 4 * t * t * t;
+                } else {
+                  return 1 - Math.pow(-2 * t + 2, 3) / 2;
+                }
+              },
             });
           }
         }
@@ -89,11 +105,12 @@ export default function Home() {
       <Header />
       <Suspense fallback={<PageLoading />}>
         <Hero />
+        <Countdown />
+        <VSL />
         <PainPointSection />
         <SolutionSection />
         <TrapSection />
         <RealProblemSection />
-        <VSL />
         <Features />
         <Proof />
         <FAQ />

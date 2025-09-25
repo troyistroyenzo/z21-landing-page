@@ -9,12 +9,16 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Helvetica Neue', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+        saaseriescd: ['Saa Series', 'serif'],
+        inter: ['Inter', 'system-ui', 'sans-serif'],
+        helvetica: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
       },
       colors: {
         background: '#fafafa',
         foreground: '#0a0a0a',
+        gold: '#C4A27A',
         accent: {
           DEFAULT: '#0070f3',
           dark: '#0061d5',
@@ -96,11 +100,6 @@ const config: Config = {
         },
         scaleIn: {
           '0%': { opacity: '0', transform: 'scale(0.95)' },
-          '100%': { opacity: '1', transform: 'scale(1)' },
-        },
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
         },
         pulseSubtle: {
           '0%, 100%': { opacity: '1' },
