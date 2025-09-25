@@ -52,6 +52,11 @@
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  html {
+    overflow-x: hidden;
   }
 
   /* Typography */
@@ -185,7 +190,7 @@
     box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.15), 0 10px 10px -5px rgba(16, 185, 129, 0.08);
   }
 
-  /* Reduced motion */
+  /* Reduced motion and mobile optimizations */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -194,6 +199,29 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
+    }
+  }
+
+  /* Mobile-specific performance optimizations */
+  @media (max-width: 768px) {
+    * {
+      animation-duration: 0.3s !important;
+      transition-duration: 0.2s !important;
+    }
+    
+    .zero-to-one-text {
+      animation-duration: 1.5s !important;
+    }
+    
+    /* Disable complex shadows on mobile */
+    .shadow-green, .shadow-green-lg {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    /* Optimize backdrop filters on mobile */
+    .glass, .glass-dark {
+      backdrop-filter: none !important;
+      background: rgba(255, 255, 255, 0.95) !important;
     }
   }
 }
