@@ -12,20 +12,21 @@
 
 @layer base {
   :root {
-    /* Color system */
-    --color-background: #fafafa;
-    --color-foreground: #0a0a0a;
-    --color-accent: #0070f3;
-    --color-accent-dark: #0061d5;
-    --color-success: #00d9ff;
-    --color-border: #e4e4e7;
-    --color-border-hover: #d4d4d8;
+    /* Color system - Dark Emerald Theme */
+    --color-background: #0C1816;
+    --color-foreground: #f0fdf4;
+    --color-accent: #10b981;
+    --color-accent-dark: #059669;
+    --color-success: #34d399;
+    --color-border: #065f46;
+    --color-border-hover: #047857;
+    --color-gold: #fbbf24;
     
     /* Shadows */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.3);
     
     /* Borders */
     --border-radius: 12px;
