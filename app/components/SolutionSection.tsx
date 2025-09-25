@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { CheckIcon } from '@radix-ui/react-icons';
 
@@ -37,34 +38,16 @@ const SolutionSection = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="relative max-w-5xl mx-auto"
         >
-          <div className="relative bg-gradient-to-br from-green-50 to-green-100 rounded-3xl p-8 shadow-2xl border border-green-200">
+          <div className="relative bg-#F5EFE6 rounded-3xl p-8 ">
             {/* Product Image Placeholder */}
-            <div className="aspect-[16/10] bg-white rounded-2xl shadow-lg border border-gray-200 flex items-center justify-center relative overflow-hidden">
-              <div className="text-center">
-                <div className="w-20 h-20 mx-auto mb-6 bg-green-100 rounded-2xl flex items-center justify-center">
-                  <CheckIcon className="w-10 h-10 text-green-600" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-2">Product Preview</h3>
-                <p className="text-gray-500 font-medium">Z21 Program Dashboard</p>
-                <p className="text-sm text-gray-400 mt-2">Replace with actual product screenshot/mockup</p>
-              </div>
-
-              {/* Decorative Elements */}
-              <div className="absolute top-6 left-6 w-4 h-4 bg-green-200 rounded-full opacity-60"></div>
-              <div className="absolute top-6 right-6 w-3 h-3 bg-green-300 rounded-full opacity-40"></div>
-              <div className="absolute bottom-6 left-6 w-2 h-2 bg-green-400 rounded-full opacity-50"></div>
-              <div className="absolute bottom-6 right-6 w-5 h-5 bg-green-100 rounded-full opacity-70"></div>
-            </div>
-
-            {/* Floating Success Icons */}
-            <div className="absolute -top-4 left-1/4 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg border-4 border-white">
-              <CheckIcon className="w-4 h-4 text-white" />
-            </div>
-            <div className="absolute -top-2 right-1/3 w-6 h-6 bg-green-400 rounded-full flex items-center justify-center shadow-md border-4 border-white">
-              <CheckIcon className="w-3 h-3 text-white" />
-            </div>
-            <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-10 h-10 bg-green-600 rounded-full flex items-center justify-center shadow-xl border-4 border-white">
-              <CheckIcon className="w-5 h-5 text-white" />
+            <div className="aspect-[16/10] bg-#F5EFE6 rounded-2xl shadow-lg border border-gray-200 relative overflow-hidden">
+              <Image 
+                src="https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/ef842d96-0afc-4092-8210-6ddfd2eea3f6.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTQzMGYtOWVkOC1iNzY3YzU1NDM5YzMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvZWY4NDJkOTYtMGFmYy00MDkyLTgyMTAtNmRkZmQyZWVhM2Y2LnBuZyIsImlhdCI6MTc1ODc3MzIxMSwiZXhwIjoxNzkwMzA5MjExfQ.SfDUv0qcAhsF8ALuBZlphUTm1x7awTdweiG2gCJy_vY"
+                alt="Z21 Program Dashboard"
+                fill
+                className="object-cover"
+                priority
+              />
             </div>
           </div>
 
