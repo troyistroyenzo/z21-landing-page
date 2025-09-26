@@ -3,7 +3,8 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { CheckIcon } from '@radix-ui/react-icons';
+import { CheckIcon, ArrowRightIcon } from '@radix-ui/react-icons';
+import Button from './ui/Button';
 
 const SolutionSection = () => {
   return (
@@ -23,10 +24,20 @@ const SolutionSection = () => {
             </h2>
             
             {/* Description */}
-            <p className="text-xl md:text-2xl text-gray-700 leading-relaxed max-w-4xl mx-auto">
+            <p className="text-xl md:text-2xl text-gray-700 leading-relaxed max-w-4xl mx-auto mb-8">
               A 6-week program that turns founders from AI-overwhelmed tinkerers into operators— 
               with a live offer and production workflows that scale without you.
             </p>
+
+            {/* Learn More CTA */}
+            <Button
+              variant="outline"
+              size="lg"
+              className="group border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition-all duration-300"
+            >
+              Learn More
+              <ArrowRightIcon className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
+            </Button>
           </motion.div>
         </div>
 

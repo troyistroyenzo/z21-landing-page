@@ -15,7 +15,7 @@ const PainPointSection = () => {
   ];
 
   return (
-    <section className="py-24 bg-">
+    <section className="py-24 bg-gray-50">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Side - Content */}
@@ -26,12 +26,15 @@ const PainPointSection = () => {
             transition={{ duration: 0.8 }}
           >
             {/* Title */}
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-8 leading-tight">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
               WHAT HAPPENS WHEN YOU HAVE THE{' '}
               <span className="text-green-600">IDEAS</span>
               <br />
               BUT NO SYSTEM TO SHIP A STARTUP?
             </h2>
+
+            {/* Grey Divider */}
+            <div className="w-full border-b border-gray-400/30 mb-8"></div>
 
             {/* Pain Points List */}
             <div className="space-y-4">
@@ -47,7 +50,7 @@ const PainPointSection = () => {
                   <div className="flex-shrink-0 w-6 h-6 mt-1 bg-red-50 rounded-full flex items-center justify-center border border-red-200 group-hover:bg-red-100 transition-colors duration-200">
                     <Cross2Icon className="w-3 h-3 text-red-500" />
                   </div>
-                  <p className="text-lg text-background leading-relaxed">
+                  <p className="text-lg text-gray-700 leading-relaxed">
                     {point}
                   </p>
                 </motion.div>

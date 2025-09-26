@@ -8,6 +8,13 @@ import Hero from './components/Hero';
 import Countdown from './components/Countdown';
 import PainPointSection from './components/PainPointSection';
 import SolutionSection from './components/SolutionSection';
+import TomLetterSection from './components/TomLetterSection';
+import BuildInSixWeeks from './components/BuildInSixWeeks';
+import CurriculumSection from './components/CurriculumSection';
+import WhatYouGetSection from './components/WhatYouGetSection';
+import TestimonialsSection from './components/TestimonialsSection';
+import MoatAnalysisSection from './components/MoatAnalysisSection';
+import ReviewsSection from './components/ReviewsSection';
 import TrapSection from './components/TrapSection';
 import RealProblemSection from './components/RealProblemSection';
 import VSL from './components/VSL';
@@ -33,22 +40,25 @@ export default function Home() {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (mediaQuery.matches) return;
 
-    // Initialize Lenis smooth scrolling with ease-in-out
+    // Initialize Lenis smooth scrolling with enhanced inertia and "weight"
     const lenis = new Lenis({
-      duration: 1.8,
+      duration: 2.4,
       easing: (t) => {
-        // Custom ease-in-out cubic bezier approximation
-        if (t < 0.5) {
-          return 4 * t * t * t;
-        } else {
-          return 1 - Math.pow(-2 * t + 2, 3) / 2;
-        }
+        // Enhanced ease-in-out for more "weight"
+        const c1 = 1.70158;
+        const c2 = c1 * 1.525;
+        
+        return t < 0.5
+          ? (Math.pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2
+          : (Math.pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2;
       },
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 0.8,
-      touchMultiplier: 1.5,
+      wheelMultiplier: 0.6, // Reduced for more control
+      touchMultiplier: 1.8, // Increased for mobile inertia
+      syncTouch: true,
+      touchInertiaMultiplier: 35, // Add inertia for touch
       infinite: false,
     });
 
@@ -109,9 +119,16 @@ export default function Home() {
         <VSL />
         <PainPointSection />
         <SolutionSection />
+        <TomLetterSection />
+        <BuildInSixWeeks />
+        <CurriculumSection />
+        <WhatYouGetSection />
+        <TestimonialsSection />
+        <MoatAnalysisSection />
         <TrapSection />
         <RealProblemSection />
         <Features />
+        <ReviewsSection />
         <Proof />
         <FAQ />
         <Footer />
