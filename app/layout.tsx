@@ -4,6 +4,7 @@ import './globals.css';
 import { initAnalytics } from '@/lib/analytics';
 import Script from 'next/script';
 import content from '@/app/content/z21.json';
+import AnalyticsInit from '@/app/components/AnalyticsInit';
 
 export const metadata: Metadata = {
   title: content.seo.title,
@@ -99,18 +100,6 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased selection:bg-accent/10">
         {children}
-        <Script
-          id="analytics-init"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                ${initAnalytics.toString()}
-                initAnalytics();
-              })();
-            `,
-          }}
-        />
       </body>
     </html>
   );

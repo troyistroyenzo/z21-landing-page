@@ -23,10 +23,12 @@ function getTimeLeft(currentTime?: Date) {
 }
 
 const Countdown = () => {
-  const [timeLeft, setTimeLeft] = useState(getTimeLeft());
-  const [currentTime, setCurrentTime] = useState<Date | null>(null);
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [isLoading, setIsLoading] = useState(true);
+  const [useServerTime, setUseServerTime] = useState(false);
+  const [serverTimeOffset, setServerTimeOffset] = useState(0);
 
-  // Fetch accurate time from API
+  // Fetch accurate time from API on mount
   useEffect(() => {
     const fetchTime = async () => {
       try {
@@ -34,32 +36,44 @@ const Countdown = () => {
         if (response.ok) {
           const data = await response.json();
           const serverTime = new Date(data.datetime);
-          setCurrentTime(serverTime);
+          const localTime = new Date();
+          const offset = serverTime.getTime() - localTime.getTime();
+          
+          setServerTimeOffset(offset);
+          setUseServerTime(true);
           setTimeLeft(getTimeLeft(serverTime));
+          setIsLoading(false);
         }
       } catch (error) {
         console.log('Using local time as fallback');
         // Fallback to local time
+        setUseServerTime(false);
         setTimeLeft(getTimeLeft());
+        setIsLoading(false);
       }
     };
 
     fetchTime();
   }, []);
 
+  // Update countdown every second
   useEffect(() => {
+    if (isLoading) return;
+
     const timer = setInterval(() => {
-      if (currentTime) {
-        // Update based on server time
-        currentTime.setSeconds(currentTime.getSeconds() + 1);
-        setTimeLeft(getTimeLeft(currentTime));
+      if (useServerTime) {
+        // Calculate server time using offset
+        const localTime = new Date();
+        const serverTime = new Date(localTime.getTime() + serverTimeOffset);
+        setTimeLeft(getTimeLeft(serverTime));
       } else {
-        // Fallback to local time
+        // Use local time
         setTimeLeft(getTimeLeft());
       }
     }, 1000);
+
     return () => clearInterval(timer);
-  }, [currentTime]);
+  }, [isLoading, useServerTime, serverTimeOffset]);
 
   return (
     <section className="w-full bg-emerald-900 text-white py-3 px-4 overflow-x-hidden">

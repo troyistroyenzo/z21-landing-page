@@ -22,6 +22,7 @@ import Features from './components/Features';
 import Proof from './components/Proof';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
+import ClientsSection from './components/ClientsSection';
 
 // Loading component
 const PageLoading = () => (
@@ -128,6 +129,7 @@ export default function Home() {
         <TrapSection />
         <RealProblemSection />
         <Features />
+        <ClientsSection />
         <ReviewsSection />
         <Proof />
         <FAQ />
