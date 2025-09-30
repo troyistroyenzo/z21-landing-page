@@ -73,7 +73,16 @@ export default function RootLayout({
       <head>
         <link rel="canonical" href="https://z21founders.hq" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        
+
+        {/* Favicons */}
+        <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png" />
+        <link rel="icon" type="image/png" sizes="180x180" href="/favicon-180.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png" />
+        {/* Optionally keep .ico for legacy support */}
+        <link rel="shortcut icon" href="/favicon.ico" />
+
         {/* Preload critical fonts */}
         <link
           rel="preload"

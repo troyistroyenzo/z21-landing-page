@@ -49,7 +49,7 @@ const Header = () => {
               className="font-bold text-2xl md:text-3xl"
               style={{ color: '#AF977C' }}
             >
-              Founders
+              Z21 Launchpad
             </span>
           </motion.div>
 
