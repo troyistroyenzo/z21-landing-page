@@ -23,7 +23,6 @@ import Proof from './components/Proof';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import ClientsSection from './components/ClientsSection';
-import HeroNoske from './components/HeroNoske';
 
 // Loading component
 const PageLoading = () => (
