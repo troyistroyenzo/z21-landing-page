@@ -106,6 +106,19 @@ export default function RootLayout({
             })
           }}
         />
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-QXV287SDEN"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-QXV287SDEN');
+          `}
+        </Script>
       </head>
       <body className="font-sans antialiased selection:bg-accent/10">
         {children}
