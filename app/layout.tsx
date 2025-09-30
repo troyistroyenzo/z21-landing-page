@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     siteName: 'Z21 Launchpad',
     images: [
       {
-        url: 'https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/Z21%20Launchpad.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTDuu46cAy2TcG12e3qivppEG1i5nSyRkTthbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvWjIxIExhdW5jaHBhZC5wbmciLCJpYXQiOjE3NTkyMDgyOTAsImV4cCI6MTc5MDc0NDI5MH0.gPVpF1pgrSO25fWVDlKklfyERtd_7Ve9gvmTXue3NqY',
+        url: 'https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/Z21%20Launchpad.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTQzMGYtOWVkOC1iNzY3YzU1NDM5YzMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvWjIxIExhdW5jaHBhZC5wbmciLCJpYXQiOjE3NTkyMTA3NTYsImV4cCI6MTc5MDc0Njc1Nn0.bRnPFrPoqngX4p5ZEkMxxMMvPtnM62STkni0yARdSHA',
         width: 1200,
         height: 630,
         alt: 'Z21 Launchpad - Build Your Startup from Idea to Launch in 6 Weeks with AI',
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: content.seo.title,
     description: content.seo.description,
-    images: [content.seo.ogImage],
+    images: ['https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/Z21%20Launchpad.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTQzMGYtOWVkOC1iNzY3YzU1NDM5YzMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvWjIxIExhdW5jaHBhZC5wbmciLCJpYXQiOjE3NTkyMTA3NTYsImV4cCI6MTc5MDc0Njc1Nn0.bRnPFrPoqngX4p5ZEkMxxMMvPtnM62STkni0yARdSHA'],
     creator: content.seo.twitter,
   },
   robots: {
@@ -119,6 +119,9 @@ export default function RootLayout({
             gtag('config', 'G-QXV287SDEN');
           `}
         </Script>
+        {/* Social Thumbnail Fallbacks */}
+        <meta property="og:image" content="https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/Z21%20Launchpad.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTQzMGYtOWVkOC1iNzY3YzU1NDM5YzMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvWjIxIExhdW5jaHBhZC5wbmciLCJpYXQiOjE3NTkyMTA3NTYsImV4cCI6MTc5MDc0Njc1Nn0.bRnPFrPoqngX4p5ZEkMxxMMvPtnM62STkni0yARdSHA" />
+        <meta name="twitter:image" content="https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/Z21%20Launchpad.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTQzMGYtOWVkOC1iNzY3YzU1NDM5YzMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvWjIxIExhdW5jaHBhZC5wbmciLCJpYXQiOjE3NTkyMTA3NTYsImV4cCI6MTc5MDc0Njc1Nn0.bRnPFrPoqngX4p5ZEkMxxMMvPtnM62STkni0yARdSHA" />
       </head>
       <body className="font-sans antialiased selection:bg-accent/10">
         {children}
