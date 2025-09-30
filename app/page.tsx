@@ -120,18 +120,18 @@ export default function Home() {
         <VSL />
         <PainPointSection />
         <SolutionSection />
-        <TomLetterSection />
-        <BuildInSixWeeks />
-        <CurriculumSection />
-        <WhatYouGetSection />
-        <TestimonialsSection />
-        <MoatAnalysisSection />
+        {/* <TomLetterSection /> */}
+        {/* <BuildInSixWeeks /> */}
+        {/* <CurriculumSection /> */}
+        {/* <WhatYouGetSection /> */}
+        {/* <TestimonialsSection /> */}
+        {/* <MoatAnalysisSection /> */}
         <TrapSection />
         <RealProblemSection />
-        <Features />
+        {/* <Features /> */}
         <ClientsSection />
         <ReviewsSection />
-        <Proof />
+        {/* <Proof /> */}
         <FAQ />
         <Footer />
       </Suspense>
