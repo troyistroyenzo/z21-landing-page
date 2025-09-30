@@ -91,7 +91,7 @@ const Hero = () => {
               style={{ willChange: 'transform' }}
             >
 
-
+              Leverage AI, lean startup, and personal brand frameworks to ship a real offer and one production workflow.
             </motion.p>
 
             {/* CTA Buttons - centered on mobile */}
@@ -107,7 +107,7 @@ const Hero = () => {
                 className="group bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90 w-full sm:w-auto"
                 style={{ backgroundColor: '#C4A27A' }}
               >
-                Apply for Cohort 3
+                Learn More
                 <ArrowRightIcon className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
               </Button>
               <Button 
