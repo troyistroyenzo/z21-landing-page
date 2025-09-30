@@ -5,7 +5,7 @@ import Lenis from '@studio-freight/lenis';
 import { motion } from 'framer-motion';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import Countdown from './components/Countdown';
+import GlobalCountdown from './components/GlobalCountdown';
 import PainPointSection from './components/PainPointSection';
 import SolutionSection from './components/SolutionSection';
 import TomLetterSection from './components/TomLetterSection';
@@ -23,7 +23,7 @@ import Proof from './components/Proof';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import ClientsSection from './components/ClientsSection';
-
+import { StickerIcon } from 'lucide-react';
 // Loading component
 const PageLoading = () => (
   <div className="min-h-screen bg-background flex items-center justify-center">
@@ -116,7 +116,7 @@ export default function Home() {
       <Header />
       <Suspense fallback={<PageLoading />}>
         <Hero />
-        <Countdown />
+        <GlobalCountdown />
         <VSL />
         <PainPointSection />
         <SolutionSection />

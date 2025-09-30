@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import Lenis from '@studio-freight/lenis';
-import StickyHeader from '@/app/components/StickyHeader';
+import GlobalCountdown from '@/app/components/GlobalCountdown';
 import HeroNoske from '@/app/components/HeroNoske';
 import ProblemSection from '@/app/components/ProblemSection';
 import StorySection from '@/app/components/StorySection';
@@ -39,8 +39,8 @@ export default function NoskeLandingPage() {
 
   return (
     <main className="relative">
-      <StickyHeader />
       <HeroNoske />
+      <GlobalCountdown />
       
       {/* Separator strip */}
       <div className="bg-dark-green py-3 overflow-hidden">
