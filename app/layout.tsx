@@ -10,29 +10,29 @@ export const metadata: Metadata = {
   title: content.seo.title,
   description: content.seo.description,
   keywords: 'AI workflows, productivity, founders, cohort, automation, Z21, modern startup',
-  authors: [{ name: 'Z21 Founders' }],
-  creator: 'Z21 Founders',
-  publisher: 'Z21 Founders',
+  authors: [{ name: 'Z21 Launchpad' }],
+  creator: 'Z21 Launchpad',
+  publisher: 'Z21 Launchpad',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://z21founders.hq'),
+  metadataBase: new URL('https://z21hq.xyz'),
   alternates: {
     canonical: '/',
   },
-  openGraph: {
+ openGraph: {
     title: content.seo.title,
     description: content.seo.description,
-    url: 'https://z21founders.hq',
-    siteName: 'Z21 Founders',
+    url: 'https://z21hq.xyz',
+    siteName: 'Z21 Launchpad',
     images: [
       {
-        url: content.seo.ogImage,
+        url: 'https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/Z21%20Launchpad.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTDuu46cAy2TcG12e3qivppEG1i5nSyRkTthbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvWjIxIExhdW5jaHBhZC5wbmciLCJpYXQiOjE3NTkyMDgyOTAsImV4cCI6MTc5MDc0NDI5MH0.gPVpF1pgrSO25fWVDlKklfyERtd_7Ve9gvmTXue3NqY',
         width: 1200,
         height: 630,
-        alt: 'Z21 Founders - Transform AI potential into production power',
+        alt: 'Z21 Launchpad - Build Your Startup from Idea to Launch in 6 Weeks with AI',
       },
     ],
     locale: 'en_US',

@@ -90,8 +90,8 @@ const Hero = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
               style={{ willChange: 'transform' }}
             >
-              Install one production AI workflow, publish a 90s VSL, launch an offer page, 
-              and book 2+ qualified calls in 6 weeks.
+
+
             </motion.p>
 
             {/* CTA Buttons - centered on mobile */}
