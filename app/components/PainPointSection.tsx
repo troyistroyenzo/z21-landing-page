@@ -2,79 +2,90 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Cross2Icon } from '@radix-ui/react-icons';
+import Image from 'next/image';
 
-const PainPointSection = () => {
-  const painPoints = [
-    'You keep tinkering with AI tools. You keep posting.',
-    'But your pipeline stays flat.',
-    'You don\'t need a bigger audience.',
-    'You don\'t need to post daily.',
-    'You don\'t need another app or course.',
-    'You don\'t need more "AI pilots."',
-  ];
-
+const RealProblemSection = () => {
   return (
-    <section className="py-24 bg-gray-50">
+    <section className="py-24 bg-background">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Side - Content */}
+        <div className="grid lg:grid-cols-3 gap-12 items-center">
+          {/* Left Side - Content (2/3 width) */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.8 }}
+            className="lg:col-span-2"
           >
             {/* Title */}
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
-              WHAT HAPPENS WHEN YOU HAVE THE{' '}
-              <span className="text-green-600">IDEAS</span>
-              <br />
-              BUT NO SYSTEM TO SHIP A STARTUP?
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 leading-tight">
+              The Real Problem
             </h2>
+            <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-red-600 mb-8 leading-tight">
+              Isn&apos;t Your Idea.
+              <br />
+              It&apos;s Your System.
+            </h3>
 
-            {/* Grey Divider */}
-            <div className="w-full border-b border-gray-400/30 mb-8"></div>
-
-            {/* Pain Points List */}
-            <div className="space-y-4">
-              {painPoints.map((point, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="flex items-start gap-4 group"
-                >
-                  <div className="flex-shrink-0 w-6 h-6 mt-1 bg-red-50 rounded-full flex items-center justify-center border border-red-200 group-hover:bg-red-100 transition-colors duration-200">
-                    <Cross2Icon className="w-3 h-3 text-red-500" />
-                  </div>
-                  <p className="text-lg text-gray-700 leading-relaxed">
-                    {point}
-                  </p>
-                </motion.div>
-              ))}
+            {/* Content */}
+            <div className="prose prose-lg max-w-none text-white space-y-6">
+              <p>
+                Most zero→one efforts don&apos;t stall from lack of talent. They stall because the system is wrong.
+              </p>
+              
+              <p>
+                We build visibility instead of value. We stack tools instead of workflows. We create motion—but nothing compounds.
+              </p>
+              
+              <p>
+                We think &ldquo;more content&rdquo; or &ldquo;another AI app&rdquo; is the answer. But content without clarity is noise. And an AI pilot without production is a demo.
+              </p>
+              
+              <p>
+                If your revenue depends on your personal output, you don&apos;t have leverage—you have a treadmill. The moment you rest, momentum disappears.
+              </p>
+              
+              <div className="bg-gray-50 p-6 rounded-xl border-l-4 border-gray-400">
+                <p className="font-semibold text-gray-800">
+                  The truth is simple: Content is how people find you. Business is what happens after they do.
+                </p>
+              </div>
+              
+              <p>
+                If you don&apos;t have a system that turns attention → trust → a premium offer—and installs one workflow in production to deliver consistently—you&apos;re not building a company. You&apos;re renting momentum.
+              </p>
+              
+              <div className="bg-green-50 p-8 rounded-xl border-l-4 border-green-500">
+                <p className="text-green-800 font-semibold mb-4">
+                  <strong>Z21 fixes the system: identity → system → proof.</strong>
+                </p>
+                <p className="text-green-700">
+                  Offer live, 90-sec VSL, 2+ qualified calls, and one production AI workflow in 6 weeks—so you finally move from tinkering to operating.
+                </p>
+              </div>
             </div>
           </motion.div>
 
-          {/* Right Side - Image Holder */}
+          {/* Right Side - Vertical Image (1/3 width) */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-200px' }}
+            viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative"
+            className="lg:col-span-1"
           >
-            <div className="relative">
-              {/* Actual Image */}
-              <img 
-                src="https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/DSC02916.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTQzMGYtOWVkOC1iNzY3YzU1NDM5YzMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvRFNDMDI5MTYuanBnIiwiaWF0IjoxNzU4NzcwNzQ4LCJleHAiOjE3OTAzMDY3NDh9.TrJCKhG6Ee3WQkGeDr3IiDuE_zuTcWK671fkXYXuC3A"
-                alt="Startup founder working"
-                className="aspect-square w-full object-cover rounded-xl"
-              />
+            <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-8 shadow-xl border border-gray-200">
+              {/* Vertical Image */}
+              
+                <Image
+                  src="https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/DSC05796.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTQzMGYtOWVkOC1iNzY3YzU1NDM5YzMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvRFNDMDU3OTYuanBnIiwiaWF0IjoxNzU5Mzc0ODQ3LCJleHAiOjE3OTA5MTA4NDd9.7ECIKPJo7Yes3hy-JhfXNyxqbeXCiEYlLA7IUpMkMfM"
+                  alt="Z21 Program Dashboard"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              
             </div>
-
           </motion.div>
         </div>
       </div>
@@ -82,4 +93,4 @@ const PainPointSection = () => {
   );
 };
 
-export default PainPointSection;
+export default RealProblemSection;

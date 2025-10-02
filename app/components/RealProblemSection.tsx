@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { GearIcon } from '@radix-ui/react-icons';
+import Image from 'next/image';
 
 const RealProblemSection = () => {
   return (
@@ -74,23 +75,19 @@ const RealProblemSection = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="lg:col-span-1"
           >
-            <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-8 shadow-xl border border-gray-200">
+            <div className="relative">
               {/* Vertical Image Placeholder */}
-              <div className="aspect-[3/4] bg-gray-300 rounded-xl flex items-center justify-center">
-                <div className="text-center">
-                  <GearIcon className="w-16 h-16 mx-auto mb-4 text-gray-500" />
-                  <p className="text-gray-600 font-medium mb-2">Vertical Image</p>
-                  <p className="text-sm text-gray-500">System visualization</p>
-                </div>
-              </div>
+              <div className="aspect-[16/9] relative rounded-xl overflow-hidden">
+  <Image
+    src="https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/DSC05796.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTQzMGYtOWVkOC1iNzY3YzU1NDM5YzMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvRFNDMDU3OTYuanBnIiwiaWF0IjoxNzU5Mzc0ODQ3LCJleHAiOjE3OTA5MTA4NDd9.7ECIKPJo7Yes3hy-JhfXNyxqbeXCiEYlLA7IUpMkMfM"
+    alt="Z21 Program Dashboard"
+    fill
+    className="object-cover rounded-xl"
+    priority
+  />
+</div>
 
-              {/* Decorative Elements */}
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-100 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
-                <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-              </div>
-              <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
-                <GearIcon className="w-4 h-4 text-green-600" />
-              </div>
+             
             </div>
           </motion.div>
         </div>
