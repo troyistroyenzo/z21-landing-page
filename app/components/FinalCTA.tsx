@@ -34,19 +34,6 @@ export default function FinalCTA() {
             {content.hero.primaryCta.label}
           </Link>
 
-          {/* Social proof */}
-          <div className="mt-16 pt-16 border-t border-dark-green/10">
-            <p className="text-sm text-muted-green/60 uppercase tracking-wider mb-4">
-              Join founders from
-            </p>
-            <div className="flex flex-wrap justify-center gap-8 opacity-50">
-              {['Google', 'Meta', 'OpenAI', 'Stripe', 'Y Combinator'].map((company) => (
-                <span key={company} className="text-dark-green/40 font-medium">
-                  {company}
-                </span>
-              ))}
-            </div>
-          </div>
         </motion.div>
       </Container>
 

@@ -8,18 +8,9 @@ import Hero from './components/Hero';
 import GlobalCountdown from './components/GlobalCountdown';
 import PainPointSection from './components/PainPointSection';
 import SolutionSection from './components/SolutionSection';
-import TomLetterSection from './components/TomLetterSection';
-import BuildInSixWeeks from './components/BuildInSixWeeks';
-import CurriculumSection from './components/CurriculumSection';
-import WhatYouGetSection from './components/WhatYouGetSection';
 import TestimonialsSection from './components/TestimonialsSection';
-import MoatAnalysisSection from './components/MoatAnalysisSection';
-import ReviewsSection from './components/ReviewsSection';
 import TrapSection from './components/TrapSection';
-import RealProblemSection from './components/RealProblemSection';
 import VSL from './components/VSL';
-import Features from './components/Features';
-import Proof from './components/Proof';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import ClientsSection from './components/ClientsSection';
@@ -27,7 +18,6 @@ import { StickerIcon } from 'lucide-react';
 import ProblemSection from './components/ProblemSection';
 import StorySection from './components/StorySection';
 import FormulaCards from './components/FormulaCards';
-import DifferentiatorsSection from './components/DifferentiatorsSection';
 import RoadmapSection from './components/RoadmapSection';
 import FinalCTA from './components/FinalCTA';
 // Loading component
@@ -79,28 +69,20 @@ export default function Home() {
         <Hero />
         <GlobalCountdown />
         <VSL />
+        <ProblemSection />
         <PainPointSection />
-        <SolutionSection />
-        {/* <TomLetterSection /> */}
-        {/* <BuildInSixWeeks /> */}
-        {/* <CurriculumSection /> */}
-        {/* <WhatYouGetSection /> */}
-        {/* <TestimonialsSection /> */}
-        {/* <MoatAnalysisSection /> */}
         <TrapSection />
-        <RealProblemSection />
-        {/* <Features /> */}
+        <SolutionSection />
         <ClientsSection />
-        <ReviewsSection />
-        {/* <Proof /> */}
-          <ProblemSection />
-      <StorySection />
-      <FormulaCards />
-      <DifferentiatorsSection />
-      <RoadmapSection />
-      <FinalCTA />
+        <TestimonialsSection />
+        <StorySection />
+        <FormulaCards />
+        <RoadmapSection />
+        <FinalCTA />
         <FAQ />
         <Footer />
+
+        
       </Suspense>
     </motion.main>
   );
