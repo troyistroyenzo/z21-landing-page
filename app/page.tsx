@@ -24,6 +24,12 @@ import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import ClientsSection from './components/ClientsSection';
 import { StickerIcon } from 'lucide-react';
+import ProblemSection from './components/ProblemSection';
+import StorySection from './components/StorySection';
+import FormulaCards from './components/FormulaCards';
+import DifferentiatorsSection from './components/DifferentiatorsSection';
+import RoadmapSection from './components/RoadmapSection';
+import FinalCTA from './components/FinalCTA';
 // Loading component
 const PageLoading = () => (
   <div className="min-h-screen bg-background flex items-center justify-center">
@@ -37,29 +43,15 @@ const PageLoading = () => (
 
 export default function Home() {
   useEffect(() => {
-    // Check for reduced motion preference
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (mediaQuery.matches) return;
-
-    // Initialize Lenis smooth scrolling with enhanced inertia and "weight"
+    // Initialize Lenis smooth scrolling
     const lenis = new Lenis({
-      duration: 2.4,
-      easing: (t) => {
-        // Enhanced ease-in-out for more "weight"
-        const c1 = 1.70158;
-        const c2 = c1 * 1.525;
-        
-        return t < 0.5
-          ? (Math.pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2
-          : (Math.pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2;
-      },
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 0.6, // Reduced for more control
-      touchMultiplier: 1.8, // Increased for mobile inertia
-      syncTouch: true,
-      touchInertiaMultiplier: 35, // Add inertia for touch
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
       infinite: false,
     });
 
@@ -70,39 +62,8 @@ export default function Home() {
 
     requestAnimationFrame(raf);
 
-    // Handle anchor links with smooth scrolling
-    const handleAnchorClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const anchor = target.closest('a[href^="#"]');
-      
-      if (anchor) {
-        e.preventDefault();
-        const href = anchor.getAttribute('href');
-        if (href && href !== '#') {
-          const element = document.querySelector(href) as HTMLElement;
-          if (element) {
-            lenis.scrollTo(element, {
-              offset: -80,
-              duration: 2,
-              easing: (t) => {
-                // Ease-in-out for anchor links
-                if (t < 0.5) {
-                  return 4 * t * t * t;
-                } else {
-                  return 1 - Math.pow(-2 * t + 2, 3) / 2;
-                }
-              },
-            });
-          }
-        }
-      }
-    };
-
-    document.addEventListener('click', handleAnchorClick);
-
     return () => {
       lenis.destroy();
-      document.removeEventListener('click', handleAnchorClick);
     };
   }, []);
 
@@ -132,6 +93,12 @@ export default function Home() {
         <ClientsSection />
         <ReviewsSection />
         {/* <Proof /> */}
+          <ProblemSection />
+      <StorySection />
+      <FormulaCards />
+      <DifferentiatorsSection />
+      <RoadmapSection />
+      <FinalCTA />
         <FAQ />
         <Footer />
       </Suspense>
