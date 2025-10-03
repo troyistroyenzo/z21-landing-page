@@ -1,106 +1,94 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import Container from './Container';
-import { X, Check } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 
 export default function ProblemSection() {
-  const myths = [
-    "You need to be an AI expert to leverage AI",
-    "AI will replace your job entirely",
-    "Only tech companies can benefit from AI",
-    "AI is too complex for small teams"
-  ];
-
-  const truths = [
-    "AI is a tool that amplifies your existing skills",
-    "Human expertise + AI creates unstoppable value",
-    "Every industry can apply AI workflows today",
-    "Start small with one workflow, scale from there"
+  const macroProblemPoints = [
+    "Optimizing for content output, not offer throughput",
+    "Pilots never cross to production workflows",
+    "Data silos break handoffs weekly",
+    "Revenue stops when you stop"
   ];
 
   return (
-    <section className="py-24 lg:py-32 gradient-dark">
+    <section className="py-16 lg:py-20 gradient-dark">
       <Container>
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Left: Image */}
+        {/* Macro Problem - Condensed */}
+        <div className="max-w-4xl mx-auto mb-16">
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="relative"
+            transition={{ duration: 0.6 }}
+            className="text-center mb-8"
           >
-            <div className="relative rounded-2xl overflow-hidden shadow-deep">
-              {/* Placeholder for image */}
-              <div className="aspect-[4/5] bg-gradient-to-br from-darker-green to-dark-green">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center px-8">
-                    <p className="text-tan text-display-sm font-heading uppercase tracking-wider mb-4">
-                      The Gap
-                    </p>
-                    <p className="text-off-white/80 text-lg">
-                      Between AI potential and production reality
-                    </p>
-                  </div>
-                </div>
-                {/* Decorative overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-              </div>
-            </div>
+            <h2 className="text-display-sm md:text-display text-off-white font-heading uppercase tracking-wide mb-4">
+              The blocker isn't talent — <span className="text-tan">it's your system</span>
+            </h2>
+            <p className="text-lg text-muted-green/80">
+              Visibility without velocity. Tools without workflows.
+            </p>
           </motion.div>
 
-          {/* Right: Problem statement and myths/truths */}
+          {/* Compact Macro Points Grid */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="grid md:grid-cols-2 gap-3 mb-8"
           >
-            <h2 className="text-display-sm md:text-display text-off-white font-heading uppercase tracking-wide mb-8">
-              The problem isn't you — <br />
-              <span className="text-tan">it's your system</span>
-            </h2>
+            {macroProblemPoints.map((point, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+                className="flex items-center gap-3 bg-darker-green/30 border border-dark-green/30 rounded-lg p-4"
+              >
+                <AlertCircle className="w-4 h-4 text-tan flex-shrink-0" />
+                <p className="text-off-white/90 text-sm">{point}</p>
+              </motion.div>
+            ))}
+          </motion.div>
 
-            <div className="space-y-6">
-              {/* Myths */}
-              <div className="space-y-3">
-                <p className="text-tan/60 text-sm uppercase tracking-wider">Common Myths</p>
-                {myths.map((myth, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.05 }}
-                    className="flex items-start gap-3"
-                  >
-                    <X className="w-5 h-5 text-error-red mt-1 flex-shrink-0" />
-                    <p className="text-muted-green line-through opacity-75">
-                      {myth}
-                    </p>
-                  </motion.div>
-                ))}
+          {/* Punchline - Smaller */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-center bg-gradient-to-r from-dark-green/30 to-darker-green/30 border border-tan/20 rounded-lg p-6"
+          >
+            <p className="text-lg text-off-white">
+              Content finds you. <span className="text-tan font-medium">Systems deliver value on repeat.</span>
+            </p>
+          </motion.div>
+
+          {/* Z21 Frame - Compact */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-8 border border-tan/20 rounded-lg p-4"
+          >
+            <div className="grid md:grid-cols-3 gap-4 text-center">
+              <div>
+                <p className="text-tan text-sm font-medium">Identity</p>
+                <p className="text-off-white/70 text-xs">Clear premium promise</p>
               </div>
-
-              {/* Truths */}
-              <div className="space-y-3">
-                <p className="text-tan/60 text-sm uppercase tracking-wider mt-8">The Reality</p>
-                {truths.map((truth, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.05 }}
-                    className="flex items-start gap-3"
-                  >
-                    <Check className="w-5 h-5 text-success-green mt-1 flex-shrink-0" />
-                    <p className="text-off-white/90">
-                      {truth}
-                    </p>
-                  </motion.div>
-                ))}
+              <div>
+                <p className="text-tan text-sm font-medium">System</p>
+                <p className="text-off-white/70 text-xs">AI-assisted workflow</p>
+              </div>
+              <div>
+                <p className="text-tan text-sm font-medium">Proof</p>
+                <p className="text-off-white/70 text-xs">2+ calls/week, shipped</p>
               </div>
             </div>
           </motion.div>

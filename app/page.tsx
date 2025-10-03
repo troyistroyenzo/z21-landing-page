@@ -68,8 +68,8 @@ export default function Home() {
         <Hero />
         <GlobalCountdown />
         <VSL />
-        <ProblemSection />
         <PainPointSection />
+        <ProblemSection />
         <TrapSection />
         <SolutionSection />
         <ClientsSection />
