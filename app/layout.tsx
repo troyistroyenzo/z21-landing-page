@@ -4,7 +4,6 @@ import './globals.css';
 import { initAnalytics } from '@/lib/analytics';
 import Script from 'next/script';
 import content from '@/app/content/z21.json';
-import AnalyticsInit from '@/app/components/AnalyticsInit';
 
 export const metadata: Metadata = {
   title: content.seo.title,
