@@ -1,4 +1,4 @@
-import TypeformCTAButton from '@/app/components/TypeformCTAButton';
+import TypeformCTAButton from '@/app/cta-demo/components/TypeformCTAButton';
 
 export default function CTADemoPage() {
   return (

@@ -14,7 +14,6 @@ import VSL from './components/VSL';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import ClientsSection from './components/ClientsSection';
-import { StickerIcon } from 'lucide-react';
 import ProblemSection from './components/ProblemSection';
 import StorySection from './components/StorySection';
 import FormulaCards from './components/FormulaCards';

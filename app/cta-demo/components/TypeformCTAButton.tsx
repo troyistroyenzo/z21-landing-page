@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import TypeformCTA from './TypeformCTA';
+import TypeformCTA from '../components/TypeformCTA';
 import { cn } from '@/lib/utils';
 
 interface TypeformCTAButtonProps {
