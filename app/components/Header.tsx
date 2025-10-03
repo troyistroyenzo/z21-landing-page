@@ -68,10 +68,9 @@ const Header = () => {
             ))}
             {/* Apply Now button inline with nav */}
             <Button 
-              variant="primary" 
+              variant="ghost" 
               size="md"
               className="bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90"
-              style={{ backgroundColor: '#C4A27A' }}
             >
               Apply Now
             </Button>
@@ -117,7 +116,7 @@ const Header = () => {
                   variant="primary" 
                   size="lg" 
                   className="w-full bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90"
-                  style={{ backgroundColor: '#C4A27A' }}
+                  
                 >
                   Apply Now
                 </Button>

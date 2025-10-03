@@ -79,17 +79,13 @@ export default function GlobalCountdown() {
           {/* Desktop Layout */}
           <div className="hidden md:flex items-center justify-between gap-4 h-16">
             {/* Left Section - Logo and Cohort Info */}
-            <div className="flex items-center gap-6 px-6">
+            <div className="flex items-center gap-6 px-1">
               <Link href="/" className="text-off-white font-heading font-bold text-xl tracking-wider">
-                <Logo width={28} height={28} className="w-7 h-7 flex-shrink-0 inline-block mr-2" />
-                Z21
+                <Logo width={48} height={48} className="w-7 h-7 flex-shrink-0 inline-block mr-2" />
               </Link>
-              <div className="flex items-center gap-4">
-                <span className="text-tan text-caption uppercase tracking-wide">
-                  NEXT COHORT OPENS ON <span className="text-yellow-400 font-bold">JANUARY 31</span>
-                </span>
+              <div className="flex items-center gap-1">
                 <span className="text-muted-green text-caption uppercase tracking-wide">
-                  • BY APPLICATION ONLY • LIMITED TO <span className="text-yellow-400 font-bold">80 SPOTS</span>
+                  • BY APPLICATION ONLY • LIMITED TO <span className="text-tan font-bold">80 SPOTS</span>
                 </span>
               </div>
             </div>
@@ -117,13 +113,14 @@ export default function GlobalCountdown() {
             </div>
             {/* Right Section - Apply Button */}
             <div className="flex items-center px-6">
-              <Button
-                variant="primary"
-                size="sm"
-                className="bg-yellow-400 hover:bg-yellow-500 text-emerald-900 border-yellow-400 hover:border-yellow-500 font-bold uppercase tracking-wide text-xs px-4 py-2"
-              >
-                APPLY NOW
-              </Button>
+              <Button 
+              variant="primary" 
+              size="md"
+              className="bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90"
+              style={{ backgroundColor: '#AE9370' }}
+            >
+              Apply Now
+            </Button>
             </div>
           </div>
           {/* Mobile Layout - Simplified Single Row */}
@@ -138,29 +135,30 @@ export default function GlobalCountdown() {
               {/* Mobile Countdown */}
               <div className="flex items-center gap-2">
                 <div className="text-center">
-                  <div className="text-base font-bold text-yellow-400">{formatNumber(timeLeft.days)}</div>
+                  <div className="text-base font-bold text-tan">{formatNumber(timeLeft.days)}</div>
                   <div className="text-[8px] text-gray-300 uppercase">D</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-base font-bold text-yellow-400">{formatNumber(timeLeft.hours)}</div>
+                  <div className="text-base font-bold text-tan">{formatNumber(timeLeft.hours)}</div>
                   <div className="text-[8px] text-gray-300 uppercase">H</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-base font-bold text-yellow-400">{formatNumber(timeLeft.minutes)}</div>
+                  <div className="text-base font-bold text-tan">{formatNumber(timeLeft.minutes)}</div>
                   <div className="text-[8px] text-gray-300 uppercase">M</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-base font-bold text-yellow-400">{formatNumber(timeLeft.seconds)}</div>
+                  <div className="text-base font-bold text-tan">{formatNumber(timeLeft.seconds)}</div>
                   <div className="text-[8px] text-gray-300 uppercase">S</div>
                 </div>
               </div>
-              <Button
-                variant="primary"
-                size="sm"
-                className="bg-yellow-400 hover:bg-yellow-500 text-emerald-900 border-yellow-400 hover:border-yellow-500 font-bold uppercase text-[10px] px-3 py-1.5"
-              >
-                APPLY
-              </Button>
+              <Button 
+              variant="primary" 
+              size="md"
+              className="bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90"
+              style={{ backgroundColor: '#AE9370' }}
+            >
+              Apply Now
+            </Button>
             </div>
           </div>
         </div>

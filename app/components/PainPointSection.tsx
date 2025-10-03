@@ -121,7 +121,7 @@ export default function PainPointsSection() {
                   </div>
 
                   <div className="flex items-start gap-2">
-                    <AlertCircle className="w-3.5 h-3.5 mt-0.5 text-yellow-400/70 flex-shrink-0" />
+                    <AlertCircle className="w-3.5 h-3.5 mt-0.5 text-tan/70 flex-shrink-0" />
                     <span className="text-off-white/60 italic">{item.hurt}</span>
                   </div>
                 </div>

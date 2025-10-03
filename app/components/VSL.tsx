@@ -80,13 +80,6 @@ const VSL = () => {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, delay: 0.8 }}
         >
-          <Button 
-            variant="primary" 
-            size="lg"
-            className="bg-yellow-400 hover:bg-yellow-500 text-emerald-900 border-yellow-400 hover:border-yellow-500"
-          >
-            Start Your Transformation
-          </Button>
         </motion.div>
       </div>
     </section>

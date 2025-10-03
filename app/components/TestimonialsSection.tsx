@@ -44,7 +44,7 @@ const TestimonialsSection = () => {
         >
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
             What Happens When You
-            <span className="block text-yellow-400">Build the Right System</span>
+            <span className="block text-tan">Build the Right System</span>
           </h2>
           <p className="text-xl text-emerald-200 max-w-3xl mx-auto">
             These aren't just testimonials. Here's what happens when creators stop posting randomly 
@@ -62,9 +62,9 @@ const TestimonialsSection = () => {
               transition={{ duration: 0.6, delay: index * 0.15 }}
               className="relative"
             >
-              <div className="bg-emerald-900/30 backdrop-blur-sm rounded-xl p-6 border border-emerald-700/30 hover:border-yellow-400/30 transition-all duration-300 h-full">
+              <div className="bg-emerald-900/30 backdrop-blur-sm rounded-xl p-6 border border-emerald-700/30 hover:border-tan/30 transition-all duration-300 h-full">
                 <div className="mb-4">
-                  <QuoteIcon className="w-8 h-8 text-yellow-400/30" />
+                  <QuoteIcon className="w-8 h-8 text-tan/30" />
                 </div>
                 
                 <p className="text-emerald-100 mb-6 italic">
@@ -73,7 +73,7 @@ const TestimonialsSection = () => {
                 
                 <div className="border-t border-emerald-700/30 pt-4">
                   <div className="mb-4">
-                    <div className="text-2xl font-bold text-yellow-400 mb-1">
+                    <div className="text-2xl font-bold text-tan mb-1">
                       {testimonial.metric}
                     </div>
                     <div className="text-sm text-emerald-400">
@@ -87,7 +87,7 @@ const TestimonialsSection = () => {
                       <div className="text-sm text-emerald-300">{testimonial.role}</div>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm text-yellow-400 font-bold flex items-center">
+                      <div className="text-sm text-tan font-bold flex items-center">
                         <ArrowUpIcon className="w-4 h-4 mr-1" />
                         {testimonial.result}
                       </div>

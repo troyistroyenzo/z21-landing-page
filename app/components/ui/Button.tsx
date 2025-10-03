@@ -14,7 +14,7 @@ interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', loading, children, ...props }, ref) => {
     const variants = {
-      primary: 'bg-green-600 text-white hover:bg-green-700 active:bg-green-800 shadow-green-lg',
+      primary: 'bg-tan text-emerald-900 hover:bg-tan/90 active:bg-tan/80 shadow-green-lg',
       secondary: 'bg-accent text-white hover:bg-accent-dark shadow-lg',
       ghost: 'bg-transparent text-foreground hover:bg-green-50 active:bg-green-100',
       outline: 'bg-transparent text-green-600 border border-green-300 hover:bg-green-50 hover:border-green-400 shadow-green',

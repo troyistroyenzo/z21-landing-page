@@ -18,7 +18,8 @@ const config: Config = {
       colors: {
         background: '#fafafa',
         foreground: '#0a0a0a',
-        gold: '#C4A27A',
+        gold: '#AE9370',
+        tan: '#AE9370',
         accent: {
           DEFAULT: '#0070f3',
           dark: '#0061d5',
