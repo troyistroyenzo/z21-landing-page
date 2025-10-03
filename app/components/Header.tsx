@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import Button from './ui/Button';
@@ -67,13 +68,15 @@ const Header = () => {
               </motion.a>
             ))}
             {/* Apply Now button inline with nav */}
-            <Button 
-              variant="ghost" 
-              size="md"
-              className="bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90"
-            >
-              Apply Now
-            </Button>
+            <Link href="/cta-demo">
+              <Button 
+                variant="ghost" 
+                size="md"
+                className="bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90"
+              >
+                Apply Now
+              </Button>
+            </Link>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -112,14 +115,16 @@ const Header = () => {
                 </motion.a>
               ))}
               <div className="pt-4">
-                <Button 
-                  variant="primary" 
-                  size="lg" 
-                  className="w-full bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90"
-                  
-                >
-                  Apply Now
-                </Button>
+                <Link href="/cta-demo" className="block">
+                  <Button 
+                    variant="primary" 
+                    size="lg" 
+                    className="w-full bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90"
+                    
+                  >
+                    Apply Now
+                  </Button>
+                </Link>
               </div>
             </div>
           </motion.div>

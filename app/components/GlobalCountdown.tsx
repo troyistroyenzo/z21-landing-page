@@ -113,14 +113,16 @@ export default function GlobalCountdown() {
             </div>
             {/* Right Section - Apply Button */}
             <div className="flex items-center px-6">
-              <Button 
-              variant="primary" 
-              size="md"
-              className="bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90"
-              style={{ backgroundColor: '#AE9370' }}
-            >
-              Apply Now
-            </Button>
+              <Link href="/cta-demo">
+                <Button 
+                variant="primary" 
+                size="md"
+                className="bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90"
+                style={{ backgroundColor: '#AE9370' }}
+              >
+                Apply Now
+              </Button>
+              </Link>
             </div>
           </div>
           {/* Mobile Layout - Simplified Single Row */}
@@ -151,14 +153,16 @@ export default function GlobalCountdown() {
                   <div className="text-[8px] text-gray-300 uppercase">S</div>
                 </div>
               </div>
-              <Button 
-              variant="primary" 
-              size="md"
-              className="bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90"
-              style={{ backgroundColor: '#AE9370' }}
-            >
-              Apply Now
-            </Button>
+              <Link href="/cta-demo">
+                <Button 
+                variant="primary" 
+                size="md"
+                className="bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90"
+                style={{ backgroundColor: '#AE9370' }}
+              >
+                Apply Now
+              </Button>
+              </Link>
             </div>
           </div>
         </div>
