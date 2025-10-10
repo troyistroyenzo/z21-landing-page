@@ -53,20 +53,25 @@ export default function StorySection() {
             className="relative"
           >
             <div className="relative rounded-2xl overflow-hidden shadow-card">
-              {/* Placeholder for portrait */}
-              <div className="aspect-[3/4] bg-gradient-to-br from-dark-green to-darker-green">
+              {/* Portrait image */}
+              <div className="aspect-[3/4] relative">
+                <img 
+                  src="https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/IMG_8850.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTQzMGYtOWVkOC1iNzY3YzU1NDM5YzMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvSU1HXzg4NTAuanBnIiwiaWF0IjoxNzYwMDU4NjYzLCJleHAiOjE3OTE1OTQ2NjN9.QsYR1KindfXNbFLOkZsEMRiRqvliPE9UkWFj5hcqWak"
+                  alt="Z21 Team Founder"
+                  className="w-full h-full object-cover"
+                />
                 <div className="absolute inset-0 flex items-end justify-center pb-12">
                   <div className="text-center">
                     <p className="text-off-white/80 text-sm uppercase tracking-wider mb-2">
                       Founded by
                     </p>
                     <p className="text-tan text-2xl font-heading uppercase tracking-wide">
-                      Z21 Team
+                      Troy
                     </p>
                   </div>
                 </div>
                 {/* Decorative overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               </div>
             </div>
             

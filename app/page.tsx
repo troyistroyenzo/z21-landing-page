@@ -18,6 +18,7 @@ import ProblemSection from './components/ProblemSection';
 import StorySection from './components/StorySection';
 import FormulaCards from './components/FormulaCards';
 import RoadmapSection from './components/RoadmapSection';
+import CoursesSection from './components/CoursesSection';
 import FinalCTA from './components/FinalCTA';
 // Loading component
 const PageLoading = () => (
@@ -75,6 +76,7 @@ export default function Home() {
         <ClientsSection />
         <TestimonialsSection />
         <StorySection />
+        <CoursesSection />
         <FormulaCards />
         <RoadmapSection />
         <FinalCTA />
