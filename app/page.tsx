@@ -74,7 +74,7 @@ export default function Home() {
         <TrapSection />
         <SolutionSection />
         <ClientsSection />
-        <TestimonialsSection />
+        {/* <TestimonialsSection /> */}
         <StorySection />
         <CoursesSection />
         <FormulaCards />

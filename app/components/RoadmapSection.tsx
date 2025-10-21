@@ -231,7 +231,7 @@ export default function RoadmapSection() {
   };
 
   return (
-    <section className="py-24 lg:py-32 bg-dark-green">
+    <section id="curriculum" className="py-24 lg:py-32 bg-dark-green">
       <Container>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

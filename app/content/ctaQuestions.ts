@@ -140,9 +140,9 @@ export const ctaQuestions: Question[] = [
 
 // Optional: Thank you message configuration
 export const thankYouConfig = {
-  title: "You're in! 🎉",
-  subtitle: "Welcome to Z21 Founders",
-  message: "Check your email for next steps. We'll be in touch within 24 hours with your personalized onboarding plan.",
+  title: "Application Submitted! ✓",
+  subtitle: "Thanks for applying to Z21 Founders",
+  message: "We've received your application and will review it carefully. Expect to hear from us within 24-48 hours about next steps.",
   ctaText: "Back to Homepage",
   ctaLink: "/"
 };

@@ -9,7 +9,7 @@ const VSL = () => {
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
 
   return (
-    <section ref={sectionRef} className="py-24 bg-#9FA3A2s">
+    <section id="vsl" ref={sectionRef} className="py-24 bg-#9FA3A2s">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <motion.div

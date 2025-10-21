@@ -5,11 +5,11 @@ export default function CTADemoPage() {
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-8">
       <div className="max-w-4xl mx-auto text-center space-y-8">
         <h1 className="text-5xl font-bold bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
-          Typeform CTA Demo
+          Join Z21 Launchpad
         </h1>
         
         <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-          This is a demo page for testing the Typeform-style CTA. Click any button below to see the form in action.
+          Build {'>'} talk. We ship, measure, repeat.
         </p>
 
         <div className="flex flex-col items-center gap-8 mt-12">
@@ -20,7 +20,7 @@ export default function CTADemoPage() {
           />
         </div>
 
-        <div className="mt-16 p-6 bg-zinc-900 rounded-lg border border-zinc-800">
+        {/* <div className="mt-16 p-6 bg-zinc-900 rounded-lg border border-zinc-800">
           <h2 className="text-2xl font-semibold mb-4">Implementation Notes</h2>
           <div className="text-left space-y-4 text-zinc-400">
             <div>
@@ -53,7 +53,7 @@ export default function CTADemoPage() {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

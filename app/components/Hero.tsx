@@ -8,6 +8,40 @@ import Button from './ui/Button';
 const Hero = () => {
   const { scrollY } = useScroll();
   
+  // Smooth scroll function with ease-in-out
+  const smoothScrollTo = (targetId: string) => {
+    const target = document.getElementById(targetId);
+    if (!target) return;
+
+    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset;
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    const duration = 1500; // 1.5 seconds
+    let start: number | null = null;
+
+    // Ease-in-out cubic function
+    const easeInOutCubic = (t: number): number => {
+      return t < 0.5 
+        ? 4 * t * t * t 
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    };
+
+    const animation = (currentTime: number) => {
+      if (start === null) start = currentTime;
+      const timeElapsed = currentTime - start;
+      const progress = Math.min(timeElapsed / duration, 1);
+      const ease = easeInOutCubic(progress);
+      
+      window.scrollTo(0, startPosition + distance * ease);
+      
+      if (timeElapsed < duration) {
+        requestAnimationFrame(animation);
+      }
+    };
+
+    requestAnimationFrame(animation);
+  };
+  
   // Optimized parallax transforms for mobile performance
   const backgroundY = useTransform(scrollY, [0, 800], ['0%', '15%']);
   const contentY = useTransform(scrollY, [0, 600], ['0%', '-5%']);
@@ -91,7 +125,7 @@ const Hero = () => {
               style={{ willChange: 'transform' }}
             >
 
-              Leverage AI, lean startup, and personal brand frameworks to ship a real offer and one production workflow.
+              Leverage AI, lean startup, and personal brand frameworks to build a product with an outstanding offer from zero to one.
             </motion.p>
 
             {/* CTA Buttons - centered on mobile */}
@@ -104,8 +138,9 @@ const Hero = () => {
               <Button 
                 variant="primary" 
                 size="lg" 
-                className="group bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90 w-full sm:w-auto"
+                className="group bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90 w-full sm:w-auto cursor-pointer"
                 style={{ backgroundColor: '#AE9370' }}
+                onClick={() => smoothScrollTo('curriculum')}
               >
                 Learn More
                 <ArrowRightIcon className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
@@ -113,7 +148,8 @@ const Hero = () => {
               <Button 
                 variant="ghost" 
                 size="lg"
-                className="w-full sm:w-auto text-white border-white/30 hover:bg-white/10"
+                className="w-full sm:w-auto text-white border-white/30 hover:bg-white/10 cursor-pointer"
+                onClick={() => smoothScrollTo('vsl')}
               >
                 Watch Demo
               </Button>
