@@ -19,6 +19,7 @@ import StorySection from './components/StorySection';
 import FormulaCards from './components/FormulaCards';
 import RoadmapSection from './components/RoadmapSection';
 import CoursesSection from './components/CoursesSection';
+import OfferSection from './components/OfferSection';
 import FinalCTA from './components/FinalCTA';
 // Loading component
 const PageLoading = () => (
@@ -69,6 +70,9 @@ export default function Home() {
         <Hero />
         <GlobalCountdown />
         <VSL />
+        
+        <CoursesSection />
+        <OfferSection />
         <PainPointSection />
         <ProblemSection />
         <TrapSection />
@@ -76,7 +80,6 @@ export default function Home() {
         <ClientsSection />
         {/* <TestimonialsSection /> */}
         <StorySection />
-        <CoursesSection />
         <FormulaCards />
         <RoadmapSection />
         <FinalCTA />
