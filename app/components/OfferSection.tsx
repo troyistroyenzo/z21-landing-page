@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import OfferCard from './OfferCard';
+import OfferCard3D from './OfferCard3D';
 import OfferModal from './OfferModal';
 import { offerStack } from '@/app/content/offerStack';
 import type { OfferItem } from '@/app/content/offerStack';
@@ -66,7 +66,7 @@ export default function OfferSection() {
                 ease: 'easeOut'
               }}
             >
-              <OfferCard
+              <OfferCard3D
                 offer={offer}
                 onOpenModal={() => handleOpenModal(offer)}
                 isPaused={modalOpen}

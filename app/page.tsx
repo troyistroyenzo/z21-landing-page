@@ -4,23 +4,26 @@ import React, { useEffect, Suspense } from 'react';
 import Lenis from '@studio-freight/lenis';
 import { motion } from 'framer-motion';
 import Header from './components/Header';
-import Hero from './components/Hero';
+import Hero3D from './components/Hero3D';
 import GlobalCountdown from './components/GlobalCountdown';
-import PainPointSection from './components/PainPointSection';
-import SolutionSection from './components/SolutionSection';
+import PainPointSection3D from './components/PainPointSection3D';
+import SolutionSection3D from './components/SolutionSection3D';
 import TestimonialsSection from './components/TestimonialsSection';
 import TrapSection from './components/TrapSection';
 import VSL from './components/VSL';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
-import ClientsSection from './components/ClientsSection';
+import ClientsSection3D from './components/ClientsSection3D';
 import ProblemSection from './components/ProblemSection';
 import StorySection from './components/StorySection';
 import FormulaCards from './components/FormulaCards';
-import RoadmapSection from './components/RoadmapSection';
+import RoadmapSection3D from './components/RoadmapSection3D';
 import CoursesSection from './components/CoursesSection';
 import OfferSection from './components/OfferSection';
 import FinalCTA from './components/FinalCTA';
+import SolutionSection from './components/SolutionSection';
+import ClientsSection from './components/ClientsSection';
+import PainPointsSection from './components/PainPointSection';
 // Loading component
 const PageLoading = () => (
   <div className="min-h-screen bg-background flex items-center justify-center">
@@ -67,21 +70,23 @@ export default function Home() {
     >
       <Header />
       <Suspense fallback={<PageLoading />}>
-        <Hero />
+        <Hero3D />
         <GlobalCountdown />
         <VSL />
-        
         <CoursesSection />
         <OfferSection />
-        <PainPointSection />
+        <PainPointsSection />
+        <PainPointSection3D />
         <ProblemSection />
         <TrapSection />
-        <SolutionSection />
-        <ClientsSection />
+         <SolutionSection/>
+        <ClientsSection/>
+        <SolutionSection3D />
+        <ClientsSection3D />
         {/* <TestimonialsSection /> */}
         <StorySection />
         <FormulaCards />
-        <RoadmapSection />
+        <RoadmapSection3D />
         <FinalCTA />
         <FAQ />
         <Footer />

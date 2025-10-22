@@ -3,10 +3,19 @@
 import { motion } from 'framer-motion';
 import Container from './Container';
 import content from '@/app/content/z21.json';
-import { interpolateEnv } from '@/lib/utils';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
 export default function FinalCTA() {
+  // Use consistent href value to prevent hydration mismatch
+  const [ctaHref, setCtaHref] = useState('#');
+  
+  useEffect(() => {
+    // Only access environment variables on the client
+    const envUrl = process.env.NEXT_PUBLIC_COHORT_URL || '#';
+    setCtaHref(envUrl);
+  }, []);
+
   return (
     <section className="py-24 lg:py-32 bg-off-white">
       <Container>
@@ -28,7 +37,7 @@ export default function FinalCTA() {
           </p>
 
           <Link
-            href={interpolateEnv(content.hero.primaryCta.href)}
+            href={ctaHref}
             className="inline-block px-12 py-5 bg-tan text-dark-green font-heading font-bold text-lg uppercase tracking-wider rounded-lg hover:bg-tan/90 transition-all transform hover:scale-105 shadow-card hover:shadow-deep"
           >
             {content.hero.primaryCta.label}
