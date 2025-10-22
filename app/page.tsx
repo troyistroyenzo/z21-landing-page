@@ -24,6 +24,7 @@ import SolutionSection from './components/SolutionSection';
 import ClientsSection from './components/ClientsSection';
 import ClientsSection3D from './components/ClientsSection3D';
 import PainPointsSection from './components/PainPointSection';
+import Hero from './components/Hero';
 // Loading component
 const PageLoading = () => (
   <div className="min-h-screen bg-background flex items-center justify-center">

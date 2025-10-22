@@ -4,7 +4,6 @@ import React, { Suspense, useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, RoundedBox, MeshDistortMaterial, Environment } from '@react-three/drei';
 import { useLoader } from '@react-three/fiber';
-import { TextureLoader } from 'three/src/loaders/TextureLoader';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import ClientOnly from './ClientOnly';
@@ -18,7 +17,7 @@ function ProductCard3D({ mouseX, mouseY, isMobile, imageSrc, scale = 1.5 }: { mo
   // Load an optional texture if an imageSrc is provided. Keep it safe for SSR by
   // guarding loader usage to client-only rendering (this component is already
   // used inside a ClientOnly wrapper in the parent).
-  const texture = imageSrc ? useLoader(TextureLoader, imageSrc) : null;
+  const texture = imageSrc ? useLoader(THREE.TextureLoader, imageSrc) : null;
 
   useFrame((state) => {
     if (!groupRef.current) return;
