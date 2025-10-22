@@ -3,15 +3,22 @@
 import React, { Suspense, useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, RoundedBox, MeshDistortMaterial, Environment } from '@react-three/drei';
+import { useLoader } from '@react-three/fiber';
+import { TextureLoader } from 'three/src/loaders/TextureLoader';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import ClientOnly from './ClientOnly';
 import { useMousePosition3D, useIsMobile } from './3d/MouseTracker3D';
 
 // Interactive 3D Product Card
-function ProductCard3D({ mouseX, mouseY, isMobile }: { mouseX: number; mouseY: number; isMobile: boolean }) {
+function ProductCard3D({ mouseX, mouseY, isMobile, imageSrc, scale = 1.5 }: { mouseX: number; mouseY: number; isMobile: boolean; imageSrc?: string; scale?: number }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const groupRef = useRef<THREE.Group>(null);
+
+  // Load an optional texture if an imageSrc is provided. Keep it safe for SSR by
+  // guarding loader usage to client-only rendering (this component is already
+  // used inside a ClientOnly wrapper in the parent).
+  const texture = imageSrc ? useLoader(TextureLoader, imageSrc) : null;
 
   useFrame((state) => {
     if (!groupRef.current) return;
@@ -37,7 +44,8 @@ function ProductCard3D({ mouseX, mouseY, isMobile }: { mouseX: number; mouseY: n
 
   return (
     <Float speed={1.5} rotationIntensity={0.3} floatIntensity={0.2}>
-      <group ref={groupRef}>
+      {/* scale the whole card and nudge vertically on mobile so it stays centered */}
+      <group ref={groupRef} scale={scale} position={[0, isMobile ? -0.2 : 0, 0]}>
         {/* Main Card */}
         <RoundedBox 
           ref={meshRef}
@@ -90,6 +98,16 @@ function ProductCard3D({ mouseX, mouseY, isMobile }: { mouseX: number; mouseY: n
             thickness={0.5}
           />
         </mesh>
+
+        {/* Optional image rendered on the card as a textured plane. Place your
+            image in the `public/` folder and pass '/my-image.png' as the
+            `imageSrc` prop to `ProductCard3D`. */}
+        {texture && (
+          <mesh position={[0, 0, 0.201]}>
+            <planeGeometry args={[2.6, 1.4]} />
+            <meshBasicMaterial map={texture} toneMapped={false} transparent />
+          </mesh>
+        )}
       </group>
     </Float>
   );
@@ -179,7 +197,7 @@ export default function SolutionSection3D() {
             }>
               <Suspense fallback={null}>
                 <Canvas
-                  camera={{ position: [0, 0, 5], fov: 45 }}
+                  camera={isMobile ? { position: [0, 0.6, 6], fov: 45 } : { position: [0, 0, 5], fov: 45 }}
                   dpr={[1, 2]}
                   className="w-full h-full"
                 >
@@ -192,6 +210,9 @@ export default function SolutionSection3D() {
                     mouseX={mousePosition.normalized.x} 
                     mouseY={mousePosition.normalized.y}
                     isMobile={isMobile}
+                    // Example: put an image file in public/ and reference it here
+                    imageSrc="https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/f7fd4d46-2bed-491b-a4c3-c33f0db3adb5.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTQzMGYtOWVkOC1iNzY3YzU1NDM5YzMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvZjdmZDRkNDYtMmJlZC00OTFiLWE0YzMtYzMzZjBkYjNhZGI1LnBuZyIsImlhdCI6MTc1ODc3NzAyNSwiZXhwIjoxNzkwMzEzMDI1fQ._WbDvasTorIvVudnbtKYH7yyt8eNJ9d93R4QPqMKoW4"
+                    scale={1.5}
                   />
                   
                   <Environment preset="city" />

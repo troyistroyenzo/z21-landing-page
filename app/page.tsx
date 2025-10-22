@@ -16,7 +16,7 @@ import Footer from './components/Footer';
 import ClientsSection3D from './components/ClientsSection3D';
 import ProblemSection from './components/ProblemSection';
 import StorySection from './components/StorySection';
-import FormulaCards from './components/FormulaCards';
+import FormulaCards3D from './components/FormulaCards3D';
 import RoadmapSection3D from './components/RoadmapSection3D';
 import CoursesSection from './components/CoursesSection';
 import OfferSection from './components/OfferSection';
@@ -75,17 +75,21 @@ export default function Home() {
         <VSL />
         <CoursesSection />
         <OfferSection />
-        <PainPointsSection />
+        
         <PainPointSection3D />
+        <PainPointsSection />
+
         <ProblemSection />
         <TrapSection />
-         <SolutionSection/>
-        <ClientsSection/>
+        {/* <SolutionSection/> */}
+        
+
         <SolutionSection3D />
-        <ClientsSection3D />
+        {/* <ClientsSection3D /> */}
+        <ClientsSection/>
         {/* <TestimonialsSection /> */}
         <StorySection />
-        <FormulaCards />
+        <FormulaCards3D />
         <RoadmapSection3D />
         <FinalCTA />
         <FAQ />
