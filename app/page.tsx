@@ -13,7 +13,6 @@ import TrapSection from './components/TrapSection';
 import VSL from './components/VSL';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
-import ClientsSection3D from './components/ClientsSection3D';
 import ProblemSection from './components/ProblemSection';
 import StorySection from './components/StorySection';
 import FormulaCards3D from './components/FormulaCards3D';
@@ -23,6 +22,7 @@ import OfferSection from './components/OfferSection';
 import FinalCTA from './components/FinalCTA';
 import SolutionSection from './components/SolutionSection';
 import ClientsSection from './components/ClientsSection';
+import ClientsSection3D from './components/ClientsSection3D';
 import PainPointsSection from './components/PainPointSection';
 // Loading component
 const PageLoading = () => (
@@ -85,7 +85,6 @@ export default function Home() {
         
 
         <SolutionSection3D />
-        {/* <ClientsSection3D /> */}
         <ClientsSection/>
         {/* <TestimonialsSection /> */}
         <StorySection />
