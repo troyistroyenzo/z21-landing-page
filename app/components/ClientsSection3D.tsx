@@ -122,7 +122,7 @@ function LogoCard3D({
         <DreiImage
           url={client.logoUrl}
           position={[0, 0, 0.08]}
-          scale={[4.2, 2.4, 1]}
+          scale={[4.2, 2.4]}
           transparent
         />
       </group>
