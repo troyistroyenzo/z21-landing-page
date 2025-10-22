@@ -70,7 +70,7 @@ export default function Home() {
     >
       <Header />
       <Suspense fallback={<PageLoading />}>
-        <Hero3D />
+        <Hero />
         <GlobalCountdown />
         <VSL />
         <CoursesSection />
