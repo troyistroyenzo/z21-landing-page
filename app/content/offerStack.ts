@@ -16,37 +16,10 @@ export interface OfferItem {
   seasonOpen?: boolean; // For cohort availability
   acceptingClients?: boolean; // For coaching availability
   workshopTopics?: string[]; // For B2B workshop topics
+  isActive?: boolean; // For showing "Accepting Now" badge
 }
 
 export const offerStack: OfferItem[] = [
-  {
-    id: 'cohort',
-    title: 'Z21 Cohort',
-    subtitle: 'Application only. Capped seats.',
-    cardSubtitle: 'Ship an AI revenue system in 6 weeks.',
-    targets: [
-      'Founders',
-      'Builders',
-      'Entrepreneurs (B2C/B2B solo or early-stage)'
-    ],
-    format: '6-week sprint with live sessions, hot seats, and a public scoreboard.',
-    deliverables: [
-      'Offer page with checkout',
-      '90-second VSL shipped',
-      'Booking system live',
-      '1 production AI workflow'
-    ],
-    extras: [
-      'Seasonal cadence with access to community, frameworks, resources',
-      'Metric trackers and systems',
-      'Price increases each season as seats scale (like Tom Noske\'s model)'
-    ],
-    pricing: 'Cost per seat. Seasonal price increase.',
-    ctaLabel: 'Apply to the Cohort',
-    ctaRoute: '/apply',
-    dmKeywords: ['COHORT'],
-    seasonOpen: true
-  },
   {
     id: 'coaching',
     title: '1:1 Coaching',
@@ -66,10 +39,11 @@ export const offerStack: OfferItem[] = [
       'Fixed cost package'
     ],
     pricing: 'Fixed package price.',
-    ctaLabel: 'Book a 1:1 discovery call',
-    ctaRoute: '/book',
+    ctaLabel: 'Book a call',
+    ctaRoute: 'https://calendly.com/troyenzo/30min',
     dmKeywords: ['COACH', '1ON1'],
-    acceptingClients: true
+    acceptingClients: true,
+    isActive: true
   },
   {
     id: 'workshop',
@@ -94,13 +68,43 @@ export const offerStack: OfferItem[] = [
       'Variable pricing depending on demand'
     ],
     pricing: 'Variable by scope and demand.',
-    ctaLabel: 'Request a team workshop brief',
-    ctaRoute: '/workshop-brief',
+    ctaLabel: 'Request a Demo',
+    ctaRoute: 'https://calendly.com/troyenzo/30min',
     dmKeywords: ['BUILD', 'TEAM'],
     workshopTopics: [
       'AI workflow automation',
       'Prompt engineering',
       'Team productivity systems'
-    ]
+    ],
+    isActive: true
+  },
+  {
+    id: 'cohort',
+    title: 'Z21 Cohort',
+    subtitle: 'Application only. Capped seats.',
+    cardSubtitle: 'Ship an AI revenue system in 6 weeks.',
+    targets: [
+      'Founders',
+      'Builders',
+      'Entrepreneurs (B2C/B2B solo or early-stage)'
+    ],
+    format: '6-week sprint with live sessions, hot seats, and a public scoreboard.',
+    deliverables: [
+      'Offer page with checkout',
+      '90-second VSL shipped',
+      'Booking system live',
+      '1 production AI workflow'
+    ],
+    extras: [
+      'Seasonal cadence with access to community, frameworks, resources',
+      'Metric trackers and systems',
+      'Price increases each season as seats scale (like Tom Noske\'s model)'
+    ],
+    pricing: 'Cost per seat. Seasonal price increase.',
+    ctaLabel: 'Coming Soon',
+    ctaRoute: '#',
+    dmKeywords: ['COHORT'],
+    seasonOpen: false,
+    isActive: false
   }
 ];

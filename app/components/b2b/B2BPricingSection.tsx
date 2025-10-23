@@ -184,7 +184,7 @@ export default function B2BPricingSection() {
         "Prompt engineering basics",
         "Team activation plan"
       ],
-      price: "₱65,000+",
+      price: "TBA",
       location: "Virtual starting at"
     },
     {
@@ -199,7 +199,7 @@ export default function B2BPricingSection() {
         "Complete frameworks & resources",
         "Custom tool integration"
       ],
-      price: "₱150,000+",
+      price: "TBA",
       location: "Virtual starting at",
       badge: "MOST POPULAR"
     },
@@ -215,7 +215,7 @@ export default function B2BPricingSection() {
         "Multi-site support available",
         "Executive dashboard setup"
       ],
-      price: "₱300,000+",
+      price: "TBA",
       location: "Custom quote starts at"
     }
   ];
