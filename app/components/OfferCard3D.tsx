@@ -492,34 +492,40 @@ export default function OfferCard3D({ offer, onOpenModal, isPaused = false }: Of
               Coming Soon
             </span>
           </div>
-        ) : (
-          // For active offers, show buttons
+        ) : offer.id === 'coaching' ? (
+          // For coaching, only show CTA link (no Learn more button)
+          <div className="flex items-center justify-end">
+            <a
+              href={offer.ctaRoute}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-emerald-300 hover:text-emerald-200 underline underline-offset-4 text-sm transition-colors"
+            >
+              {offer.ctaLabel} →
+            </a>
+          </div>
+        ) : offer.id === 'workshop' ? (
+          // For B2B workshop, Learn more goes to /b2b
           <div className="flex items-center justify-between">
-            <motion.button
-              onClick={handleLearnMore}
-              className="px-6 py-2.5 bg-tan text-emerald-900 rounded-lg font-semibold hover:bg-tan/90 transition-colors"
+            <motion.a
+              href="/b2b"
+              className="px-6 py-2.5 bg-tan text-emerald-900 rounded-lg font-semibold hover:bg-tan/90 transition-colors inline-block"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               Learn more
-            </motion.button>
+            </motion.a>
 
-            {isCalendlyLink ? (
-              <a
-                href={offer.ctaRoute}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-emerald-300 hover:text-emerald-200 underline underline-offset-4 text-sm transition-colors"
-              >
-                {offer.ctaLabel} →
-              </a>
-            ) : (
-              <span className="text-emerald-300 text-sm">
-                {offer.ctaLabel}
-              </span>
-            )}
+            <a
+              href={offer.ctaRoute}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-emerald-300 hover:text-emerald-200 underline underline-offset-4 text-sm transition-colors"
+            >
+              {offer.ctaLabel} →
+            </a>
           </div>
-        )}
+        ) : null}
       </div>
     </motion.div>
   );

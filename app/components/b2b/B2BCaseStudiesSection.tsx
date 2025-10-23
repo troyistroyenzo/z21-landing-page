@@ -64,23 +64,23 @@ function CaseStudyCard({
       transition={{ duration: 0.5 }}
       className="w-full"
     >
-      <div className="grid lg:grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-12">
         {/* Left: Case Study Details */}
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           <div>
-            <h3 className="text-3xl font-bold text-white mb-2">{study.title}</h3>
-            <p className="text-emerald-400 text-lg">{study.subtitle}</p>
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">{study.title}</h3>
+            <p className="text-emerald-400 text-base md:text-lg">{study.subtitle}</p>
           </div>
           
-          <p className="text-gray-300 text-lg leading-relaxed">{study.description}</p>
+          <p className="text-gray-300 text-base md:text-lg leading-relaxed">{study.description}</p>
           
-          <div className="bg-emerald-900/20 border border-emerald-700/30 rounded-lg p-6">
-            <h4 className="text-xl font-semibold text-emerald-400 mb-3">Workflow Built</h4>
-            <p className="text-gray-300">{study.workflow}</p>
+          <div className="bg-emerald-900/20 border border-emerald-700/30 rounded-lg p-4 md:p-6">
+            <h4 className="text-lg md:text-xl font-semibold text-emerald-400 mb-2 md:mb-3">Workflow Built</h4>
+            <p className="text-gray-300 text-sm md:text-base">{study.workflow}</p>
           </div>
           
           <div>
-            <h4 className="text-xl font-semibold text-emerald-400 mb-3">Results</h4>
+            <h4 className="text-lg md:text-xl font-semibold text-emerald-400 mb-2 md:mb-3">Results</h4>
             <ul className="space-y-2">
               {study.results.map((result, i) => (
                 <li key={i} className="flex items-start text-gray-300">
@@ -96,15 +96,15 @@ function CaseStudyCard({
         <div className="relative">
           {study.codeSnippet ? (
             <motion.div 
-              className="bg-black/50 border border-emerald-700/30 rounded-lg p-6 font-mono text-sm overflow-x-auto"
+              className="bg-black/50 border border-emerald-700/30 rounded-lg p-4 md:p-6 font-mono text-xs md:text-sm overflow-x-auto max-w-full"
               whileHover={{ borderColor: 'rgba(16, 185, 129, 0.5)' }}
             >
-              <pre className="text-emerald-300">
+              <pre className="text-emerald-300 whitespace-pre-wrap break-words">
                 <code>{study.codeSnippet}</code>
               </pre>
             </motion.div>
           ) : (
-            <div className="h-[400px] bg-gradient-to-br from-emerald-900/10 to-emerald-800/5 border border-emerald-700/20 rounded-lg overflow-hidden">
+            <div className="h-[250px] md:h-[400px] bg-gradient-to-br from-emerald-900/10 to-emerald-800/5 border border-emerald-700/20 rounded-lg overflow-hidden">
               <ClientOnly fallback={null}>
                 <Canvas
                   camera={{ position: [0, 0, 5], fov: 50 }}
@@ -209,7 +209,7 @@ Output format: JSON with content + metadata`
   };
 
   return (
-    <section ref={sectionRef} className="relative py-32 overflow-hidden">
+    <section ref={sectionRef} className="relative py-16 md:py-32 overflow-hidden">
       {/* Background Pattern */}
       <motion.div 
         className="absolute inset-0 opacity-10"
@@ -220,7 +220,7 @@ Output format: JSON with content + metadata`
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -229,13 +229,57 @@ Output format: JSON with content + metadata`
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
+          <h2 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 md:mb-6">
             Live Case Studies
           </h2>
           <p className="text-2xl text-emerald-300 font-medium">
             Real workflows we've shipped with teams
           </p>
+          {/* Navigation */}
+          <div className="flex justify-center items-center gap-4 mt-8 md:mt-12">
+            <motion.button
+              type="button"
+              onClick={prevCase}
+              className="p-2 md:p-3 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-lg bg-emerald-900/20 border border-emerald-700/30 text-emerald-400 hover:bg-emerald-900/30 transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </motion.button>
+            
+            <div className="flex items-center gap-2 mx-2">
+              {caseStudies.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  aria-label={`Go to case ${i + 1}`}
+                  onClick={() => setActiveIndex(i)}
+                  className={`transition-all flex items-center justify-center ${
+                    i === activeIndex
+                      ? 'w-6 md:w-10 h-2 md:h-2 bg-emerald-400 rounded-full'
+                      : 'w-2 h-2 bg-emerald-700/50 hover:bg-emerald-700 rounded-full'
+                  }`}
+                />
+              ))}
+            </div>
+            
+            <motion.button
+              type="button"
+              onClick={nextCase}
+              className="p-2 md:p-3 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-lg bg-emerald-900/20 border border-emerald-700/30 text-emerald-400 hover:bg-emerald-900/30 transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </motion.button>
+          </div>
         </motion.div>
+
+         
 
         {/* Case Study Carousel */}
         <div className="relative">
@@ -247,44 +291,7 @@ Output format: JSON with content + metadata`
             />
           </AnimatePresence>
           
-          {/* Navigation */}
-          <div className="flex justify-center items-center gap-4 mt-12">
-            <motion.button
-              onClick={prevCase}
-              className="p-3 rounded-lg bg-emerald-900/20 border border-emerald-700/30 text-emerald-400 hover:bg-emerald-900/30 transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </motion.button>
-            
-            <div className="flex gap-2">
-              {caseStudies.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveIndex(i)}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    i === activeIndex 
-                      ? 'w-8 bg-emerald-400' 
-                      : 'bg-emerald-700/50 hover:bg-emerald-700'
-                  }`}
-                />
-              ))}
-            </div>
-            
-            <motion.button
-              onClick={nextCase}
-              className="p-3 rounded-lg bg-emerald-900/20 border border-emerald-700/30 text-emerald-400 hover:bg-emerald-900/30 transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </motion.button>
-          </div>
+         
         </div>
       </div>
     </section>

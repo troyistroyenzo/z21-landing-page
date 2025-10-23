@@ -87,9 +87,9 @@ export default function B2BPage() {
         </section>
 
         {/* Pricing */}
-        <section id="pricing" className="relative">
+        {/* <section id="pricing" className="relative">
           <B2BPricingSection />
-        </section>
+        </section> */}
 
         {/* Final CTA */}
         <section id="cta" className="relative">

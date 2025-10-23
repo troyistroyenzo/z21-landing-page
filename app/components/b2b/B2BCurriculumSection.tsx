@@ -102,19 +102,19 @@ function CurriculumStep({
     [index % 2 === 0 ? -50 : 50, 0]
   );
   
-  // Track when this card is in center viewport
+  // Track when this card is in center viewport - improved for second row
   React.useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+          if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
             onInView(index);
           }
         });
       },
       {
-        threshold: [0.3, 0.5, 0.7],
-        rootMargin: '-40% 0px -40% 0px' // Center 20% of viewport
+        threshold: [0.2, 0.4, 0.6],
+        rootMargin: '-30% 0px -30% 0px' // Wider detection zone for second row
       }
     );
 
@@ -313,7 +313,7 @@ export default function B2BCurriculumSection() {
         </motion.div>
 
         {/* Curriculum Steps Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 items-start">
           {curriculum.map((step, index) => (
             <CurriculumStep
               key={index}
