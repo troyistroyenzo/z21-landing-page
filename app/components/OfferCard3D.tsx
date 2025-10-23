@@ -393,20 +393,40 @@ export default function OfferCard3D({ offer, onOpenModal, isPaused = false }: Of
     workshop: 'from-emerald-700 via-[#AE9370] to-emerald-800',
   };
 
+  const isInactive = offer.seasonOpen === false || offer.isActive === false;
+  const isCalendlyLink = offer.ctaRoute.startsWith('http');
+
   return (
     <motion.div
-      className="bg-black/40 backdrop-blur-sm rounded-xl border border-emerald-900/30 overflow-hidden group cursor-pointer"
+      className={`bg-black/40 backdrop-blur-sm rounded-xl border overflow-hidden group relative ${
+        isInactive 
+          ? 'border-gray-700/30 opacity-60 cursor-default' 
+          : 'border-emerald-900/30 cursor-pointer'
+      }`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      whileHover={{
+      whileHover={!isInactive ? {
         y: -8,
         boxShadow: '0 25px 50px rgba(16, 185, 129, 0.3)',
         transition: { duration: 0.3 }
-      }}
-      onMouseEnter={() => setIsHovered(true)}
+      } : {}}
+      onMouseEnter={() => !isInactive && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {/* Active Badge */}
+      {offer.isActive && (
+        <div className="absolute top-4 right-4 z-10">
+          <motion.div
+            className="px-4 py-2 bg-emerald-500 text-emerald-900 text-sm font-bold rounded-full shadow-lg"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.3, type: "spring" }}
+          >
+            ACTIVE OFFER
+          </motion.div>
+        </div>
+      )}
       {/* 3D Scene Container */}
       <div ref={canvasRef} className="relative h-64 overflow-hidden">
         <ClientOnly fallback={
@@ -458,27 +478,48 @@ export default function OfferCard3D({ offer, onOpenModal, isPaused = false }: Of
 
       {/* Card Content */}
       <div className="p-6">
-        <h3 className="text-2xl font-bold text-white mb-2">{offer.title}</h3>
-        <p className="text-emerald-200 mb-6">{offer.cardSubtitle}</p>
+        <h3 className={`text-2xl font-bold mb-2 ${isInactive ? 'text-gray-400' : 'text-white'}`}>
+          {offer.title}
+        </h3>
+        <p className={`mb-6 ${isInactive ? 'text-gray-500' : 'text-emerald-200'}`}>
+          {offer.cardSubtitle}
+        </p>
 
-        <div className="flex items-center justify-between">
-          <motion.button
-            onClick={handleLearnMore}
-            className="px-6 py-2.5 bg-tan text-emerald-900 rounded-lg font-semibold hover:bg-tan/90 transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Learn more
-          </motion.button>
+        {isInactive ? (
+          // For inactive offers (cohort), just show "Coming Soon" centered text
+          <div className="text-center py-4">
+            <span className="text-gray-500 text-sm uppercase tracking-wide font-semibold">
+              Coming Soon
+            </span>
+          </div>
+        ) : (
+          // For active offers, show buttons
+          <div className="flex items-center justify-between">
+            <motion.button
+              onClick={handleLearnMore}
+              className="px-6 py-2.5 bg-tan text-emerald-900 rounded-lg font-semibold hover:bg-tan/90 transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Learn more
+            </motion.button>
 
-          <a
-            href={offer.ctaRoute}
-            onClick={handleDirectRoute}
-            className="text-emerald-300 hover:text-emerald-200 underline underline-offset-4 text-sm transition-colors"
-          >
-            {offer.ctaLabel} →
-          </a>
-        </div>
+            {isCalendlyLink ? (
+              <a
+                href={offer.ctaRoute}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-emerald-300 hover:text-emerald-200 underline underline-offset-4 text-sm transition-colors"
+              >
+                {offer.ctaLabel} →
+              </a>
+            ) : (
+              <span className="text-emerald-300 text-sm">
+                {offer.ctaLabel}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     </motion.div>
   );

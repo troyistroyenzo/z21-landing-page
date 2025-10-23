@@ -140,7 +140,7 @@ const Hero = () => {
                 size="lg" 
                 className="group bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90 w-full sm:w-auto cursor-pointer"
                 style={{ backgroundColor: '#AE9370' }}
-                onClick={() => smoothScrollTo('curriculum')}
+                onClick={() => smoothScrollTo('offers')}
               >
                 Learn More
                 <ArrowRightIcon className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />

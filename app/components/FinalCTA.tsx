@@ -36,12 +36,12 @@ export default function FinalCTA() {
             in just 6 weeks. Limited spots available.
           </p>
 
-          <Link
-            href={ctaHref}
-            className="inline-block px-12 py-5 bg-tan text-dark-green font-heading font-bold text-lg uppercase tracking-wider rounded-lg hover:bg-tan/90 transition-all transform hover:scale-105 shadow-card hover:shadow-deep"
+          <button
+            disabled
+            className="inline-block px-12 py-5 bg-gray-600 text-gray-300 font-heading font-bold text-lg uppercase tracking-wider rounded-lg cursor-not-allowed opacity-70"
           >
-            {content.hero.primaryCta.label}
-          </Link>
+            Coming Soon
+          </button>
 
         </motion.div>
       </Container>

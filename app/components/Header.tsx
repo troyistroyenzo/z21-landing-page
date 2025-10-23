@@ -68,7 +68,7 @@ const Header = () => {
               </motion.a>
             ))}
             {/* Apply Now button inline with nav */}
-            <Link href="/cta-demo">
+            {/* <Link href="/cta-demo">
               <Button 
                 variant="ghost" 
                 size="md"
@@ -76,7 +76,7 @@ const Header = () => {
               >
                 Apply Now
               </Button>
-            </Link>
+            </Link> */}
           </nav>
 
           {/* Mobile Menu Button */}
@@ -114,7 +114,7 @@ const Header = () => {
                   {item.label}
                 </motion.a>
               ))}
-              <div className="pt-4">
+              {/* <div className="pt-4">
                 <Link href="/cta-demo" className="block">
                   <Button 
                     variant="primary" 
@@ -125,7 +125,7 @@ const Header = () => {
                     Apply Now
                   </Button>
                 </Link>
-              </div>
+              </div> */}
             </div>
           </motion.div>
         )}

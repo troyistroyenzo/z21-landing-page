@@ -24,7 +24,7 @@ export default function FAQ() {
           transition={{ duration: 0.5, ease: 'easeOut' }}
           className="max-w-3xl mx-auto"
         >
-          <h2 className="text-display text-emerald-950 mb-12 text-center">
+          <h2 className="text-display text-white mb-12 text-center">
             {content.faq.title}
           </h2>
 

@@ -111,18 +111,16 @@ export default function GlobalCountdown() {
               </div>
               <span className="text-xs text-gray-300 uppercase tracking-wide hidden lg:inline">TO JOIN</span>
             </div>
-            {/* Right Section - Apply Button */}
+            {/* Right Section - Coming Soon Button */}
             <div className="flex items-center px-6">
-              <Link href="/cta-demo">
-                <Button 
+              <Button 
                 variant="primary" 
                 size="md"
-                className="bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90"
-                style={{ backgroundColor: '#AE9370' }}
+                className="bg-gray-600 text-gray-300 border-gray-600 cursor-not-allowed opacity-70"
+                disabled
               >
-                Apply Now
+                Coming Soon
               </Button>
-              </Link>
             </div>
           </div>
           {/* Mobile Layout - Simplified Single Row */}
@@ -153,16 +151,14 @@ export default function GlobalCountdown() {
                   <div className="text-[8px] text-gray-300 uppercase">S</div>
                 </div>
               </div>
-              <Link href="/cta-demo">
-                <Button 
+              <Button 
                 variant="primary" 
                 size="md"
-                className="bg-gold hover:bg-gold/90 text-white border-gold hover:border-gold/90"
-                style={{ backgroundColor: '#AE9370' }}
+                className="bg-gray-600 text-gray-300 border-gray-600 cursor-not-allowed opacity-70"
+                disabled
               >
-                Apply Now
+                Coming Soon
               </Button>
-              </Link>
             </div>
           </div>
         </div>
