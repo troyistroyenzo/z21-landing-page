@@ -4,6 +4,8 @@ import './globals.css';
 import { initAnalytics } from '@/lib/analytics';
 import Script from 'next/script';
 import content from '@/app/content/z21.json';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   title: content.seo.title,
@@ -124,6 +126,8 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased selection:bg-accent/10">
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
