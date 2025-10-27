@@ -129,7 +129,7 @@ export default function B2BFinalCTA() {
             }}
             whileTap={{ scale: 0.95 }}
           >
-            <span className="text-emerald-900">Apply Now → Schedule Your Fit Check</span>
+            <span className="text-emerald-900">Apply Now → Schedule Your Vibe Check</span>
           </motion.a>
 
           <p className="mt-6 text-emerald-300">

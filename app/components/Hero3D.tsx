@@ -1,16 +1,24 @@
 'use client';
 
-import React, { Suspense, useRef, useMemo } from 'react';
+import React, { Suspense, useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, Environment } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import ClientOnly from './ClientOnly';
+import { 
+  useDeviceDetection, 
+  getThreePerformanceSettings,
+  useInViewport,
+  useVisibilityControl,
+  useOptimizedMousePosition,
+  throttle
+} from '@/lib/performanceUtils';
 
-// 3D Particle Field Background
-function ParticleField() {
+// 3D Particle Field Background - Optimized
+function ParticleField({ count = 2000, isMobile = false }: { count?: number; isMobile?: boolean }) {
   const points = useRef<THREE.Points>(null);
-  const particleCount = 2000;
+  const particleCount = isMobile ? Math.min(count, 500) : count; // Reduce for mobile
   
   const positions = useMemo(() => {
     const arr = new Float32Array(particleCount * 3);
@@ -20,7 +28,7 @@ function ParticleField() {
       arr[i + 2] = (Math.random() - 0.5) * 50;
     }
     return arr;
-  }, []);
+  }, [particleCount]);
   
   const colors = useMemo(() => {
     const arr = new Float32Array(particleCount * 3);
@@ -40,13 +48,13 @@ function ParticleField() {
   }, []);
   
   useFrame((state) => {
-    if (!points.current) return;
+    if (!points.current || isMobile) return; // Skip animations on mobile
     
     points.current.rotation.x = state.mouse.y * 0.05;
     points.current.rotation.y = state.mouse.x * 0.05;
     
-    // Floating animation
-    points.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
+    // Floating animation - slower for better performance
+    points.current.position.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.2;
   });
   
   return (
@@ -139,8 +147,21 @@ function CameraController() {
 }
 
 export default function Hero3D() {
+  const canvasRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  
+  // Performance hooks
+  const deviceInfo = useDeviceDetection();
+  const { isInView, hasBeenInView } = useInViewport(sectionRef as React.RefObject<HTMLElement>);
+  const isPageVisible = useVisibilityControl();
+  const mousePosition = useOptimizedMousePosition();
+  const threeSettings = getThreePerformanceSettings(deviceInfo);
+  
+  // Control rendering based on visibility
+  const shouldRender = hasBeenInView && isInView && isPageVisible;
+  
   // Smooth scroll function with ease-in-out
-  const smoothScrollTo = (targetId: string) => {
+  const smoothScrollTo = throttle((targetId: string) => {
     const target = document.getElementById(targetId);
     if (!target) return;
 
@@ -171,10 +192,13 @@ export default function Hero3D() {
     };
 
     requestAnimationFrame(animation);
-  };
+  }, 100); // Throttle scroll calls
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0C1816]">
+    <section 
+      ref={sectionRef}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0C1816] gpu-accelerated"
+    >
       {/* Background Image Overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-no-repeat"
@@ -191,28 +215,41 @@ export default function Hero3D() {
         }
       `}</style>
 
-      {/* 3D Canvas Background */}
-      <div className="absolute inset-0 mix-blend-screen">
+      {/* 3D Canvas Background - Performance Optimized */}
+      <div 
+        ref={canvasRef}
+        className="absolute inset-0 mix-blend-screen gpu-canvas"
+      >
         <ClientOnly fallback={<div className="w-full h-full bg-gradient-to-b from-emerald-950 to-[#0C1816]" />}>
-          <Suspense fallback={<div className="w-full h-full bg-gradient-to-b from-emerald-950 to-[#0C1816]" />}>
-            <Canvas
-              camera={{ position: [0, 1, 8], fov: 60 }}
-              dpr={[1, 2]}
-              className="w-full h-full"
-            >
+          {shouldRender && (
+            <Suspense fallback={<div className="w-full h-full bg-gradient-to-b from-emerald-950 to-[#0C1816]" />}>
+              <Canvas
+                camera={{ position: [0, 1, 8], fov: 60 }}
+                dpr={threeSettings.dpr as [number, number]}
+                frameloop={shouldRender ? threeSettings.frameloop : 'never'}
+                className="w-full h-full"
+                gl={{ 
+                  antialias: threeSettings.antialias,
+                  powerPreference: "high-performance",
+                  alpha: false,
+                  stencil: false,
+                  depth: true
+                }}
+              >
               <fog attach="fog" args={['#0C1816', 5, 30]} />
               
-              <ambientLight intensity={0.2} />
-              <directionalLight position={[10, 10, 5]} intensity={0.5} />
-              <directionalLight position={[-10, -10, -5]} intensity={0.2} />
-              
-            <ParticleField />
-            <FloatingShapes />
+                <ambientLight intensity={0.2} />
+                <directionalLight position={[10, 10, 5]} intensity={0.5} castShadow={threeSettings.shadows} />
+                <directionalLight position={[-10, -10, -5]} intensity={0.2} />
+                
+                <ParticleField count={threeSettings.particles * 20} isMobile={deviceInfo.isMobile} />
+                {!deviceInfo.isMobile && <FloatingShapes />}
               
               <CameraController />
               <Environment preset="city" />
-            </Canvas>
-          </Suspense>
+              </Canvas>
+            </Suspense>
+          )}
         </ClientOnly>
       </div>
       
