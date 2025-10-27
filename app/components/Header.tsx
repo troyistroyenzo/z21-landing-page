@@ -68,7 +68,7 @@ const Header = () => {
               </motion.a>
             ))}
             {/* Apply Now button inline with nav */}
-            {/* <Link href="/cta-demo">
+            {/* <Link href="/vibe-check">
               <Button 
                 variant="ghost" 
                 size="md"
@@ -115,7 +115,7 @@ const Header = () => {
                 </motion.a>
               ))}
               {/* <div className="pt-4">
-                <Link href="/cta-demo" className="block">
+                <Link href="/vibe-check" className="block">
                   <Button 
                     variant="primary" 
                     size="lg" 
