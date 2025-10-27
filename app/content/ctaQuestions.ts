@@ -181,9 +181,9 @@ export const ctaQuestions: Question[] = [
     type: 'select',
     label: "Timeline to start",
     options: [
-      { value: 'within_14', label: 'Within 14 days ✅' },
-      { value: '15-30', label: '15–30 days ⚠️' },
-      { value: '>30', label: 'More than 30 days 🚫' }
+      { value: 'within_14', label: 'Within 14 days' },
+      { value: '15-30', label: '15–30 days' },
+      { value: '>30', label: 'More than 30 days' }
     ],
     validation: {
       required: true,
@@ -341,11 +341,11 @@ export const ctaQuestions: Question[] = [
   {
     id: 'budgetReadiness',
     type: 'select',
-    label: "Budget readiness (in ₱ or $)",
+    label: "Budget readiness",
     options: [
-      { value: 'ready', label: 'Ready to invest (₱60k–₱120k range) ✅' },
-      { value: 'payment_plan', label: 'Want payment plan ⚠️' },
-      { value: 'exploring', label: 'Just exploring 🚫' }
+      { value: 'ready', label: 'Ready to invest' },
+      { value: 'payment_plan', label: 'Want payment plan' },
+      { value: 'exploring', label: 'Just exploring' }
     ],
     validation: {
       required: true,

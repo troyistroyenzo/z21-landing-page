@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, Loader2, CheckCircle2, AlertCircle, Clock } from 'lucide-react';
 import { ctaQuestions, thankYouConfig, Question } from '@/app/content/ctaQuestions';
@@ -35,6 +36,7 @@ const slideVariants = {
 };
 
 export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState(0);
   const [formData, setFormData] = useState<FormData>({});
@@ -305,10 +307,10 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
               Book a Free Consultation
             </a>
             <button
-              onClick={onClose}
+              onClick={() => router.push('/')}
               className="block w-full px-5 py-3 text-zinc-400 hover:text-white transition-colors text-sm"
             >
-              Close
+              Back to Home Page
             </button>
           </div>
         </div>
@@ -335,14 +337,22 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">{thankYouConfig.title}</h2>
           <p className="text-lg sm:text-xl text-zinc-400 mb-4">{thankYouConfig.subtitle}</p>
           <p className="text-sm sm:text-base text-zinc-500 mb-6">{thankYouConfig.message}</p>
-          <a
-            href={thankYouConfig.ctaLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block w-full px-5 sm:px-6 py-3 sm:py-3.5 bg-accent text-white font-semibold rounded-lg border-2 border-accent hover:bg-accent/90 hover:border-accent/90 transition-all hover:scale-105 text-sm sm:text-base"
-          >
-            {thankYouConfig.ctaText}
-          </a>
+          <div className="space-y-3">
+            <a
+              href={thankYouConfig.ctaLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full px-5 sm:px-6 py-3 sm:py-3.5 bg-accent text-white font-semibold rounded-lg border-2 border-accent hover:bg-accent/90 hover:border-accent/90 transition-all hover:scale-105 text-sm sm:text-base"
+            >
+              {thankYouConfig.ctaText}
+            </a>
+            <button
+              onClick={() => router.push('/')}
+              className="block w-full px-5 py-3 text-zinc-400 hover:text-white transition-colors text-sm"
+            >
+              Back to Home Page
+            </button>
+          </div>
         </div>
       </motion.div>
     );
@@ -359,7 +369,7 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
         {/* Header */}
         <div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-2 border-b border-zinc-800 bg-zinc-950">
           <h1 className="text-lg sm:text-xl font-bold text-center bg-gradient-to-r from-red-300 via-yellow-300 via-green-300 via-blue-300 to-purple-300 bg-clip-text text-transparent">
-            Join Z21 Launchpad
+            JOIN THE Z21 JOURNEY
           </h1>
         </div>
         

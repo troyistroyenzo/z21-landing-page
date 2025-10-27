@@ -233,7 +233,7 @@ export function getThreePerformanceSettings(deviceInfo: ReturnType<typeof useDev
 // Optimized mouse position tracking
 export function useOptimizedMousePosition() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const rafId = useRef<number>();
+  const rafId = useRef<number | undefined>(undefined);
   
   useEffect(() => {
     const handleMouseMove = throttle((e: MouseEvent) => {
