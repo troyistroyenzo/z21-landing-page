@@ -366,12 +366,7 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
       className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/90 backdrop-blur-sm"
     >
       <div className="bg-zinc-950 border border-zinc-800 rounded-xl sm:rounded-2xl w-full max-w-full sm:max-w-2xl overflow-hidden max-h-screen flex flex-col">
-        {/* Header */}
-        <div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-2 border-b border-zinc-800 bg-zinc-950">
-          <h1 className="text-lg sm:text-xl font-bold text-center bg-gradient-to-r from-red-300 via-yellow-300 via-green-300 via-blue-300 to-purple-300 bg-clip-text text-transparent">
-            JOIN THE Z21 JOURNEY
-          </h1>
-        </div>
+
         
         {/* Progress Bar with Number */}
         <div className="relative h-12 bg-zinc-900 border-b border-zinc-800 flex items-center px-4">
@@ -447,7 +442,7 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
                     onKeyPress={handleKeyPress}
                     placeholder={currentQuestion.placeholder}
                     className={cn(
-                      "w-full px-3 sm:px-4 py-3 bg-zinc-900 border rounded-lg text-base text-white placeholder-zinc-500 focus:outline-none focus:border-accent transition-colors",
+                      "w-full px-3 sm:px-4 py-3 bg-zinc-900 border rounded-lg text-base text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-600 transition-colors",
                       errors[currentQuestion.id] ? "border-red-500" : "border-zinc-800"
                     )}
                     autoFocus
@@ -463,7 +458,7 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
                     placeholder={currentQuestion.placeholder}
                     rows={4}
                     className={cn(
-                      "w-full px-3 sm:px-4 py-3 bg-zinc-900 border rounded-lg text-base text-white placeholder-zinc-500 focus:outline-none focus:border-accent transition-colors resize-none",
+                      "w-full px-3 sm:px-4 py-3 bg-zinc-900 border rounded-lg text-base text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-600 transition-colors resize-none",
                       errors[currentQuestion.id] ? "border-red-500" : "border-zinc-800"
                     )}
                     autoFocus
@@ -510,7 +505,7 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
                               value={otherInputs[currentQuestion.id] || ''}
                               onChange={(e) => setOtherInputs({ ...otherInputs, [currentQuestion.id]: e.target.value })}
                               placeholder="Please specify..."
-                              className="mt-2 w-full px-3 sm:px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-accent transition-colors"
+                              className="mt-2 w-full px-3 sm:px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-600 transition-colors"
                             />
                           )}
                         </div>
@@ -635,7 +630,7 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
         </div>
 
         {/* Navigation */}
-        <div className="px-4 sm:px-8 pb-4 sm:pb-8 pt-4 flex items-center justify-between gap-2 bg-zinc-950">
+        <div className="px-4 sm:px-8 pb-4 sm:pb-8 pt-4 flex items-center justify-between gap-2 bg-zinc-950 border-t border-zinc-800">
           <button
             onClick={handlePrevious}
             disabled={currentStep === 0}

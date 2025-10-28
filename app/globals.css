@@ -218,6 +218,23 @@
     }
   }
 
+  /* Animated Rainbow Gradient */
+  .animate-rainbow-gradient {
+    background: linear-gradient(90deg, 
+      #fca5a5, #fed7aa, #fef3c7, #d9f99d, 
+      #a7f3d0, #bfdbfe, #ddd6fe, #fecdd3);
+    background-size: 200% 200%;
+    animation: rainbow-flow 8s ease infinite;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  @keyframes rainbow-flow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
   /* Enhanced shadows */
   .shadow-green {
     box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.1), 0 4px 6px -2px rgba(16, 185, 129, 0.05);
