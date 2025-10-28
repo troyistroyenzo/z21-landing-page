@@ -366,12 +366,7 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
       className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/90 backdrop-blur-sm"
     >
       <div className="bg-zinc-950 border border-zinc-800 rounded-xl sm:rounded-2xl w-full max-w-full sm:max-w-2xl overflow-hidden max-h-screen flex flex-col">
-        {/* Header */}
-        <div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-2 border-b border-zinc-800 bg-zinc-950">
-          <h1 className="text-lg sm:text-xl font-bold text-center bg-gradient-to-r from-red-300 via-yellow-300 via-green-300 via-blue-300 to-purple-300 bg-clip-text text-transparent">
-            JOIN THE Z21 JOURNEY
-          </h1>
-        </div>
+
         
         {/* Progress Bar with Number */}
         <div className="relative h-12 bg-zinc-900 border-b border-zinc-800 flex items-center px-4">
