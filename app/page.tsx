@@ -1,30 +1,43 @@
 'use client';
 
 import React, { useEffect, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import Lenis from '@studio-freight/lenis';
 import { motion } from 'framer-motion';
 import Header from './components/Header';
-import Hero3D from './components/Hero3D';
+import Hero from './components/Hero';
 import GlobalCountdown from './components/GlobalCountdown';
-import PainPointSection3D from './components/PainPointSection3D';
-import SolutionSection3D from './components/SolutionSection3D';
-import TestimonialsSection from './components/TestimonialsSection';
-import TrapSection from './components/TrapSection';
 import VSL from './components/VSL';
-import FAQ from './components/FAQ';
-import Footer from './components/Footer';
-import ProblemSection from './components/ProblemSection';
-import StorySection from './components/StorySection';
-import FormulaCards3D from './components/FormulaCards3D';
-import RoadmapSection3D from './components/RoadmapSection3D';
 import CoursesSection from './components/CoursesSection';
 import OfferSection from './components/OfferSection';
-import FinalCTA from './components/FinalCTA';
-import SolutionSection from './components/SolutionSection';
+import ProblemSection from './components/ProblemSection';
+import TrapSection from './components/TrapSection';
 import ClientsSection from './components/ClientsSection';
-import ClientsSection3D from './components/ClientsSection3D';
-import PainPointsSection from './components/PainPointSection';
-import Hero from './components/Hero';
+import StorySection from './components/StorySection';
+import FinalCTA from './components/FinalCTA';
+import FAQ from './components/FAQ';
+import Footer from './components/Footer';
+
+// Lazy load heavy 3D components
+const PainPointSection3D = dynamic(() => import('./components/PainPointSection3D'), {
+  ssr: false,
+  loading: () => <div className="min-h-screen" />
+});
+
+const SolutionSection3D = dynamic(() => import('./components/SolutionSection3D'), {
+  ssr: false,
+  loading: () => <div className="min-h-screen" />
+});
+
+const FormulaCards3D = dynamic(() => import('./components/FormulaCards3D'), {
+  ssr: false,
+  loading: () => <div className="min-h-screen" />
+});
+
+const RoadmapSection3D = dynamic(() => import('./components/RoadmapSection3D'), {
+  ssr: false,
+  loading: () => <div className="min-h-screen" />
+});
 // Loading component
 const PageLoading = () => (
   <div className="min-h-screen bg-background flex items-center justify-center">
@@ -38,36 +51,47 @@ const PageLoading = () => (
 
 export default function Home() {
   useEffect(() => {
-    // Initialize Lenis smooth scrolling
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 2,
-      infinite: false,
-    });
+    // Defer Lenis initialization to improve initial load
+    const initLenis = () => {
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 2,
+        infinite: false,
+      });
 
-    function raf(time: number) {
-      lenis.raf(time);
+      function raf(time: number) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+
       requestAnimationFrame(raf);
-    }
 
-    requestAnimationFrame(raf);
+      return lenis;
+    };
+
+    // Initialize after a delay to not block initial render
+    const timeoutId = setTimeout(() => {
+      const lenis = initLenis();
+      return () => {
+        lenis.destroy();
+      };
+    }, 1000);
 
     return () => {
-      lenis.destroy();
+      clearTimeout(timeoutId);
     };
   }, []);
 
   return (
     <motion.main
       className="bg-background"
-      initial={{ opacity: 0 }}
+      initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
     >
       <Header />
       <Suspense fallback={<PageLoading />}>
@@ -76,18 +100,11 @@ export default function Home() {
         <VSL />
         <CoursesSection />
         <OfferSection />
-        
         <PainPointSection3D />
-        <PainPointsSection />
-
         <ProblemSection />
         <TrapSection />
-        {/* <SolutionSection/> */}
-        
-
         <SolutionSection3D />
-        <ClientsSection/>
-        {/* <TestimonialsSection /> */}
+        <ClientsSection />
         <StorySection />
         <FormulaCards3D />
         <RoadmapSection3D />
