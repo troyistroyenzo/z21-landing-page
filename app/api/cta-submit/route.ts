@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
+import { generateAISummary } from '@/lib/openai-summary';
+import { sendSubmissionNotification } from '@/lib/resend';
 
 interface CTAFormData {
   [key: string]: string;
@@ -185,13 +187,14 @@ export async function POST(request: NextRequest) {
 
     console.log('Successfully inserted data:', data);
 
-    // TODO: Send email notification for strong fit candidates
-    // if (qualificationStatus === 'strong_fit') {
-    //   await sendStrongFitNotification(data);
-    // }
-
-    // TODO: Send confirmation email to applicant
-    // await sendConfirmationEmail(body.email, body.name, qualificationStatus);
+    // Generate AI summary and send email notification (don't block on failure)
+    try {
+      const aiSummary = await generateAISummary(data);
+      await sendSubmissionNotification(data, aiSummary);
+    } catch (emailError) {
+      // Log but don't fail the request if email fails
+      console.error('Email notification failed (non-blocking):', emailError);
+    }
 
     return NextResponse.json(
       { 
