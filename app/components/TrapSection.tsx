@@ -39,9 +39,12 @@ const TrapSection = () => {
                 <Image 
                   src="https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/TWS_3517.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTQzMGYtOWVkOC1iNzY3YzU1NDM5YzMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvVFdTXzM1MTcuanBnIiwiaWF0IjoxNzU4Nzc3MjA4LCJleHAiOjE3OTAzMTMyMDh9.7HhCnGIt2q9Gj69vSMcm9KGhInBDlZDNorERXqD6po8"
                   alt="Founders Program"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
                   className="object-cover rounded-2xl"
                   fill
-                  priority
                 />
                 
               </div>

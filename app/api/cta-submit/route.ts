@@ -110,7 +110,8 @@ export async function POST(request: NextRequest) {
       // Basic Info
       name: body.name,
       work_description: body.workDescription,
-      profile_link: body.profileLink,
+      social_handle: body.socialHandle || null,
+      phone: body.phone || null,
       email: body.email,
       referral_source: body.referralSource,
       
@@ -119,20 +120,18 @@ export async function POST(request: NextRequest) {
       
       // AI Onboarding fields (only if sprint type is ai_onboarding)
       ...(body.sprintType === 'ai_onboarding' && {
-        ai_motivation: body.aiMotivation || null,
-        role_description: body.roleDescription || null,
+        experience_level: body.experienceLevel || null,
+        stuck_areas: body.stuckAreas ? JSON.parse(body.stuckAreas) : null,
+        monthly_revenue: body.monthlyRevenue || null,
+        sprint_goals: body.sprintGoals ? JSON.parse(body.sprintGoals) : null,
         time_commitment: body.timeCommitment || null,
         start_timeline: body.startTimeline || null,
         ai_readiness: body.aiReadiness ? parseInt(body.aiReadiness) : null,
         tool_stack: body.toolStack ? JSON.parse(body.toolStack) : null,
         focus_areas: body.focusAreas ? JSON.parse(body.focusAreas) : null,
         sample_data: body.sampleData || null,
-        dwy_confirmation: body.dwyConfirmation || null,
-        preferred_format: body.preferredFormat || null,
-        success_metrics: body.successMetrics ? JSON.parse(body.successMetrics) : null,
-        budget_readiness: body.budgetReadiness || null,
-        additional_info: body.additionalInfo || null,
-        confirmations: body.confirmations ? JSON.parse(body.confirmations) : null,
+        workflow_owner: body.workflowOwner || null,
+        investment_readiness: body.investmentReadiness || null,
       }),
       
       // Scoring

@@ -39,8 +39,8 @@ export const offerStack: OfferItem[] = [
       'Fixed cost package'
     ],
     pricing: 'Fixed package price.',
-    ctaLabel: 'Book a call',
-    ctaRoute: 'https://calendly.com/troyenzo/30min',
+    ctaLabel: 'Apply now (see if you qualify)',
+    ctaRoute: '/vibe-check',
     dmKeywords: ['COACH', '1ON1'],
     acceptingClients: true,
     isActive: true
@@ -68,7 +68,7 @@ export const offerStack: OfferItem[] = [
       'Variable pricing depending on demand'
     ],
     pricing: 'Variable by scope and demand.',
-    ctaLabel: 'Request a Demo',
+    ctaLabel: 'Request as Demo',
     ctaRoute: 'https://calendly.com/troyenzo/30min',
     dmKeywords: ['BUILD', 'TEAM'],
     workshopTopics: [

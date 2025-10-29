@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, Loader2, CheckCircle2, AlertCircle, Clock } from 'lucide-react';
 import { ctaQuestions, thankYouConfig, Question } from '@/app/content/ctaQuestions';
 import { cn } from '@/lib/utils';
+import PricingCard from './PricingCard';
 
 interface FormData {
   [key: string]: string | string[];
@@ -82,7 +83,7 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
   });
 
   const currentQuestion = visibleQuestions[currentStep];
-  const progress = ((currentStep + 1) / visibleQuestions.length) * 100;
+  const progress = currentQuestion ? ((currentStep + 1) / visibleQuestions.length) * 100 : 0;
 
   useEffect(() => {
     // Track form started
@@ -95,6 +96,16 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
       }
     }
   }, [currentStep]);
+
+  // Safety check: if currentQuestion is undefined, reset form
+  useEffect(() => {
+    if (!currentQuestion && visibleQuestions.length > 0 && currentStep > 0) {
+      console.warn('Question not found, resetting form');
+      localStorage.removeItem(STORAGE_KEY);
+      setCurrentStep(0);
+      setFormData({});
+    }
+  }, [currentQuestion, visibleQuestions.length, currentStep]);
 
   // Check if user is not a fit
   const checkNotFit = (data: FormData): boolean => {
@@ -429,6 +440,13 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
               {/* Question Description */}
               {currentQuestion.description && (
                 <p className="text-sm sm:text-base text-zinc-400">{currentQuestion.description}</p>
+              )}
+
+              {/* Pricing Card - Show before investment question */}
+              {currentQuestion.id === 'investmentReadiness' && (
+                <div className="mb-6">
+                  <PricingCard />
+                </div>
               )}
 
               {/* Input Field */}
