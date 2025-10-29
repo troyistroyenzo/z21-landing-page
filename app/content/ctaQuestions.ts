@@ -42,9 +42,9 @@ export interface Question {
   };
 }
 
-// AI Onboarding Sprint Questions - 1:1 DWY Program
+// AI Onboarding Vibe-Check Questions - 1:1 DWY Program
 export const ctaQuestions: Question[] = [
-  // SECTION 1 — Basic Info
+  // SECTION 1 — Who Are You?
   {
     id: 'name',
     type: 'text',
@@ -59,8 +59,8 @@ export const ctaQuestions: Question[] = [
   {
     id: 'workDescription',
     type: 'text',
-    label: "Describe what you do in one line",
-    placeholder: 'e.g., "I\'m a real estate agent helping clients find mid-range properties in Manila."',
+    label: "What do you do in one line?",
+    placeholder: 'e.g., "I run a marketing agency helping B2B SaaS companies scale."',
     validation: {
       required: true,
       minLength: 10,
@@ -68,14 +68,27 @@ export const ctaQuestions: Question[] = [
     }
   },
   {
-    id: 'profileLink',
-    type: 'url',
-    label: "Where can we learn more about you or your work?",
-    placeholder: 'IG / LinkedIn / website / portfolio',
-    description: 'Share your social media, website, or portfolio link',
+    id: 'socialHandle',
+    type: 'text',
+    label: "What is your main social handle or website?",
+    placeholder: '@username or website.com',
+    description: "We'll scan your context before the call",
     validation: {
       required: true,
-      errorMessage: 'Please provide a valid URL'
+      minLength: 3,
+      errorMessage: 'Please provide your social handle or website'
+    }
+  },
+  {
+    id: 'phone',
+    type: 'phone',
+    label: "What's your phone number?",
+    placeholder: '912 345 6789',
+    description: 'Include country code (e.g., +63 for Philippines)',
+    validation: {
+      required: true,
+      pattern: '^[+]?[0-9]{10,15}$',
+      errorMessage: 'Please enter a valid phone number'
     }
   },
   {
@@ -121,32 +134,16 @@ export const ctaQuestions: Question[] = [
     }
   },
 
-  // SECTION 3 — AI Onboarding Path
-  // PART A: Context & Goals
+  // SECTION 2 — Experience & Context
   {
-    id: 'aiMotivation',
-    type: 'multiline',
-    label: "Why do you want to onboard to AI right now?",
-    placeholder: "What's not working / what do you hope to automate or improve?",
-    validation: {
-      required: true,
-      minLength: 20,
-      errorMessage: 'Please provide more details (at least 20 characters)'
-    },
-    conditionalLogic: {
-      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
-    }
-  },
-  {
-    id: 'roleDescription',
+    id: 'experienceLevel',
     type: 'select',
-    label: "Which of these best describes you?",
+    label: "How long have you been building your business/career?",
     options: [
-      { value: 'founder', label: 'Founder / solopreneur' },
-      { value: 'freelancer', label: 'Freelancer / service provider' },
-      { value: 'team_lead', label: 'Team lead / operations head' },
-      { value: 'creator', label: 'Creator / consultant' },
-      { value: 'other', label: 'Other' }
+      { value: '0-6', label: '0–6 months' },
+      { value: '6-24', label: '6–24 months' },
+      { value: '2-5', label: '2–5 years' },
+      { value: '5+', label: '5+ years' }
     ],
     validation: {
       required: true,
@@ -154,6 +151,79 @@ export const ctaQuestions: Question[] = [
     },
     conditionalLogic: {
       showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
+    }
+  },
+  {
+    id: 'stuckAreas',
+    type: 'multiselect',
+    label: "Where are you most stuck right now?",
+    description: "Pick up to 3",
+    options: [
+      { value: 'manual_tasks', label: 'Too many manual, repetitive tasks' },
+      { value: 'no_system', label: 'No clear workflow/system to follow' },
+      { value: 'content_slow', label: 'Content/marketing takes too long to produce' },
+      { value: 'reporting_mess', label: 'Reporting & dashboards are a mess' },
+      { value: 'scattered_knowledge', label: 'Knowledge is scattered (Drive/Discord/Notion)' },
+      { value: 'followups', label: 'Follow-ups and client comms are inconsistent' },
+      { value: 'new_to_ai', label: "I'm new to AI and don't know where to start" }
+    ],
+    validation: {
+      required: true,
+      errorMessage: 'Please select at least one area'
+    },
+    conditionalLogic: {
+      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
+    },
+    scoring: {
+      weight: 2
+    }
+  },
+  {
+    id: 'monthlyRevenue',
+    type: 'select',
+    label: "What's your current monthly business revenue?",
+    options: [
+      { value: 'pre_revenue', label: 'Pre-revenue / student' },
+      { value: '<2k', label: '<$2k' },
+      { value: '2k-10k', label: '$2k–$10k' },
+      { value: '10k-50k', label: '$10k–$50k' },
+      { value: '50k+', label: '$50k+' }
+    ],
+    validation: {
+      required: true,
+      errorMessage: 'Please select an option'
+    },
+    conditionalLogic: {
+      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
+    },
+    scoring: {
+      weight: 2
+    }
+  },
+
+  // SECTION 3 — Goals & Readiness
+  {
+    id: 'sprintGoals',
+    type: 'multiselect',
+    label: "What are your top goals for this sprint (4–6 weeks)?",
+    description: "Pick up to 3",
+    options: [
+      { value: 'workflows', label: 'Install 2–3 working AI workflows I can run weekly' },
+      { value: 'save_time', label: 'Save 5–10 hours/week by automating busywork' },
+      { value: 'playbook', label: 'Build a clear prompt + workflow playbook' },
+      { value: 'dashboard', label: 'Stand up a simple KPI dashboard & scorecard' },
+      { value: 'tighten_ops', label: 'Tighten my ops (onboarding, docs, knowledge base)' },
+      { value: 'other', label: 'Other' }
+    ],
+    validation: {
+      required: true,
+      errorMessage: 'Please select at least one goal'
+    },
+    conditionalLogic: {
+      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
+    },
+    scoring: {
+      weight: 2
     }
   },
   {
@@ -261,15 +331,16 @@ export const ctaQuestions: Question[] = [
   {
     id: 'sampleData',
     type: 'select',
-    label: "Do you have sample data or existing processes to use in training?",
+    label: "Do you have sample data or existing processes we can use during training?",
+    description: "Masked/redacted is fine",
     options: [
-      { value: 'yes', label: 'Yes ✅' },
-      { value: 'no', label: 'No 🚫' }
+      { value: 'yes', label: 'Yes (required for DWY)' },
+      { value: 'no', label: 'No (not ready yet)' }
     ],
     validation: {
       required: true,
       knockout: true,
-      errorMessage: 'This is required to proceed'
+      errorMessage: 'Sample data is required to proceed'
     },
     conditionalLogic: {
       showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
@@ -279,73 +350,13 @@ export const ctaQuestions: Question[] = [
     }
   },
   {
-    id: 'dwyConfirmation',
+    id: 'workflowOwner',
     type: 'select',
-    label: "Are you comfortable co-building (DWY), not DFY?",
-    description: "DWY = Done With You, DFY = Done For You",
+    label: "Who will own the workflows after we build them?",
     options: [
-      { value: 'yes', label: 'Yes ✅' },
-      { value: 'no', label: 'No 🚫' }
-    ],
-    validation: {
-      required: true,
-      knockout: true,
-      errorMessage: 'This is required to proceed'
-    },
-    conditionalLogic: {
-      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
-    },
-    scoring: {
-      weight: 2
-    }
-  },
-  {
-    id: 'preferredFormat',
-    type: 'select',
-    label: "Preferred format",
-    options: [
-      { value: 'virtual', label: 'Virtual (Zoom)' },
-      { value: 'in_person', label: 'In-person (Metro Manila)' }
-    ],
-    validation: {
-      required: true,
-      errorMessage: 'Please select a format'
-    },
-    conditionalLogic: {
-      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
-    }
-  },
-
-  // PART C: Outcomes & Commitment
-  {
-    id: 'successMetrics',
-    type: 'multiselect',
-    label: "In 30 days, what would 'success' look like for you?",
-    description: "Pick up to 3",
-    options: [
-      { value: 'workflows', label: '2–3 working AI workflows running weekly' },
-      { value: 'time_saved', label: 'Measurable hours saved' },
-      { value: 'accuracy', label: 'Improved accuracy / consistency' },
-      { value: 'capabilities', label: 'New internal capabilities unlocked' },
-      { value: 'processes', label: 'Less chaos, clearer processes' },
-      { value: 'other', label: 'Other' }
-    ],
-    validation: {
-      required: true,
-      errorMessage: 'Please select at least one success metric'
-    },
-    conditionalLogic: {
-      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
-    }
-  },
-  {
-    id: 'budgetReadiness',
-    type: 'select',
-    label: "Budget readiness",
-    options: [
-      { value: 'ready', label: 'Ready to invest' },
-      { value: 'payment_plan', label: 'Want payment plan' },
-      { value: 'exploring', label: 'Just exploring' }
+      { value: 'me', label: "Me (I'll run them weekly)" },
+      { value: 'team', label: 'Someone on my team (in the room)' },
+      { value: 'not_sure', label: 'Not sure / no owner yet' }
     ],
     validation: {
       required: true,
@@ -358,43 +369,21 @@ export const ctaQuestions: Question[] = [
       weight: 2
     }
   },
-  {
-    id: 'additionalInfo',
-    type: 'multiline',
-    label: "Anything else you want me to know before reviewing your fit?",
-    placeholder: 'Share any additional context...',
-    conditionalLogic: {
-      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
-    }
-  },
 
-  // SECTION 4 — Confirmations
+  // PART D: Investment & Final Commitment
   {
-    id: 'confirmations',
-    type: 'checkbox',
-    label: "Confirm these (required)",
+    id: 'investmentReadiness',
+    type: 'select',
+    label: "Finally, just so we're aligned on investment...",
+    description: "The 1:1 AI Onboarding Sprint (4 weeks, 1–2 calls/week)",
     options: [
-      { 
-        value: 'dwy_understood', 
-        label: 'I understand this is a 1:1 done-with-you (DWY) sprint, not a done-for-you service.' 
-      },
-      { 
-        value: 'time_commitment', 
-        label: 'I can commit 4–6 hours/week for calls + homework.' 
-      },
-      { 
-        value: 'start_timeline', 
-        label: "I'm comfortable starting within 30 days." 
-      },
-      { 
-        value: 'deposit', 
-        label: '100% deposit required to lock dates.' 
-      }
+      { value: 'ready', label: 'Ready to invest' },
+      { value: 'installment', label: 'Prefer installments' },
+      { value: 'tight', label: 'Funds are tight (not a fit right now)' }
     ],
     validation: {
       required: true,
-      knockout: true,
-      errorMessage: 'All confirmations are required to proceed'
+      errorMessage: 'Please select an option'
     },
     conditionalLogic: {
       showIf: { questionId: 'sprintType', value: 'ai_onboarding' }

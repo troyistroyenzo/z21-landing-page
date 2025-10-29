@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, Loader2, CheckCircle2, AlertCircle, Clock } from 'lucide-react';
 import { ctaQuestions, thankYouConfig, Question } from '@/app/content/ctaQuestions';
 import { cn } from '@/lib/utils';
+import PricingCard from './PricingCard';
 
 interface FormData {
   [key: string]: string | string[];
@@ -48,17 +49,25 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
   const [showTimeEstimate, setShowTimeEstimate] = useState(false);
   const [otherInputs, setOtherInputs] = useState<Record<string, string>>({});
 
-  // Load saved form data on mount
+  // Load saved form data on mount with validation
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         try {
           const { data, step } = JSON.parse(saved);
-          setFormData(data);
-          setCurrentStep(step || 0);
+          // Validate that the step is within valid range
+          if (step >= 0 && step < ctaQuestions.length) {
+            setFormData(data);
+            setCurrentStep(step);
+          } else {
+            // Clear invalid data
+            console.warn('Invalid saved step, clearing localStorage');
+            localStorage.removeItem(STORAGE_KEY);
+          }
         } catch (e) {
           console.error('Failed to load saved form data', e);
+          localStorage.removeItem(STORAGE_KEY);
         }
       }
     }
@@ -82,7 +91,7 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
   });
 
   const currentQuestion = visibleQuestions[currentStep];
-  const progress = ((currentStep + 1) / visibleQuestions.length) * 100;
+  const progress = currentQuestion ? ((currentStep + 1) / visibleQuestions.length) * 100 : 0;
 
   useEffect(() => {
     // Track form started
@@ -96,21 +105,40 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
     }
   }, [currentStep]);
 
-  // Check if user is not a fit
+  // Safety check: Clear invalid localStorage and reset
+  useEffect(() => {
+    if (visibleQuestions.length === 0 || currentStep >= visibleQuestions.length) {
+      console.warn('Invalid form state, clearing localStorage');
+      localStorage.removeItem(STORAGE_KEY);
+      setCurrentStep(0);
+      setFormData({});
+    }
+  }, [visibleQuestions.length, currentStep]);
+
+  // If no current question, return loading state
+  if (!currentQuestion) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  // Check if user is not a fit (simplified - backend has full scoring)
   const checkNotFit = (data: FormData): boolean => {
+    // Knockouts only (backend calculates full score)
+    
     // Time commitment: <2 hours
     if (data.timeCommitment === '<2') return true;
     
-    // Timeline: >30 days
-    if (data.startTimeline === '>30') return true;
-    
-    // AI familiarity: <4
+    // AI familiarity: Too beginner (<3)
     const aiReadiness = Number(data.aiReadiness);
-    if (aiReadiness > 0 && aiReadiness < 4) return true;
+    if (aiReadiness > 0 && aiReadiness < 3) return true;
     
-    // Budget: just exploring
-    if (data.budgetReadiness === 'exploring') return true;
+    // No sample data
+    if (data.sampleData === 'no') return true;
 
+    // All other scoring happens on backend
     return false;
   };
 
@@ -429,6 +457,13 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
               {/* Question Description */}
               {currentQuestion.description && (
                 <p className="text-sm sm:text-base text-zinc-400">{currentQuestion.description}</p>
+              )}
+
+              {/* Pricing Card - Show before investment question */}
+              {currentQuestion.id === 'investmentReadiness' && (
+                <div className="mb-6">
+                  <PricingCard />
+                </div>
               )}
 
               {/* Input Field */}
