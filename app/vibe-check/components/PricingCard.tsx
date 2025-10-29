@@ -13,22 +13,22 @@ export default function PricingCard() {
       value: null
     },
     { 
-      text: '2-3 custom AI workflows built together',
+      text: '2-3 custom AI workflows / products built together',
       subtext: null,
       value: '$800+'
     },
     { 
-      text: 'Complete workflow playbook & templates',
+      text: 'Complete workflow playbook, prompt library & templates',
       subtext: null,
       value: '$600+'
     },
     { 
-      text: '30-day KPI scoreboard & tracking',
+      text: 'KPI scoreboard & tracking',
       subtext: null,
       value: '$500+'
     },
     { 
-      text: 'Private Slack/Discord support access',
+      text: 'Private Discord support access',
       subtext: null,
       value: '$500+'
     },

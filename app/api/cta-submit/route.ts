@@ -7,7 +7,7 @@ interface CTAFormData {
   [key: string]: string;
 }
 
-// Calculate fit score based on scoring rules
+// Calculate fit score based on weighted priorities (Max: 20 points)
 function calculateFitScore(formData: CTAFormData): { 
   score: number; 
   hasKnockout: boolean; 
@@ -16,58 +16,56 @@ function calculateFitScore(formData: CTAFormData): {
   let score = 0;
   let hasKnockout = false;
 
-  // Q9: Time commitment (weight: 2)
-  if (formData.timeCommitment === '4-6') score += 2;
-  else if (formData.timeCommitment === '2-3') score += 1;
-
-  // Q10: Start timeline (weight: 2)
-  if (formData.startTimeline === 'within_14') score += 2;
-  else if (formData.startTimeline === '15-30') score += 1;
-
-  // Q11: AI readiness (weight: 2)
+  // 1. AI KNOWLEDGE (0-5 points + 1 bonus) - HIGHEST PRIORITY
   const aiReadiness = parseInt(formData.aiReadiness || '0');
-  if (aiReadiness >= 8) score += 2;
-  else if (aiReadiness >= 5) score += 1;
+  if (aiReadiness >= 8) score += 5; // Already using AI daily
+  else if (aiReadiness >= 5) score += 3; // Moderate experience
+  else if (aiReadiness < 3) hasKnockout = true; // Too beginner
 
-  // Q13: Focus areas (weight: 2)
+  // Tool stack bonus
   try {
-    const focusAreas = JSON.parse(formData.focusAreas || '[]');
-    if (focusAreas.length > 0) score += 2;
-  } catch (e) {
-    // Invalid JSON, skip scoring
-  }
+    const tools = JSON.parse(formData.toolStack || '[]');
+    if (tools.length >= 3) score += 1; // Bonus for using multiple tools
+  } catch (e) {}
 
-  // Q14: Sample data (weight: 2, knockout if 'no')
-  if (formData.sampleData === 'yes') score += 2;
-  else if (formData.sampleData === 'no') hasKnockout = true;
+  // 2. TIME COMMITMENT (0-4 points)
+  if (formData.timeCommitment === '4-6') score += 4;
+  else if (formData.timeCommitment === '2-3') score += 2;
+  else if (formData.timeCommitment === '<2') hasKnockout = true; // Knockout
 
-  // Q15: DWY confirmation (weight: 2, knockout if 'no')
-  if (formData.dwyConfirmation === 'yes') score += 2;
-  else if (formData.dwyConfirmation === 'no') hasKnockout = true;
+  // 3. URGENCY (0-4 points)
+  if (formData.startTimeline === 'within_14') score += 4;
+  else if (formData.startTimeline === '15-30') score += 2;
+  // >30 days = 0 points (not urgent)
 
-  // Q18: Budget readiness (weight: 2)
-  if (formData.budgetReadiness === 'ready') score += 2;
-  else if (formData.budgetReadiness === 'payment_plan') score += 1;
+  // 4. REVENUE (0-5 points)
+  if (formData.monthlyRevenue === '50k+') score += 5;
+  else if (formData.monthlyRevenue === '10k-50k') score += 4;
+  else if (formData.monthlyRevenue === '2k-10k') score += 3; // Minimum viable
+  else if (formData.monthlyRevenue === '<2k') score += 1;
+  // Pre-revenue = 0 points
 
-  // Q20: Confirmations (weight: 2, knockout if not all 4 checked)
+  // 5. BONUS POINTS (0-2)
+  // Clear goals
   try {
-    const confirmations = JSON.parse(formData.confirmations || '[]');
-    if (confirmations.length === 4) score += 2;
-    else hasKnockout = true;
-  } catch (e) {
-    hasKnockout = true;
-  }
+    const goals = JSON.parse(formData.sprintGoals || '[]');
+    if (goals.length >= 2) score += 1;
+  } catch (e) {}
+
+  // Sample data ready
+  if (formData.sampleData === 'yes') score += 1;
+  else if (formData.sampleData === 'no') hasKnockout = true; // Knockout
 
   // Determine qualification status
   let status: 'strong_fit' | 'conditional' | 'not_qualified';
   if (hasKnockout) {
     status = 'not_qualified';
-  } else if (score >= 8) {
-    status = 'strong_fit';
-  } else if (score >= 6) {
-    status = 'conditional';
+  } else if (score >= 14) {
+    status = 'strong_fit'; // 70%+ score
+  } else if (score >= 10) {
+    status = 'conditional'; // 50-69% - manual review
   } else {
-    status = 'not_qualified';
+    status = 'not_qualified'; // <50%
   }
 
   return { score, hasKnockout, status };

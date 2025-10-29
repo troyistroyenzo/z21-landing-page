@@ -375,7 +375,7 @@ export const ctaQuestions: Question[] = [
     id: 'investmentReadiness',
     type: 'select',
     label: "Finally, just so we're aligned on investment...",
-    description: "The 1:1 AI Onboarding Sprint (4–6 weeks, 1–2 calls/week) typically ranges ₱65k–₱120k ($600-3000) depending on scope",
+    description: "The 1:1 AI Onboarding Sprint (4 weeks, 1–2 calls/week)",
     options: [
       { value: 'ready', label: 'Ready to invest' },
       { value: 'installment', label: 'Prefer installments' },
