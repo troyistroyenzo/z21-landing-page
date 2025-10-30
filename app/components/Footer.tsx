@@ -12,7 +12,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           {/* Left side - Logo and smallprint */}
           <div className="text-center md:text-left">
-            <div className="text-2xl font-bold mb-2">Z21</div>
+            <div className="text-2xl font-bold mb-2">Z21 Launchpad</div>
             <p className="text-white/60 text-sm max-w-xs">
               {content.footer.smallprint}
             </p>

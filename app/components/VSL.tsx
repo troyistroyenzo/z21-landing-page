@@ -25,7 +25,7 @@ const VSL = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse" />
-            90 Second Overview
+            Full Live Recording
           </motion.div>
           
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 text-balance">
@@ -59,17 +59,16 @@ const VSL = () => {
 
           {/* Video Stats */}
           <motion.div
-            className="flex items-center justify-center mt-6 space-x-8 text-sm text-emerald-300"
+            className="flex flex-col sm:flex-row items-center justify-center mt-6 gap-3 sm:space-x-8 text-sm text-emerald-300 text-center"
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
             <div className="flex items-center">
               <div className="w-2 h-2 bg-red-500 rounded-full mr-2" />
-              Live Demo
+              Watch full live recording of “The Art of Personal Branding”
             </div>
-            <div>90 seconds</div>
-            <div>Real Results</div>
+            <div>See exactly how my workshops run, end‑to‑end</div>
           </motion.div>
         </motion.div>
 
