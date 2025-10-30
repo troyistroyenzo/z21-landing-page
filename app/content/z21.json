@@ -196,16 +196,17 @@
     "guaranteeNote": "7-day entry refund. Do-the-work credit applies upon completion of the published checklist."
   },
   "footer": {
-    "smallprint": "Nothing here is financial or legal advice. Results vary by implementation and market conditions.",
+    "smallprint": "Copyright © 2025 — Z21 Launchpad — All Rights Reserved",
     "links": [
-      { "label": "Terms", "href": "#" },
-      { "label": "Privacy", "href": "#" },
+      { "label": "Privacy Policy", "href": "/privacy" },
+      { "label": "Disclaimer", "href": "/disclaimer" },
+      { "label": "Cookie Policy", "href": "/cookies" },
       { "label": "Contact", "href": "mailto:hey@z21.build" }
     ],
     "socials": [
-      { "label": "Instagram", "href": "#" },
-      { "label": "LinkedIn", "href": "#" },
-      { "label": "YouTube", "href": "#" }
+      { "label": "Instagram", "href": "https://instagram.com/troyenzo" },
+      { "label": "LinkedIn", "href": "https://linkedin.com/in/troyenzo" },
+      { "label": "YouTube", "href": "https://youtube.com/troyenzo" }
     ]
   }
 }
