@@ -75,9 +75,13 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     console.log('Received request body:', body);
+    // Back-compat: map legacy profileLink to socialHandle if present
+    if (!body.socialHandle && body.profileLink) {
+      body.socialHandle = body.profileLink;
+    }
     
     // Validate basic required fields
-    const basicFields = ['name', 'workDescription', 'profileLink', 'email', 'referralSource', 'sprintType'];
+    const basicFields = ['name', 'workDescription', 'socialHandle', 'email', 'referralSource', 'sprintType'];
     for (const field of basicFields) {
       if (!body[field]) {
         console.error(`Missing required field: ${field}`);
@@ -109,6 +113,7 @@ export async function POST(request: NextRequest) {
       name: body.name,
       work_description: body.workDescription,
       social_handle: body.socialHandle || null,
+      profile_link: body.socialHandle || body.profileLink || '',
       phone: body.phone || null,
       email: body.email,
       referral_source: body.referralSource,
