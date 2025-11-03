@@ -15,7 +15,8 @@ interface SubmissionData {
 }
 
 export async function sendOnboardingNotification(
-  data: any
+  data: any,
+  aiSummary: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const notificationEmail = process.env.NOTIFICATION_EMAIL;
@@ -87,6 +88,16 @@ export async function sendOnboardingNotification(
 
               <!-- Content -->
               <div style="background: #000000; padding: 30px; border-radius: 0 0 12px 12px; border: 1px solid #27272a;">
+                <!-- AI Summary -->
+                <div style="background: #18181b; border: 1px solid #27272a; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+                  <h2 style="margin: 0 0 12px 0; color: #e4e4e7; font-size: 18px; font-weight: 600;">
+                    🤖 Quick Summary
+                  </h2>
+                  <p style="margin: 0; color: #a1a1aa; font-size: 14px; line-height: 1.6;">
+                    ${aiSummary}
+                  </p>
+                </div>
+
                 <h2 style="margin: 0 0 16px 0; color: #e4e4e7; font-size: 18px; font-weight: 600;">
                   📋 Intake Details
                 </h2>

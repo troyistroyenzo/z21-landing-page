@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { sendOnboardingNotification } from '@/lib/resend';
+import { generateIntakeSummary } from '@/lib/openai-summary';
 
 export async function POST(request: NextRequest) {
   try {
@@ -108,9 +109,10 @@ export async function POST(request: NextRequest) {
 
     console.log('Successfully inserted intake data:', data);
 
-    // Send email notification (don't block on failure)
+    // Generate AI summary and send email notification (don't block on failure)
     try {
-      await sendOnboardingNotification(data);
+      const aiSummary = await generateIntakeSummary(data);
+      await sendOnboardingNotification(data, aiSummary);
     } catch (emailError) {
       console.error('Email notification failed (non-blocking):', emailError);
     }

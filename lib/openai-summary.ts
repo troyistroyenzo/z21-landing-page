@@ -14,6 +14,57 @@ interface FormSubmission {
   [key: string]: any;
 }
 
+export async function generateIntakeSummary(
+  intake: any
+): Promise<string> {
+  try {
+    const prompt = `Analyze this Z21 onboarding intake form and provide a brief 2-3 sentence summary for the business owner.
+
+Business: ${intake.business_name}
+Contact: ${intake.full_name} (${intake.email})
+What they do: ${intake.business_description}
+Target customers: ${intake.target_customers}
+AI familiarity: ${intake.ai_familiarity}
+
+Top Priorities:
+${intake.top_priorities}
+
+Success Definition:
+${intake.success_definition}
+
+Current tools: ${JSON.stringify(intake.current_tools)}
+Timezone: ${intake.timezone}
+
+Provide a concise summary highlighting:
+1. Business readiness and context
+2. Key automation opportunities
+3. Potential challenges or focus areas
+
+Keep it actionable and focused.`;
+
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a business analyst helping evaluate client onboarding intake forms. Provide clear, brief summaries.'
+        },
+        {
+          role: 'user',
+          content: prompt
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 150,
+    });
+
+    return completion.choices[0]?.message?.content || 'Summary generation failed.';
+  } catch (error) {
+    console.error('OpenAI intake summary error:', error);
+    return 'AI summary unavailable - please review intake details manually.';
+  }
+}
+
 export async function generateAISummary(
   submission: FormSubmission
 ): Promise<string> {
