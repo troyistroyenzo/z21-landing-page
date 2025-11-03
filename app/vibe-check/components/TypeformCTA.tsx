@@ -327,6 +327,12 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
           </p>
           <div className="space-y-3">
             <a
+              href="/ai-resources"
+              className="block w-full px-5 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition-all text-sm"
+            >
+              Explore Free AI Resources
+            </a>
+            <a
               href="https://calendly.com/troyenzo/30min"
               target="_blank"
               rel="noopener noreferrer"

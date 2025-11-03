@@ -34,7 +34,7 @@ const FormulaCards3D = dynamic(() => import('./components/FormulaCards3D'), {
   loading: () => <div className="min-h-screen" />
 });
 
-const RoadmapSection3D = dynamic(() => import('./components/RoadmapSection3D'), {
+const RoadmapTimeline = dynamic(() => import('./components/RoadmapTimeline'), {
   ssr: false,
   loading: () => <div className="min-h-screen" />
 });
@@ -107,7 +107,7 @@ export default function Home() {
         <ClientsSection />
         <StorySection />
         <FormulaCards3D />
-        <RoadmapSection3D />
+        <RoadmapTimeline />
         <FinalCTA />
         <FAQ />
         <Footer />
