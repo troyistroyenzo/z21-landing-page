@@ -189,12 +189,20 @@ export async function POST(request: NextRequest) {
 
     console.log('Successfully inserted data:', data);
 
-    // Generate AI summary and send email notification (don't block on failure)
+    // Generate AI summary ONLY for conditional cases (saves ~70% on AI costs)
+    // strong_fit and not_qualified are obvious decisions that don't need AI analysis
     try {
-      const aiSummary = await generateAISummary(data);
-      await sendSubmissionNotification(data, aiSummary);
+      if (qualificationStatus === 'conditional') {
+        const aiSummary = await generateAISummary(data);
+        await sendSubmissionNotification(data, aiSummary);
+      } else {
+        // Skip AI for clear fit/not-fit decisions
+        const statusMessage = qualificationStatus === 'strong_fit' 
+          ? 'Auto-qualified: Strong fit based on scoring criteria'
+          : 'Auto-disqualified: Does not meet minimum requirements';
+        await sendSubmissionNotification(data, statusMessage);
+      }
     } catch (emailError) {
-      // Log but don't fail the request if email fails
       console.error('Email notification failed (non-blocking):', emailError);
     }
 

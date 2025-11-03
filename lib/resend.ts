@@ -14,6 +14,113 @@ interface SubmissionData {
   [key: string]: any;
 }
 
+export async function sendOnboardingNotification(
+  data: any
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const notificationEmail = process.env.NOTIFICATION_EMAIL;
+    
+    if (!notificationEmail) {
+      throw new Error('NOTIFICATION_EMAIL environment variable not set');
+    }
+
+    // Build intake details HTML
+    const detailsHtml = `
+      <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+        <tr style="background: #18181b;">
+          <td style="padding: 12px; border: 1px solid #27272a; font-weight: 600; color: #a1a1aa;">Business</td>
+          <td style="padding: 12px; border: 1px solid #27272a; color: #e4e4e7;">${data.business_name}</td>
+        </tr>
+        <tr>
+          <td style="padding: 12px; border: 1px solid #27272a; font-weight: 600; color: #a1a1aa;">Contact</td>
+          <td style="padding: 12px; border: 1px solid #27272a; color: #e4e4e7;">${data.full_name} (${data.email})</td>
+        </tr>
+        <tr style="background: #18181b;">
+          <td style="padding: 12px; border: 1px solid #27272a; font-weight: 600; color: #a1a1aa;">What They Do</td>
+          <td style="padding: 12px; border: 1px solid #27272a; color: #e4e4e7;">${data.business_description}</td>
+        </tr>
+        <tr>
+          <td style="padding: 12px; border: 1px solid #27272a; font-weight: 600; color: #a1a1aa;">Target Customers</td>
+          <td style="padding: 12px; border: 1px solid #27272a; color: #e4e4e7;">${data.target_customers}</td>
+        </tr>
+        <tr style="background: #18181b;">
+          <td style="padding: 12px; border: 1px solid #27272a; font-weight: 600; color: #a1a1aa;">AI Familiarity</td>
+          <td style="padding: 12px; border: 1px solid #27272a; color: #e4e4e7;">${data.ai_familiarity}</td>
+        </tr>
+        <tr>
+          <td style="padding: 12px; border: 1px solid #27272a; font-weight: 600; color: #a1a1aa;">Top Priorities</td>
+          <td style="padding: 12px; border: 1px solid #27272a; color: #e4e4e7; white-space: pre-wrap;">${data.top_priorities}</td>
+        </tr>
+        <tr style="background: #18181b;">
+          <td style="padding: 12px; border: 1px solid #27272a; font-weight: 600; color: #a1a1aa;">Success Definition</td>
+          <td style="padding: 12px; border: 1px solid #27272a; color: #e4e4e7; white-space: pre-wrap;">${data.success_definition}</td>
+        </tr>
+        <tr>
+          <td style="padding: 12px; border: 1px solid #27272a; font-weight: 600; color: #a1a1aa;">Schedule</td>
+          <td style="padding: 12px; border: 1px solid #27272a; color: #e4e4e7;">${JSON.stringify(data.preferred_schedule)} • ${data.timezone}</td>
+        </tr>
+      </table>
+    `;
+
+    const { data: emailData, error } = await resend.emails.send({
+      from: 'Z21 Onboarding <notifications@resend.dev>',
+      to: [notificationEmail],
+      subject: `NEW ONBOARDING SUMMARY: ${data.full_name} (${data.business_name})`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #09090b;">
+            <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+              <!-- Header -->
+              <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
+                <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700;">
+                  📝 New Onboarding Intake
+                </h1>
+                <p style="margin: 8px 0 0 0; color: #ffffff; opacity: 0.9; font-size: 16px;">
+                  ${data.business_name}
+                </p>
+              </div>
+
+              <!-- Content -->
+              <div style="background: #000000; padding: 30px; border-radius: 0 0 12px 12px; border: 1px solid #27272a;">
+                <h2 style="margin: 0 0 16px 0; color: #e4e4e7; font-size: 18px; font-weight: 600;">
+                  📋 Intake Details
+                </h2>
+                ${detailsHtml}
+
+                <!-- Footer -->
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #27272a; text-align: center;">
+                  <p style="margin: 0; color: #71717a; font-size: 14px;">
+                    Submitted via Onboarding Intake • Z21 Launchpad
+                  </p>
+                </div>
+              </div>
+            </div>
+          </body>
+        </html>
+      `,
+    });
+
+    if (error) {
+      console.error('Resend error:', error);
+      return { success: false, error: error.message };
+    }
+
+    console.log('Onboarding email sent successfully:', emailData);
+    return { success: true };
+  } catch (error) {
+    console.error('Email sending error:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+}
+
 export async function sendSubmissionNotification(
   data: SubmissionData,
   aiSummary: string
