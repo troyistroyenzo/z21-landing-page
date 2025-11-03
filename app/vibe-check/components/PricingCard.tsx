@@ -57,7 +57,7 @@ export default function PricingCard() {
         {/* Price */}
         <div className="px-8 py-10 text-center border-b border-zinc-800">
           <div className="text-6xl font-bold text-white mb-2">
-            $600
+            Starting at $600
           </div>
           <div className="text-zinc-400 mb-1">
             TOTAL VALUE: <span className="line-through">$2,800+</span>
