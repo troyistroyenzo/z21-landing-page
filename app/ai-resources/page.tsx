@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   resources, 
@@ -12,17 +12,70 @@ import ResourceCard from './components/ResourceCard';
 import ResourceGrid from './components/ResourceGrid';
 import FilterBar from './components/FilterBar';
 import SearchBar from './components/SearchBar';
+import EmailGateModal from './components/EmailGateModal';
 
 export default function AIResourcesPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showEmailGate, setShowEmailGate] = useState(false);
+  const [hasAccess, setHasAccess] = useState(false);
   
   const filteredResources = filterResources(selectedCategory, selectedType || undefined, searchQuery);
   const featuredResources = getFeaturedResources();
 
+  // Check if user has already submitted email or coming from internal navigation
+  useEffect(() => {
+    const hasSubmitted = localStorage.getItem('ai_resources_email_submitted');
+    
+    // Check if coming from external source
+    const referrer = document.referrer;
+    const isExternal = !referrer || !referrer.includes(window.location.hostname);
+    
+    if (hasSubmitted) {
+      // Already submitted email - always give access
+      setHasAccess(true);
+    } else if (isExternal) {
+      // External/direct traffic - show email gate
+      setShowEmailGate(true);
+    } else {
+      // Internal navigation - skip gate, give access
+      setHasAccess(true);
+    }
+  }, []);
+
+  const handleEmailSubmit = async (email: string) => {
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source: 'ai-resources' })
+      });
+
+      if (!response.ok) {
+        throw new Error('Subscription failed');
+      }
+
+      // Save to localStorage
+      localStorage.setItem('ai_resources_email_submitted', 'true');
+      setHasAccess(true);
+      setShowEmailGate(false);
+    } catch (error) {
+      console.error('Subscription error:', error);
+      throw error;
+    }
+  };
+
   return (
-    <main className="min-h-screen bg-black text-white">
+    <>
+      {/* Email Gate Modal */}
+      <EmailGateModal
+        isOpen={showEmailGate && !hasAccess}
+        onClose={() => setShowEmailGate(false)}
+        onSubmit={handleEmailSubmit}
+      />
+
+      <main className="min-h-screen bg-black text-white">
       {/* Hero Section */}
       <section className="relative py-20 bg-gradient-to-b from-zinc-900 to-black">
         <div className="max-w-7xl mx-auto px-6">
@@ -155,6 +208,7 @@ export default function AIResourcesPage() {
           </motion.div>
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }

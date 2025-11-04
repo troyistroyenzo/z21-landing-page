@@ -34,6 +34,17 @@ export const resources: Resource[] = [
     createdAt: '2025-11-03'
   },
   {
+    id: 'yupp-ai',
+    title: 'Yupp.ai',
+    description: 'Every AI for everyone. Check out the best answers from all the latest AIs for free. Win rewards. Shape the future of AI.',
+    url: 'https://yupp.ai/',
+    type: 'tool',
+    category: 'Tools & Apps',
+    tags: ['free', 'ai-comparison', 'rewards', 'multi-ai'],
+    featured: true,
+    createdAt: '2025-11-04'
+  },
+  {
     id: 'chatgpt',
     title: 'ChatGPT',
     description: 'OpenAI\'s powerful conversational AI - free tier available',

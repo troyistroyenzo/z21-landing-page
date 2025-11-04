@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-// Newsletter subscription stub
-// Replace with actual ConvertKit/Beehiiv API integration in production
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email } = body;
+    const { email, source = 'unknown' } = body;
 
     // Validate email
     if (!email || !email.includes('@')) {
@@ -16,32 +14,61 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // In production, you would integrate with your email service here
-    // For ConvertKit:
-    // const response = await fetch(`https://api.convertkit.com/v3/forms/${FORM_ID}/subscribe`, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({
-    //     api_key: process.env.CONVERTKIT_API_KEY,
-    //     email
-    //   })
-    // });
+    // Get source URL from headers
+    const sourceUrl = request.headers.get('referer') || '';
 
-    // For Beehiiv:
-    // const response = await fetch('https://api.beehiiv.com/v2/publications/YOUR_PUBLICATION_ID/subscriptions', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Authorization': `Bearer ${process.env.BEEHIIV_API_KEY}`,
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({ email })
-    // });
+    // Save to Supabase
+    const supabase = supabaseAdmin();
+    const { data, error } = await supabase
+      .from('newsletter_subscribers')
+      .insert([
+        {
+          email: email.toLowerCase().trim(),
+          source,
+          metadata: {
+            source_url: sourceUrl,
+            user_agent: request.headers.get('user-agent') || '',
+            timestamp: new Date().toISOString()
+          }
+        }
+      ])
+      .select()
+      .single();
 
-    // Simulate successful subscription
-    console.log(`New subscriber: ${email}`);
+    if (error) {
+      // Check for duplicate email
+      if (error.code === '23505' && error.message.includes('unique')) {
+        // Email already exists - this is okay, just return success
+        console.log(`Email already subscribed: ${email}`);
+        return NextResponse.json(
+          { 
+            message: 'You\'re already subscribed! Check your inbox for our latest updates.',
+            alreadySubscribed: true 
+          },
+          { status: 200 }
+        );
+      }
+      
+      console.error('Subscription error:', error);
+      return NextResponse.json(
+        { error: 'Failed to subscribe. Please try again.' },
+        { status: 500 }
+      );
+    }
+
+    console.log(`New subscriber: ${email} from ${source}`);
+
+    // Optional: Send welcome email via Resend
+    // await sendWelcomeEmail(email);
+
+    // Optional: Add to ConvertKit/Beehiiv
+    // await addToEmailService(email);
     
     return NextResponse.json(
-      { message: 'Successfully subscribed to newsletter' },
+      { 
+        message: 'Successfully subscribed! Check your inbox for AI resources.',
+        data: { id: data.id }
+      },
       { status: 200 }
     );
   } catch (error) {

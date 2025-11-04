@@ -37,7 +37,7 @@ export default function ResourceCard({ resource, featured = false }: ResourceCar
       rel="noopener noreferrer"
       className={`block p-6 rounded-xl border transition-all hover:scale-[1.02] ${
         featured 
-          ? 'bg-gradient-to-br from-zinc-900 to-zinc-950 border-accent/30 hover:border-accent/60' 
+          ? 'bg-gradient-to-br from-zinc-900 to-zinc-950 border-amber-500/30 hover:border-amber-500/60' 
           : 'bg-zinc-900/50 border-zinc-800 hover:border-zinc-700'
       }`}
       whileHover={{ y: -4 }}
@@ -46,8 +46,8 @@ export default function ResourceCard({ resource, featured = false }: ResourceCar
       transition={{ duration: 0.3 }}
     >
       <div className="flex items-start justify-between mb-3">
-        <div className={`p-2 rounded-lg ${featured ? 'bg-accent/10' : 'bg-zinc-800'}`}>
-          <Icon className={`w-5 h-5 ${featured ? 'text-accent' : 'text-zinc-400'}`} />
+        <div className={`p-2 rounded-lg ${featured ? 'bg-amber-500/10' : 'bg-zinc-800'}`}>
+          <Icon className={`w-5 h-5 ${featured ? 'text-amber-500' : 'text-zinc-400'}`} />
         </div>
         <ExternalLink className="w-4 h-4 text-zinc-500" />
       </div>
@@ -66,7 +66,7 @@ export default function ResourceCard({ resource, featured = false }: ResourceCar
         </span>
         
         {featured && (
-          <span className="px-2 py-1 text-xs font-semibold bg-accent/10 text-accent rounded-full">
+          <span className="px-2 py-1 text-xs font-semibold bg-amber-500/10 text-amber-500 rounded-full">
             Featured
           </span>
         )}
