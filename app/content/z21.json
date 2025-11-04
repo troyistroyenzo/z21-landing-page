@@ -204,9 +204,10 @@
       { "label": "Contact", "href": "mailto:hey@z21.build" }
     ],
     "socials": [
-      { "label": "Instagram", "href": "https://instagram.com/troyenzo" },
+      { "label": "Instagram", "href": "https://www.instagram.com/z21launchpad/" },
       { "label": "LinkedIn", "href": "https://linkedin.com/in/troyenzo" },
-      { "label": "YouTube", "href": "https://youtube.com/troyenzo" }
+      { "label": "YouTube", "href": "https://youtube.com/troyenzo" },
+      { "label": "Discord", "href": "https://discord.gg/fwrJwNmf" }
     ]
   }
 }
