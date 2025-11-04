@@ -11,6 +11,7 @@
       { "label": "Why now", "href": "#why" },
       { "label": "Cohort", "href": "#cohort" },
       { "label": "Proof", "href": "#proof" },
+      { "label": "Builds", "href": "/community-builds" },
       { "label": "FAQ", "href": "#faq" }
     ]
   },
