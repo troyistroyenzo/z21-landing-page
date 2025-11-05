@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 
+// Next.js 15 compatibility - params are now Promise-based
 // PATCH - Update resource
 export async function PATCH(
   request: NextRequest,
