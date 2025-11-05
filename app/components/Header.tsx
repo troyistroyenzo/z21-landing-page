@@ -22,8 +22,8 @@ const Header = () => {
   }, []);
 
   const navItems = [
-    { label: 'Features', href: '#features' },
-    { label: 'Proof', href: '#proof' },
+    { label: 'Resources', href: '/ai-resources' },
+    { label: 'Proof', href: '/community-builds' },
     { label: 'FAQ', href: '#faq' },
   ];
 
@@ -57,15 +57,27 @@ const Header = () => {
           {/* Desktop Navigation - Right aligned with larger text */}
           <nav className="hidden md:flex items-center space-x-8 ml-auto">
             {navItems.map((item) => (
-              <motion.a
-                key={item.label}
-                href={item.href}
-                className="hover:text-foreground transition-colors duration-200 text-base lg:text-lg font-medium"
-                style={{ color: '#AF977C' }}
-                whileHover={{ y: -1 }}
-              >
-                {item.label}
-              </motion.a>
+              item.href.startsWith('#') ? (
+                <motion.a
+                  key={item.label}
+                  href={item.href}
+                  className="hover:text-foreground transition-colors duration-200 text-base lg:text-lg font-medium"
+                  style={{ color: '#AF977C' }}
+                  whileHover={{ y: -1 }}
+                >
+                  {item.label}
+                </motion.a>
+              ) : (
+                <Link key={item.label} href={item.href} legacyBehavior>
+                  <motion.a
+                    className="hover:text-foreground transition-colors duration-200 text-base lg:text-lg font-medium"
+                    style={{ color: '#AF977C' }}
+                    whileHover={{ y: -1 }}
+                  >
+                    {item.label}
+                  </motion.a>
+                </Link>
+              )
             ))}
             {/* Apply Now button inline with nav */}
             {/* <Link href="/vibe-check">
@@ -103,16 +115,29 @@ const Header = () => {
           >
             <div className="max-w-6xl mx-auto px-6 py-6 space-y-6">
               {navItems.map((item) => (
-                <motion.a
-                  key={item.label}
-                  href={item.href}
-                  className="block text-center hover:text-foreground transition-colors duration-200 py-3 text-lg font-medium"
-                  style={{ color: '#AF977C' }}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  {item.label}
-                </motion.a>
+                item.href.startsWith('#') ? (
+                  <motion.a
+                    key={item.label}
+                    href={item.href}
+                    className="block text-center hover:text-foreground transition-colors duration-200 py-3 text-lg font-medium"
+                    style={{ color: '#AF977C' }}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    {item.label}
+                  </motion.a>
+                ) : (
+                  <Link key={item.label} href={item.href} legacyBehavior>
+                    <motion.a
+                      className="block text-center hover:text-foreground transition-colors duration-200 py-3 text-lg font-medium"
+                      style={{ color: '#AF977C' }}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      whileHover={{ scale: 1.05 }}
+                    >
+                      {item.label}
+                    </motion.a>
+                  </Link>
+                )
               ))}
               {/* <div className="pt-4">
                 <Link href="/vibe-check" className="block">
