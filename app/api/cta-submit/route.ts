@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { generateAISummary } from '@/lib/openai-summary';
-import { sendSubmissionNotification } from '@/lib/resend';
+import { sendSubmissionNotification, sendApplicantConfirmation } from '@/lib/resend';
 
 interface CTAFormData {
   [key: string]: string;
@@ -188,6 +188,34 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('Successfully inserted data:', data);
+
+    // Send confirmation email to applicant (non-blocking)
+    try {
+      await sendApplicantConfirmation(data);
+    } catch (emailError) {
+      console.error('Applicant confirmation email failed (non-blocking):', emailError);
+    }
+
+    // Auto-add not-qualified leads to newsletter for nurturing
+    if (qualificationStatus === 'not_qualified') {
+      try {
+        await supabase
+          .from('newsletter_subscribers')
+          .insert([{
+            email: data.email,
+            source: 'vibe-check-not-qualified',
+            metadata: {
+              name: data.name,
+              qualified_at: new Date().toISOString()
+            }
+          }])
+          .select();
+        console.log('Not-qualified lead added to newsletter');
+      } catch (subError) {
+        // Ignore if already exists (duplicate email constraint)
+        console.error('Newsletter subscription failed (non-blocking):', subError);
+      }
+    }
 
     // Generate AI summary ONLY for conditional cases (saves ~70% on AI costs)
     // strong_fit and not_qualified are obvious decisions that don't need AI analysis

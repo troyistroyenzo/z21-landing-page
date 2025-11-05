@@ -132,6 +132,125 @@ export async function sendOnboardingNotification(
   }
 }
 
+export async function sendApplicantConfirmation(
+  data: SubmissionData
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    if (!data.email) {
+      throw new Error('Applicant email is required');
+    }
+
+    // Determine email content based on qualification status
+    const statusConfig: Record<string, { subject: string; content: string; timeframe: string }> = {
+      strong_fit: {
+        subject: '✅ Application received - I\'ll reach out soon!',
+        timeframe: 'within the next 24 hours',
+        content: `Based on your responses, you look like a great fit for the program.`
+      },
+      conditional: {
+        subject: '✅ Application received - I\'ll reach out soon!',
+        timeframe: 'over the next 2-3 business days',
+        content: `I'll review it carefully and reach out personally to discuss if the program is a good fit.`
+      },
+      not_qualified: {
+        subject: '✅ Application received + Resources for you',
+        timeframe: '',
+        content: `Based on your current setup, I recommend building more AI familiarity before joining the sprint—this will help you get maximum value from the program.`
+      }
+    };
+
+    const config = statusConfig[data.qualification_status || 'conditional'] || statusConfig.conditional;
+    const isNotQualified = data.qualification_status === 'not_qualified';
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #09090b;">
+          <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 700;">
+                Thanks for applying!
+              </h1>
+            </div>
+
+            <!-- Content -->
+            <div style="background: #000000; padding: 30px; border-radius: 0 0 12px 12px; border: 1px solid #27272a;">
+              <p style="margin: 0 0 16px 0; color: #e4e4e7; font-size: 16px; line-height: 1.6;">
+                Hi ${data.name},
+              </p>
+              
+              <p style="margin: 0 0 16px 0; color: #e4e4e7; font-size: 16px; line-height: 1.6;">
+                Thanks for ${isNotQualified ? 'your interest in' : 'applying to'} the Z21 AI Onboarding Sprint!
+              </p>
+
+              <p style="margin: 0 0 16px 0; color: #e4e4e7; font-size: 16px; line-height: 1.6;">
+                I've received your application${config.timeframe ? ` and will review it personally ${config.timeframe}` : ''}. ${config.content}
+              </p>
+
+              ${isNotQualified ? `
+                <p style="margin: 0 0 16px 0; color: #e4e4e7; font-size: 16px; line-height: 1.6;">
+                  In the meantime, I've added you to our newsletter and here are some resources to get started:
+                </p>
+
+                <div style="text-align: center; margin: 24px 0;">
+                  <a href="${process.env.NEXT_PUBLIC_BASE_URL || 'https://z21.ph'}/ai-resources" 
+                     style="display: inline-block; background: #10b981; color: #ffffff; padding: 12px 32px; border-radius: 8px; text-decoration: none; font-weight: 600;">
+                    👉 Explore AI Resources
+                  </a>
+                </div>
+
+                <p style="margin: 0 0 16px 0; color: #e4e4e7; font-size: 16px; line-height: 1.6;">
+                  You'll get weekly tips on integrating AI into your workflow. Once you're more comfortable with the tools, we'd love to have you in a future cohort!
+                </p>
+              ` : `
+                <p style="margin: 16px 0 0 0; color: #e4e4e7; font-size: 16px; line-height: 1.6;">
+                  Talk soon,
+                </p>
+              `}
+
+              <!-- Signature -->
+              <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #27272a;">
+                <p style="margin: 0 0 4px 0; color: #e4e4e7; font-size: 16px; font-weight: 600;">
+                  ${isNotQualified ? 'Stay in touch,' : 'Talk soon,'}
+                </p>
+                <p style="margin: 0; color: #a1a1aa; font-size: 14px;">
+                  Troy<br/>Z21 Launchpad
+                </p>
+              </div>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    const { data: emailData, error } = await resend.emails.send({
+      from: 'Troy @ Z21 <notifications@resend.dev>',
+      to: [data.email],
+      subject: config.subject,
+      html: htmlContent
+    });
+
+    if (error) {
+      console.error('Resend error:', error);
+      return { success: false, error: error.message };
+    }
+
+    console.log('Applicant confirmation email sent successfully:', emailData);
+    return { success: true };
+  } catch (error) {
+    console.error('Email sending error:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+}
+
 export async function sendSubmissionNotification(
   data: SubmissionData,
   aiSummary: string
@@ -143,10 +262,17 @@ export async function sendSubmissionNotification(
       throw new Error('NOTIFICATION_EMAIL environment variable not set');
     }
 
-    const isStrongFit = data.qualification_status === 'strong_fit';
-    const statusEmoji = isStrongFit ? '🎯' : '⚠️';
-    const statusText = isStrongFit ? 'STRONG FIT' : 'NOT FIT';
-    const statusColor = isStrongFit ? '#10b981' : '#eab308';
+    // Map qualification_status to email display
+    const statusConfig: Record<string, { emoji: string; text: string; color: string }> = {
+      strong_fit: { emoji: '🎯', text: 'STRONG FIT', color: '#10b981' },
+      conditional: { emoji: '⚠️', text: 'REVIEW NEEDED', color: '#eab308' },
+      not_qualified: { emoji: '❌', text: 'NOT QUALIFIED', color: '#ef4444' }
+    };
+    
+    const config = statusConfig[data.qualification_status || 'not_qualified'] || statusConfig.not_qualified;
+    const statusEmoji = config.emoji;
+    const statusText = config.text;
+    const statusColor = config.color;
 
     // Build submission details HTML
     const detailsHtml = `
