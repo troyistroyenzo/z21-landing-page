@@ -6,14 +6,18 @@ import ApplicantsChart from './components/ApplicantsChart';
 import { 
   BarChart3, 
   Users, 
-  FileText, 
   Upload, 
-  Database,
-  TrendingUp,
   Mail,
   BookOpen,
   Sparkles,
-  AlertCircle
+  AlertCircle,
+  Download,
+  Trash2,
+  Search,
+  Filter,
+  X,
+  TrendingUp,
+  Database
 } from 'lucide-react';
 import { 
   useAdminStats, 
@@ -24,7 +28,6 @@ import {
   formatTimeAgo
 } from './hooks/useAdminData';
 import { exportToCSV, formatApplicantsForCSV, formatSubscribersForCSV } from '@/lib/csvExport';
-import { Trash2, Download, Search, Filter } from 'lucide-react';
 
 type TabType = 'overview' | 'uploads' | 'applicants' | 'subscribers' | 'resources';
 
@@ -32,56 +35,62 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
 
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: BarChart3 },
-    { id: 'uploads', label: 'Upload Content', icon: Upload },
-    { id: 'applicants', label: 'Applicants', icon: Users },
-    { id: 'subscribers', label: 'Subscribers', icon: Mail },
-    { id: 'resources', label: 'Resources', icon: BookOpen }
+    { id: 'overview', label: 'Overview', icon: BarChart3, shortLabel: 'Home' },
+    { id: 'applicants', label: 'Applicants', icon: Users, shortLabel: 'Apply' },
+    { id: 'subscribers', label: 'Subscribers', icon: Mail, shortLabel: 'Subs' },
+    { id: 'resources', label: 'Resources', icon: BookOpen, shortLabel: 'Docs' },
+    { id: 'uploads', label: 'Upload', icon: Upload, shortLabel: 'Add' }
   ];
 
   return (
     <AdminAuth>
-      <div className="min-h-screen bg-zinc-950 text-white">
-        {/* Header */}
-        <header className="border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-sm sticky top-0 z-40">
-          <div className="px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-accent/10 rounded-xl flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-accent" />
-                </div>
-                <h1 className="text-2xl font-bold">Z21 Admin Dashboard</h1>
+      <div className="min-h-screen bg-zinc-950 text-white pb-20 lg:pb-0">
+        {/* Mobile Header */}
+        <header className="lg:hidden border-b border-zinc-800 bg-zinc-900/95 backdrop-blur-sm sticky top-0 z-40">
+          <div className="px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-accent" />
               </div>
+              <h1 className="text-lg font-bold">Z21 Admin</h1>
             </div>
           </div>
         </header>
 
-        <div className="flex">
-          {/* Sidebar */}
-          <aside className="w-64 border-r border-zinc-800 bg-zinc-900/30 min-h-[calc(100vh-73px)]">
-            <nav className="p-4 space-y-2">
-              {tabs.map((tab) => {
-                const Icon = tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id as TabType)}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                      activeTab === tab.id
-                        ? 'bg-accent/10 text-accent border border-accent/20'
-                        : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
-                    }`}
-                  >
-                    <Icon className="w-5 h-5" />
-                    <span className="font-medium">{tab.label}</span>
-                  </button>
-                );
-              })}
-            </nav>
+        <div className="lg:flex">
+          {/* Desktop Sidebar */}
+          <aside className="hidden lg:block w-64 border-r border-zinc-800 bg-zinc-900/30 min-h-screen sticky top-0">
+            <div className="p-6">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-10 h-10 bg-accent/10 rounded-xl flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-accent" />
+                </div>
+                <h1 className="text-xl font-bold">Z21 Admin</h1>
+              </div>
+              <nav className="space-y-2">
+                {tabs.map((tab) => {
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id as TabType)}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                        activeTab === tab.id
+                          ? 'bg-accent/10 text-accent border border-accent/20'
+                          : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span className="font-medium">{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
           </aside>
 
           {/* Main Content */}
-          <main className="flex-1 p-6">
+          <main className="flex-1 p-4 lg:p-6 max-w-7xl mx-auto w-full">
             {activeTab === 'overview' && <OverviewSection />}
             {activeTab === 'uploads' && <UploadsSection />}
             {activeTab === 'applicants' && <ApplicantsSection />}
@@ -89,59 +98,83 @@ export default function AdminPage() {
             {activeTab === 'resources' && <ResourcesSection />}
           </main>
         </div>
+
+        {/* Mobile Bottom Navigation */}
+        <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-zinc-900/95 backdrop-blur-sm border-t border-zinc-800 z-50 safe-area-bottom">
+          <div className="flex items-center justify-around px-2 py-2">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as TabType)}
+                  className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all min-w-[60px] ${
+                    isActive
+                      ? 'bg-accent/10 text-accent'
+                      : 'text-zinc-400'
+                  }`}
+                >
+                  <Icon className={`w-5 h-5 ${isActive ? 'scale-110' : ''} transition-transform`} />
+                  <span className="text-[10px] font-medium">{tab.shortLabel}</span>
+                </button>
+              );
+            })}
+          </div>
+        </nav>
       </div>
     </AdminAuth>
   );
 }
 
-// Overview Section with stats
+// Overview Section
 function OverviewSection() {
   const { stats, loading: statsLoading, error: statsError } = useAdminStats();
   const { activities, loading: activityLoading, error: activityError } = useRecentActivity();
 
   if (statsError || activityError) {
     return (
-      <div className="flex items-center gap-3 p-6 bg-red-900/20 border border-red-800 rounded-xl">
-        <AlertCircle className="w-6 h-6 text-red-500" />
+      <div className="flex items-center gap-3 p-4 bg-red-900/20 border border-red-800 rounded-xl">
+        <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
         <div>
-          <p className="text-red-500 font-semibold">Error loading dashboard data</p>
-          <p className="text-red-400 text-sm">{statsError || activityError}</p>
+          <p className="text-red-500 font-semibold text-sm">Error loading data</p>
+          <p className="text-red-400 text-xs">{statsError || activityError}</p>
         </div>
       </div>
     );
   }
 
   const statCards = [
-    { label: 'Total Applicants', value: stats.totalApplicants.toString(), icon: Users },
-    { label: 'Qualified Leads', value: stats.qualifiedLeads.toString(), icon: TrendingUp },
-    { label: 'Newsletter Subscribers', value: stats.newsletterSubscribers.toString(), icon: Mail },
-    { label: 'AI Resources', value: stats.resourcesCount.toString(), icon: Database }
+    { label: 'Total Applicants', value: stats.totalApplicants.toString(), icon: Users, color: 'accent' },
+    { label: 'Qualified Leads', value: stats.qualifiedLeads.toString(), icon: TrendingUp, color: 'green-500' },
+    { label: 'Newsletter', value: stats.newsletterSubscribers.toString(), icon: Mail, color: 'blue-500' },
+    { label: 'AI Resources', value: stats.resourcesCount.toString(), icon: Database, color: 'purple-500' }
   ];
 
   return (
-    <div>
-      <h2 className="text-3xl font-bold mb-6">Dashboard Overview</h2>
+    <div className="space-y-6">
+      <h2 className="text-2xl lg:text-3xl font-bold">Dashboard</h2>
       
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      {/* Stats Grid - Mobile: 2 cols, Desktop: 4 cols */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
         {statCards.map((stat) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.label} className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
-                  <Icon className="w-6 h-6 text-accent" />
+            <div key={stat.label} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 lg:p-6">
+              <div className="flex items-center justify-between mb-3 lg:mb-4">
+                <div className={`w-10 h-10 lg:w-12 lg:h-12 bg-${stat.color}/10 rounded-xl flex items-center justify-center`}>
+                  <Icon className={`w-5 h-5 lg:w-6 lg:h-6 text-${stat.color}`} />
                 </div>
               </div>
               {statsLoading ? (
                 <div className="animate-pulse">
-                  <div className="h-8 bg-zinc-800 rounded mb-2"></div>
-                  <div className="h-4 bg-zinc-800 rounded w-3/4"></div>
+                  <div className="h-6 lg:h-8 bg-zinc-800 rounded mb-2"></div>
+                  <div className="h-3 lg:h-4 bg-zinc-800 rounded w-3/4"></div>
                 </div>
               ) : (
                 <>
-                  <p className="text-3xl font-bold text-white mb-2">{stat.value}</p>
-                  <p className="text-zinc-400 text-sm">{stat.label}</p>
+                  <p className="text-2xl lg:text-3xl font-bold text-white mb-1 lg:mb-2">{stat.value}</p>
+                  <p className="text-zinc-400 text-xs lg:text-sm leading-tight">{stat.label}</p>
                 </>
               )}
             </div>
@@ -149,18 +182,18 @@ function OverviewSection() {
         })}
       </div>
 
-      {/* Applicants Chart */}
-      <div className="mb-8">
+      {/* Chart - Hidden on mobile */}
+      <div className="hidden lg:block">
         <ApplicantsChart />
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
-        <h3 className="text-xl font-bold mb-4">Recent Activity</h3>
+      <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 lg:p-6">
+        <h3 className="text-lg lg:text-xl font-bold mb-4">Recent Activity</h3>
         {activityLoading ? (
           <div className="space-y-3">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="animate-pulse py-3 border-b border-zinc-800">
+              <div key={i} className="animate-pulse py-3 border-b border-zinc-800 last:border-0">
                 <div className="h-4 bg-zinc-800 rounded mb-2"></div>
                 <div className="h-3 bg-zinc-800 rounded w-2/3"></div>
               </div>
@@ -171,182 +204,158 @@ function OverviewSection() {
             {activities.map((activity, index) => (
               <div 
                 key={activity.id} 
-                className={`flex items-center justify-between py-3 ${
-                  index < activities.length - 1 ? 'border-b border-zinc-800' : ''
-                }`}
+                className={`py-3 ${index < activities.length - 1 ? 'border-b border-zinc-800' : ''}`}
               >
-                <div>
-                  <p className="text-white">{activity.title}</p>
-                  <p className="text-sm text-zinc-400">{activity.description}</p>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white text-sm lg:text-base font-medium">{activity.title}</p>
+                    <p className="text-xs lg:text-sm text-zinc-400 truncate">{activity.description}</p>
+                  </div>
+                  <span className="text-[10px] lg:text-xs text-zinc-500 flex-shrink-0">{formatTimeAgo(activity.timestamp)}</span>
                 </div>
-                <span className="text-xs text-zinc-500">{formatTimeAgo(activity.timestamp)}</span>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-zinc-400">No recent activity</p>
+          <p className="text-zinc-400 text-sm">No recent activity</p>
         )}
       </div>
     </div>
   );
 }
 
-// Upload Section
+// Uploads Section
 function UploadsSection() {
   const [uploadType, setUploadType] = useState<'build' | 'resource'>('build');
 
   return (
-    <div>
-      <h2 className="text-3xl font-bold mb-6">Upload Content</h2>
+    <div className="space-y-4 lg:space-y-6">
+      <h2 className="text-2xl lg:text-3xl font-bold">Upload Content</h2>
       
-      {/* Tab Switcher */}
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2">
         <button
           onClick={() => setUploadType('build')}
-          className={`px-4 py-2 rounded-lg font-medium transition-all ${
-            uploadType === 'build' 
-              ? 'bg-accent text-white' 
-              : 'bg-zinc-800 text-zinc-400 hover:text-white'
+          className={`flex-1 lg:flex-none px-4 py-2.5 rounded-lg font-medium transition-all text-sm lg:text-base ${
+            uploadType === 'build' ? 'bg-accent text-white' : 'bg-zinc-800 text-zinc-400'
           }`}
         >
           Student Build
         </button>
         <button
           onClick={() => setUploadType('resource')}
-          className={`px-4 py-2 rounded-lg font-medium transition-all ${
-            uploadType === 'resource' 
-              ? 'bg-accent text-white' 
-              : 'bg-zinc-800 text-zinc-400 hover:text-white'
+          className={`flex-1 lg:flex-none px-4 py-2.5 rounded-lg font-medium transition-all text-sm lg:text-base ${
+            uploadType === 'resource' ? 'bg-accent text-white' : 'bg-zinc-800 text-zinc-400'
           }`}
         >
           AI Resource
         </button>
       </div>
 
-      {uploadType === 'build' ? (
-        <form className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
-          <h3 className="text-xl font-bold mb-4">Add Student Build</h3>
-          
-          <div>
-            <label className="block text-sm font-medium text-zinc-400 mb-2">Title</label>
-            <input
-              type="text"
-              className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white"
-              placeholder="AI-Powered Dashboard"
-            />
-          </div>
-          
+      <form className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 lg:p-6 space-y-4">
+        <h3 className="text-lg lg:text-xl font-bold">
+          {uploadType === 'build' ? 'Add Student Build' : 'Add AI Resource'}
+        </h3>
+        
+        <div>
+          <label className="block text-sm font-medium text-zinc-400 mb-2">Title</label>
+          <input
+            type="text"
+            className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm lg:text-base"
+            placeholder={uploadType === 'build' ? 'AI-Powered Dashboard' : 'Claude API Guide'}
+          />
+        </div>
+        
+        {uploadType === 'build' && (
           <div>
             <label className="block text-sm font-medium text-zinc-400 mb-2">Student Name</label>
             <input
               type="text"
-              className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white"
+              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm lg:text-base"
               placeholder="John Doe"
             />
           </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-zinc-400 mb-2">Description</label>
-            <textarea
-              className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white h-32"
-              placeholder="Built an automated dashboard that..."
-            />
-          </div>
-          
+        )}
+        
+        {uploadType === 'resource' && (
+          <>
+            <div>
+              <label className="block text-sm font-medium text-zinc-400 mb-2">URL</label>
+              <input
+                type="url"
+                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm lg:text-base"
+                placeholder="https://..."
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-zinc-400 mb-2">Category</label>
+              <select className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm lg:text-base">
+                <option>Getting Started</option>
+                <option>Tools & Apps</option>
+                <option>ML Frameworks</option>
+                <option>Learning Resources</option>
+              </select>
+            </div>
+          </>
+        )}
+        
+        {uploadType === 'build' && (
           <div>
             <label className="block text-sm font-medium text-zinc-400 mb-2">Tools Used</label>
             <input
               type="text"
-              className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white"
+              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm lg:text-base"
               placeholder="Next.js, Supabase, OpenAI"
             />
           </div>
-          
-          <button
-            type="submit"
-            className="px-6 py-2 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90"
-          >
-            Add Build
-          </button>
-        </form>
-      ) : (
-        <form className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
-          <h3 className="text-xl font-bold mb-4">Add AI Resource</h3>
-          
-          <div>
-            <label className="block text-sm font-medium text-zinc-400 mb-2">Title</label>
-            <input
-              type="text"
-              className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white"
-              placeholder="Claude API Guide"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-zinc-400 mb-2">URL</label>
-            <input
-              type="url"
-              className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white"
-              placeholder="https://..."
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-zinc-400 mb-2">Category</label>
-            <select className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white">
-              <option>Getting Started</option>
-              <option>Tools & Apps</option>
-              <option>ML Frameworks</option>
-              <option>Learning Resources</option>
-            </select>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-zinc-400 mb-2">Description</label>
-            <textarea
-              className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white h-24"
-              placeholder="Comprehensive guide for..."
-            />
-          </div>
-          
-          <button
-            type="submit"
-            className="px-6 py-2 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90"
-          >
-            Add Resource
-          </button>
-        </form>
-      )}
+        )}
+        
+        <div>
+          <label className="block text-sm font-medium text-zinc-400 mb-2">Description</label>
+          <textarea
+            className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm lg:text-base"
+            rows={4}
+            placeholder={uploadType === 'build' ? 'Built an automated dashboard that...' : 'Comprehensive guide for...'}
+          />
+        </div>
+        
+        <button
+          type="submit"
+          className="w-full lg:w-auto px-6 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition-colors text-sm lg:text-base"
+        >
+          {uploadType === 'build' ? 'Add Build' : 'Add Resource'}
+        </button>
+      </form>
     </div>
   );
 }
 
-// Applicants Section with bulk delete, CSV export, search/filter
+// Applicants Section
 function ApplicantsSection() {
   const { applicants, loading, error } = useApplicants();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState<'date' | 'score'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [deleting, setDeleting] = useState(false);
 
   if (error) {
     return (
-      <div>
-        <h2 className="text-3xl font-bold mb-6">Vibe-Check Applicants</h2>
-        <div className="flex items-center gap-3 p-6 bg-red-900/20 border border-red-800 rounded-xl">
-          <AlertCircle className="w-6 h-6 text-red-500" />
+      <div className="space-y-4">
+        <h2 className="text-2xl lg:text-3xl font-bold">Applicants</h2>
+        <div className="flex items-center gap-3 p-4 bg-red-900/20 border border-red-800 rounded-xl">
+          <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
           <div>
-            <p className="text-red-500 font-semibold">Error loading applicants</p>
-            <p className="text-red-400 text-sm">{error}</p>
+            <p className="text-red-500 font-semibold text-sm">Error loading applicants</p>
+            <p className="text-red-400 text-xs">{error}</p>
           </div>
         </div>
       </div>
     );
   }
 
-  // Filter and sort
   let filtered = applicants.filter(app => {
     const matchesSearch = app.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                          app.email.toLowerCase().includes(searchTerm.toLowerCase());
@@ -373,17 +382,9 @@ function ApplicantsSection() {
     );
   };
 
-  const toggleSelectAll = () => {
-    if (selectedIds.length === filtered.length) {
-      setSelectedIds([]);
-    } else {
-      setSelectedIds(filtered.map(a => a.id));
-    }
-  };
-
   const handleDelete = async () => {
     if (selectedIds.length === 0) return;
-    if (!confirm(`Delete ${selectedIds.length} applicant(s)? This cannot be undone.`)) return;
+    if (!confirm(`Delete ${selectedIds.length} applicant(s)?`)) return;
 
     setDeleting(true);
     try {
@@ -396,7 +397,7 @@ function ApplicantsSection() {
       if (!res.ok) throw new Error(json.error);
       alert(json.message);
       setSelectedIds([]);
-      window.location.reload(); // Simple refresh, or use state update
+      window.location.reload();
     } catch (err: any) {
       alert('Delete failed: ' + err.message);
     } finally {
@@ -410,81 +411,128 @@ function ApplicantsSection() {
   };
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-3xl font-bold">Vibe-Check Applicants</h2>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-2xl lg:text-3xl font-bold">Applicants</h2>
         <div className="flex gap-2">
           <button
             onClick={handleExport}
             disabled={filtered.length === 0}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-2 lg:px-4 lg:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
           >
             <Download className="w-4 h-4" />
-            Export CSV
+            <span className="hidden lg:inline text-sm">Export</span>
           </button>
           {selectedIds.length > 0 && (
             <button
               onClick={handleDelete}
               disabled={deleting}
-              className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+              className="p-2 lg:px-4 lg:py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 flex items-center gap-2"
             >
               <Trash2 className="w-4 h-4" />
-              Delete ({selectedIds.length})
+              <span className="hidden lg:inline text-sm">({selectedIds.length})</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* Search and Filters */}
-      <div className="flex gap-4 mb-4">
-        <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-          <input
-            type="text"
-            placeholder="Search by name or email..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500"
-          />
-        </div>
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white"
-        >
-          <option value="all">All Status</option>
-          <option value="qualified">Qualified</option>
-          <option value="review">Review</option>
-          <option value="rejected">Not Qualified</option>
-        </select>
-        <select
-          value={`${sortBy}-${sortOrder}`}
-          onChange={(e) => {
-            const [by, order] = e.target.value.split('-');
-            setSortBy(by as 'date' | 'score');
-            setSortOrder(order as 'asc' | 'desc');
-          }}
-          className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white"
-        >
-          <option value="date-desc">Newest First</option>
-          <option value="date-asc">Oldest First</option>
-          <option value="score-desc">Highest Score</option>
-          <option value="score-asc">Lowest Score</option>
-        </select>
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+        <input
+          type="text"
+          placeholder="Search by name or email..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full pl-10 pr-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 text-sm"
+        />
       </div>
 
-      <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+      <div className="flex gap-2">
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className="flex-1 lg:hidden flex items-center justify-center gap-2 px-4 py-2.5 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-400 text-sm"
+        >
+          <Filter className="w-4 h-4" />
+          Filters
+          {(statusFilter !== 'all' || sortBy !== 'date') && (
+            <span className="w-2 h-2 bg-accent rounded-full"></span>
+          )}
+        </button>
+
+        <div className="hidden lg:flex gap-2 flex-1">
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm"
+          >
+            <option value="all">All Status</option>
+            <option value="qualified">Qualified</option>
+            <option value="review">Review</option>
+            <option value="rejected">Not Qualified</option>
+          </select>
+          <select
+            value={`${sortBy}-${sortOrder}`}
+            onChange={(e) => {
+              const [by, order] = e.target.value.split('-');
+              setSortBy(by as 'date' | 'score');
+              setSortOrder(order as 'asc' | 'desc');
+            }}
+            className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm"
+          >
+            <option value="date-desc">Newest First</option>
+            <option value="date-asc">Oldest First</option>
+            <option value="score-desc">Highest Score</option>
+            <option value="score-asc">Lowest Score</option>
+          </select>
+        </div>
+      </div>
+
+      {showFilters && (
+        <div className="lg:hidden bg-zinc-900 border border-zinc-800 rounded-xl p-4 space-y-3">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="font-semibold">Filters</h3>
+            <button onClick={() => setShowFilters(false)}>
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <div>
+            <label className="block text-sm text-zinc-400 mb-2">Status</label>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm"
+            >
+              <option value="all">All Status</option>
+              <option value="qualified">Qualified</option>
+              <option value="review">Review</option>
+              <option value="rejected">Not Qualified</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm text-zinc-400 mb-2">Sort By</label>
+            <select
+              value={`${sortBy}-${sortOrder}`}
+              onChange={(e) => {
+                const [by, order] = e.target.value.split('-');
+                setSortBy(by as 'date' | 'score');
+                setSortOrder(order as 'asc' | 'desc');
+              }}
+              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm"
+            >
+              <option value="date-desc">Newest First</option>
+              <option value="date-asc">Oldest First</option>
+              <option value="score-desc">Highest Score</option>
+              <option value="score-asc">Lowest Score</option>
+            </select>
+          </div>
+        </div>
+      )}
+
+      {/* Desktop Table */}
+      <div className="hidden lg:block bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
         <table className="w-full">
           <thead className="bg-zinc-800/50">
             <tr>
-              <th className="px-4 py-3 text-left">
-                <input
-                  type="checkbox"
-                  checked={selectedIds.length === filtered.length && filtered.length > 0}
-                  onChange={toggleSelectAll}
-                  className="w-4 h-4"
-                />
-              </th>
               <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Name</th>
               <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Email</th>
               <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Business</th>
@@ -497,7 +545,6 @@ function ApplicantsSection() {
             {loading ? (
               [...Array(3)].map((_, i) => (
                 <tr key={i} className="animate-pulse">
-                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-4"></div></td>
                   <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-24"></div></td>
                   <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-32"></div></td>
                   <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-28"></div></td>
@@ -518,14 +565,6 @@ function ApplicantsSection() {
 
                 return (
                   <tr key={applicant.id} className="hover:bg-zinc-800/30">
-                    <td className="px-4 py-3">
-                      <input
-                        type="checkbox"
-                        checked={selectedIds.includes(applicant.id)}
-                        onChange={() => toggleSelect(applicant.id)}
-                        className="w-4 h-4"
-                      />
-                    </td>
                     <td className="px-4 py-3 text-white">{applicant.name}</td>
                     <td className="px-4 py-3 text-zinc-400">{applicant.email}</td>
                     <td className="px-4 py-3 text-zinc-400">
@@ -549,7 +588,7 @@ function ApplicantsSection() {
               })
             ) : (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-zinc-400">
+                <td colSpan={6} className="px-4 py-8 text-center text-zinc-400 text-sm">
                   {searchTerm || statusFilter !== 'all' ? 'No matching applicants' : 'No applicants yet'}
                 </td>
               </tr>
@@ -557,89 +596,90 @@ function ApplicantsSection() {
           </tbody>
         </table>
       </div>
+
+      {/* Mobile Cards */}
+      <div className="lg:hidden space-y-3">
+        {loading ? (
+          [...Array(3)].map((_, i) => (
+            <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 animate-pulse">
+              <div className="h-4 bg-zinc-800 rounded w-32 mb-2"></div>
+              <div className="h-3 bg-zinc-800 rounded w-48 mb-3"></div>
+              <div className="flex gap-2">
+                <div className="h-6 bg-zinc-800 rounded w-20"></div>
+                <div className="h-6 bg-zinc-800 rounded w-16"></div>
+              </div>
+            </div>
+          ))
+        ) : filtered.length > 0 ? (
+          filtered.map((applicant) => {
+            const status = getQualificationStatus(applicant.qualification_status);
+            const statusConfig = {
+              qualified: { text: 'Qualified', color: 'green-500', emoji: '🎯' },
+              review: { text: 'Review', color: 'yellow-500', emoji: '⚠️' },
+              rejected: { text: 'Not Qualified', color: 'red-500', emoji: '❌' }
+            };
+            const config = statusConfig[status];
+
+            return (
+              <div key={applicant.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.includes(applicant.id)}
+                    onChange={() => toggleSelect(applicant.id)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-white truncate">{applicant.name}</h3>
+                    <p className="text-sm text-zinc-400 truncate">{applicant.email}</p>
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className={`px-2 py-1 bg-${config.color}/10 text-${config.color} text-xs rounded flex items-center gap-1`}>
+                        <span>{config.emoji}</span>
+                        <span>{config.text}</span>
+                      </span>
+                      <span className="text-xs text-zinc-500">Score: {applicant.score}</span>
+                    </div>
+                    <p className="text-xs text-zinc-500 mt-1">
+                      {new Date(applicant.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 text-center text-zinc-400 text-sm">
+            {searchTerm || statusFilter !== 'all' ? 'No matching applicants' : 'No applicants yet'}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
-// Subscribers Section with bulk delete, CSV export, search
+// Subscribers Section
 function SubscribersSection() {
   const { subscribers, loading, error } = useSubscribers();
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [deleting, setDeleting] = useState(false);
 
   if (error) {
     return (
-      <div>
-        <h2 className="text-3xl font-bold mb-6">Newsletter Subscribers</h2>
-        <div className="flex items-center gap-3 p-6 bg-red-900/20 border border-red-800 rounded-xl">
-          <AlertCircle className="w-6 h-6 text-red-500" />
+      <div className="space-y-4">
+        <h2 className="text-2xl lg:text-3xl font-bold">Subscribers</h2>
+        <div className="flex items-center gap-3 p-4 bg-red-900/20 border border-red-800 rounded-xl">
+          <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
           <div>
-            <p className="text-red-500 font-semibold">Error loading subscribers</p>
-            <p className="text-red-400 text-sm">{error}</p>
+            <p className="text-red-500 font-semibold text-sm">Error loading subscribers</p>
+            <p className="text-red-400 text-xs">{error}</p>
           </div>
         </div>
       </div>
     );
   }
 
-  const getSourceColor = (source: string) => {
-    switch (source) {
-      case 'ai-resources': return 'accent';
-      case 'homepage': return 'blue-500';
-      case 'footer': return 'purple-500';
-      default: return 'zinc-500';
-    }
-  };
-
-  // Filter and sort
-  let filtered = subscribers.filter(sub =>
+  const filtered = subscribers.filter(sub =>
     sub.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  filtered.sort((a, b) => {
-    const dateA = new Date(a.subscribed_at).getTime();
-    const dateB = new Date(b.subscribed_at).getTime();
-    return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
-  });
-
-  const toggleSelect = (id: string) => {
-    setSelectedIds(prev =>
-      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
-    );
-  };
-
-  const toggleSelectAll = () => {
-    if (selectedIds.length === filtered.length) {
-      setSelectedIds([]);
-    } else {
-      setSelectedIds(filtered.map(s => s.id));
-    }
-  };
-
-  const handleDelete = async () => {
-    if (selectedIds.length === 0) return;
-    if (!confirm(`Delete ${selectedIds.length} subscriber(s)? This cannot be undone.`)) return;
-
-    setDeleting(true);
-    try {
-      const res = await fetch('/api/admin/subscribers/delete', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ids: selectedIds })
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error);
-      alert(json.message);
-      setSelectedIds([]);
-      window.location.reload();
-    } catch (err: any) {
-      alert('Delete failed: ' + err.message);
-    } finally {
-      setDeleting(false);
-    }
-  };
 
   const handleExport = () => {
     const formatted = formatSubscribersForCSV(filtered);
@@ -647,203 +687,96 @@ function SubscribersSection() {
   };
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-3xl font-bold">Newsletter Subscribers</h2>
-        <div className="flex gap-2">
-          <button
-            onClick={handleExport}
-            disabled={filtered.length === 0}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Download className="w-4 h-4" />
-            Export CSV
-          </button>
-          {selectedIds.length > 0 && (
-            <button
-              onClick={handleDelete}
-              disabled={deleting}
-              className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
-            >
-              <Trash2 className="w-4 h-4" />
-              Delete ({selectedIds.length})
-            </button>
-          )}
-        </div>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-2xl lg:text-3xl font-bold">Subscribers</h2>
+        <button
+          onClick={handleExport}
+          disabled={filtered.length === 0}
+          className="p-2 lg:px-4 lg:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+        >
+          <Download className="w-4 h-4" />
+          <span className="hidden lg:inline text-sm">Export</span>
+        </button>
       </div>
 
-      {/* Search and Sort */}
-      <div className="flex gap-4 mb-4">
-        <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-          <input
-            type="text"
-            placeholder="Search by email..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500"
-          />
-        </div>
-        <select
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
-          className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white"
-        >
-          <option value="desc">Newest First</option>
-          <option value="asc">Oldest First</option>
-        </select>
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+        <input
+          type="text"
+          placeholder="Search by email..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full pl-10 pr-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 text-sm"
+        />
       </div>
-      
-      <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-zinc-800/50">
-            <tr>
-              <th className="px-4 py-3 text-left">
-                <input
-                  type="checkbox"
-                  checked={selectedIds.length === filtered.length && filtered.length > 0}
-                  onChange={toggleSelectAll}
-                  className="w-4 h-4"
-                />
-              </th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Email</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Source</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Date</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-zinc-800">
-            {loading ? (
-              [...Array(5)].map((_, i) => (
-                <tr key={i} className="animate-pulse">
-                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-4"></div></td>
-                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-48"></div></td>
-                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-24"></div></td>
-                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-32"></div></td>
-                </tr>
-              ))
-            ) : filtered.length > 0 ? (
-              filtered.map((subscriber) => (
-                <tr key={subscriber.id} className="hover:bg-zinc-800/30">
-                  <td className="px-4 py-3">
-                    <input
-                      type="checkbox"
-                      checked={selectedIds.includes(subscriber.id)}
-                      onChange={() => toggleSelect(subscriber.id)}
-                      className="w-4 h-4"
-                    />
-                  </td>
-                  <td className="px-4 py-3 text-white">{subscriber.email}</td>
-                  <td className="px-4 py-3">
-                    <span className={`px-2 py-1 bg-${getSourceColor(subscriber.source)}/10 text-${getSourceColor(subscriber.source)} text-xs font-medium rounded`}>
+
+      {loading ? (
+        <div className="space-y-3">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 animate-pulse">
+              <div className="h-4 bg-zinc-800 rounded w-48 mb-2"></div>
+              <div className="h-3 bg-zinc-800 rounded w-24"></div>
+            </div>
+          ))}
+        </div>
+      ) : filtered.length > 0 ? (
+        <div className="space-y-3">
+          {filtered.map((subscriber) => (
+            <div key={subscriber.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <p className="text-white font-medium truncate">{subscriber.email}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="px-2 py-1 bg-accent/10 text-accent text-xs rounded">
                       {subscriber.source}
                     </span>
-                  </td>
-                  <td className="px-4 py-3 text-zinc-400">
-                    {new Date(subscriber.subscribed_at).toLocaleDateString()}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-zinc-400">
-                  {searchTerm ? 'No matching subscribers' : 'No subscribers yet'}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+                    <span className="text-xs text-zinc-500">
+                      {new Date(subscriber.subscribed_at).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 text-center text-zinc-400 text-sm">
+          {searchTerm ? 'No matching subscribers' : 'No subscribers yet'}
+        </div>
+      )}
     </div>
   );
 }
 
-// Resources Section with full CRUD, pagination, search
+// Resources Section
 function ResourcesSection() {
   const [resources, setResources] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [category, setCategory] = useState('All');
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [deleting, setDeleting] = useState(false);
-
-  const categories = [
-    'All', 'Getting Started', 'Tools & Apps', 'ML Frameworks',
-    'Inference & Serving', 'Benchmarks & Evals', 'Prompts & Templates',
-    'Learning Resources', 'Research Papers', 'Communities', 'Advanced'
-  ];
-
-  const fetchResources = async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: '20'
-      });
-      if (category !== 'All') params.set('category', category);
-      if (searchTerm) params.set('search', searchTerm);
-
-      const res = await fetch(`/api/admin/resources?${params}`);
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error);
-
-      setResources(json.resources || []);
-      setTotal(json.total || 0);
-      setTotalPages(json.totalPages || 1);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchResources();
-  }, [page, category, searchTerm]);
-
-  const toggleFeatured = async (id: string, currentFeatured: boolean) => {
-    try {
-      const res = await fetch(`/api/admin/resources/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ featured: !currentFeatured })
+    fetch('/api/admin/resources')
+      .then(res => res.json())
+      .then(data => {
+        setResources(data.resources || []);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+        setLoading(false);
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error);
-      fetchResources();
-    } catch (err: any) {
-      alert('Failed to toggle featured: ' + err.message);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!confirm('Delete this resource? This cannot be undone.')) return;
-    setDeleting(true);
-    try {
-      const res = await fetch(`/api/admin/resources/${id}`, { method: 'DELETE' });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error);
-      alert(json.message);
-      fetchResources();
-    } catch (err: any) {
-      alert('Delete failed: ' + err.message);
-    } finally {
-      setDeleting(false);
-    }
-  };
+  }, []);
 
   if (error) {
     return (
-      <div>
-        <h2 className="text-3xl font-bold mb-6">AI Resources Management</h2>
-        <div className="flex items-center gap-3 p-6 bg-red-900/20 border border-red-800 rounded-xl">
-          <AlertCircle className="w-6 h-6 text-red-500" />
+      <div className="space-y-4">
+        <h2 className="text-2xl lg:text-3xl font-bold">Resources</h2>
+        <div className="flex items-center gap-3 p-4 bg-red-900/20 border border-red-800 rounded-xl">
+          <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
           <div>
-            <p className="text-red-500 font-semibold">Error loading resources</p>
-            <p className="text-red-400 text-sm">{error}</p>
+            <p className="text-red-500 font-semibold text-sm">Error loading resources</p>
+            <p className="text-red-400 text-xs">{error}</p>
           </div>
         </div>
       </div>
@@ -851,148 +784,43 @@ function ResourcesSection() {
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-3xl font-bold">AI Resources Management</h2>
-        <div className="text-sm text-zinc-400">
-          Total: <span className="text-white font-bold">{total}</span> resources
-        </div>
-      </div>
-
-      {/* Search and Filters */}
-      <div className="flex gap-4 mb-4">
-        <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-          <input
-            type="text"
-            placeholder="Search resources..."
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setPage(1);
-            }}
-            className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500"
-          />
-        </div>
-        <select
-          value={category}
-          onChange={(e) => {
-            setCategory(e.target.value);
-            setPage(1);
-          }}
-          className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white"
-        >
-          {categories.map(cat => (
-            <option key={cat} value={cat}>{cat}</option>
+    <div className="space-y-4">
+      <h2 className="text-2xl lg:text-3xl font-bold">Resources</h2>
+      
+      {loading ? (
+        <div className="space-y-3">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 animate-pulse">
+              <div className="h-4 bg-zinc-800 rounded w-48 mb-2"></div>
+              <div className="h-3 bg-zinc-800 rounded w-64"></div>
+            </div>
           ))}
-        </select>
-      </div>
-
-      <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-zinc-800/50">
-            <tr>
-              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Title</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Category</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Type</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Featured</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-zinc-800">
-            {loading ? (
-              [...Array(5)].map((_, i) => (
-                <tr key={i} className="animate-pulse">
-                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-48"></div></td>
-                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-24"></div></td>
-                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-16"></div></td>
-                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-16"></div></td>
-                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-20"></div></td>
-                </tr>
-              ))
-            ) : resources.length > 0 ? (
-              resources.map((resource) => (
-                <tr key={resource.id} className="hover:bg-zinc-800/30">
-                  <td className="px-4 py-3">
-                    <div>
-                      <p className="text-white font-medium">{resource.title}</p>
-                      <p className="text-xs text-zinc-400 truncate max-w-md">{resource.description}</p>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-zinc-400">{resource.category}</td>
-                  <td className="px-4 py-3">
-                    <span className="px-2 py-1 bg-blue-500/10 text-blue-500 text-xs font-medium rounded">
-                      {resource.type}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <button
-                      onClick={() => toggleFeatured(resource.id, resource.featured)}
-                      className={`px-2 py-1 text-xs font-medium rounded ${
-                        resource.featured
-                          ? 'bg-accent/10 text-accent'
-                          : 'bg-zinc-700 text-zinc-400'
-                      }`}
-                    >
-                      {resource.featured ? '⭐ Featured' : 'Not Featured'}
-                    </button>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-2">
-                      <a
-                        href={resource.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-400 hover:text-blue-300 text-sm"
-                      >
-                        View
-                      </a>
-                      <button
-                        onClick={() => handleDelete(resource.id)}
-                        disabled={deleting}
-                        className="text-red-400 hover:text-red-300 text-sm disabled:opacity-50"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-zinc-400">
-                  {searchTerm || category !== 'All' ? 'No matching resources' : 'No resources yet'}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-zinc-800">
-            <div className="text-sm text-zinc-400">
-              Page {page} of {totalPages}
+        </div>
+      ) : resources.length > 0 ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          {resources.slice(0, 12).map((resource) => (
+            <div key={resource.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+              <h3 className="font-semibold text-white mb-1">{resource.title}</h3>
+              <p className="text-xs text-zinc-400 mb-2 line-clamp-2">{resource.description}</p>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-zinc-500">{resource.category}</span>
+                <a
+                  href={resource.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent text-xs hover:underline"
+                >
+                  View →
+                </a>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setPage(p => Math.max(1, p - 1))}
-                disabled={page === 1}
-                className="px-3 py-1 bg-zinc-800 text-white rounded hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Previous
-              </button>
-              <button
-                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
-                className="px-3 py-1 bg-zinc-800 text-white rounded hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Next
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 text-center text-zinc-400 text-sm">
+          No resources yet
+        </div>
+      )}
     </div>
   );
 }
