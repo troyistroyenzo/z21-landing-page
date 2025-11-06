@@ -17,6 +17,7 @@ const eslintConfig = [
       'react/no-unescaped-entities': 'warn',  // Allow apostrophes/quotes in JSX
       '@typescript-eslint/triple-slash-reference': 'off',  // Allow Next.js auto-generated files
       'prefer-const': 'warn',  // Don't block on let vs const
+      '@next/next/no-html-link-for-pages': 'warn',  // Allow <a> tags for now
     },
   },
 ];
