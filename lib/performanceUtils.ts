@@ -299,7 +299,7 @@ export function useThreeFrameLimiter(fps: number = 30) {
   
   // This hook should only be used inside a Three.js Canvas context
   try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+     
     useFrame((state, delta) => {
       clock.current.delta += delta;
       clock.current.shouldUpdate = false;

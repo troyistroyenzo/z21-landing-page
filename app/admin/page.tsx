@@ -356,7 +356,7 @@ function ApplicantsSection() {
     );
   }
 
-  let filtered = applicants.filter(app => {
+  const filtered = applicants.filter(app => {
     const matchesSearch = app.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                          app.email.toLowerCase().includes(searchTerm.toLowerCase());
     if (!matchesSearch) return false;
