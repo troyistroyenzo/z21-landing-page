@@ -233,7 +233,7 @@ Output format: JSON with content + metadata`
             Live Case Studies
           </h2>
           <p className="text-2xl text-emerald-300 font-medium">
-            Real workflows we've shipped with teams
+            Real workflows we&apos;ve shipped with teams
           </p>
           {/* Navigation */}
           <div className="flex justify-center items-center gap-4 mt-8 md:mt-12">

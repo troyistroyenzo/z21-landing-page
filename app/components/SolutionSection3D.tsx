@@ -17,7 +17,9 @@ function ProductCard3D({ mouseX, mouseY, isMobile, imageSrc, scale = 1.5 }: { mo
   // Load an optional texture if an imageSrc is provided. Keep it safe for SSR by
   // guarding loader usage to client-only rendering (this component is already
   // used inside a ClientOnly wrapper in the parent).
-  const texture = imageSrc ? useLoader(THREE.TextureLoader, imageSrc) : null;
+  // Note: useLoader must be called unconditionally, so we always call it but with a fallback
+  const texture = useLoader(THREE.TextureLoader, imageSrc || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
+  const hasTexture = imageSrc && texture;
 
   useFrame((state) => {
     if (!groupRef.current) return;
@@ -133,7 +135,8 @@ function BackgroundParticles({ count = 50 }: { count?: number }) {
 
   useFrame(() => {
     particles.forEach((particle, i) => {
-      let { t, factor, speed, xFactor, yFactor, zFactor } = particle;
+      let { t } = particle;
+      const { factor, speed, xFactor, yFactor, zFactor } = particle;
       t = particle.t += speed;
       
       dummy.position.set(
