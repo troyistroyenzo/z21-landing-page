@@ -4,6 +4,19 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+interface IntakeData {
+  business_name: string;
+  full_name: string;
+  email: string;
+  business_description: string;
+  target_customers: string;
+  ai_familiarity: string;
+  top_priorities: string;
+  success_definition: string;
+  current_tools: string[];
+  timezone: string;
+}
+
 interface FormSubmission {
   name: string;
   email: string;
@@ -11,11 +24,13 @@ interface FormSubmission {
   sprint_type: string;
   qualification_status?: string | null;
   fit_score?: number | null;
-  [key: string]: any;
+  // Additional fields that might be in the submission
+  profile_link?: string;
+  referral_source?: string;
 }
 
 export async function generateIntakeSummary(
-  intake: any
+  intake: IntakeData
 ): Promise<string> {
   try {
     const prompt = `Analyze this Z21 onboarding intake form and provide a brief 2-3 sentence summary for the business owner.

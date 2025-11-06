@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-import Button from './ui/Button';
 import Logo from './ui/Logo';
 import { cn } from '@/lib/utils';
 
@@ -30,7 +29,8 @@ const Header = () => {
   return (
     <motion.header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent'
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        isScrolled ? 'bg-background/80 backdrop-blur-md shadow-lg' : 'bg-transparent'
       )}
       initial={{ y: -100 }}
       animate={{ y: 0 }}

@@ -1,5 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
+import { PostgrestError } from '@supabase/supabase-js';
+
+interface ResourceUpdate {
+  title?: string;
+  description?: string;
+  url?: string;
+  type?: string;
+  category?: string;
+  tags?: string[];
+  featured?: boolean;
+  thumbnail?: string;
+  updated_at: string;
+}
+
+interface APIError {
+  message: string;
+  [key: string]: unknown;
+}
 
 // Next.js 15 compatibility - params are now Promise-based
 // PATCH - Update resource
@@ -15,7 +33,7 @@ export async function PATCH(
     const supabase = supabaseAdmin();
     
     // Build update object (only include provided fields)
-    const updates: any = { updated_at: new Date().toISOString() };
+    const updates: ResourceUpdate = { updated_at: new Date().toISOString() };
     if (title !== undefined) updates.title = title;
     if (description !== undefined) updates.description = description;
     if (url !== undefined) updates.url = url;
@@ -42,8 +60,9 @@ export async function PATCH(
       resource: data,
       message: 'Resource updated successfully'
     });
-  } catch (error: any) {
-    const message = error?.message || 'Failed to update resource';
+  } catch (error) {
+    const apiError = error as APIError | PostgrestError;
+    const message = apiError?.message || 'Failed to update resource';
     console.error('[admin/resources/id] Handler error:', message);
     return NextResponse.json({ error: message }, { status: 500 });
   }
@@ -72,8 +91,9 @@ export async function DELETE(
       success: true,
       message: 'Resource deleted successfully'
     });
-  } catch (error: any) {
-    const message = error?.message || 'Failed to delete resource';
+  } catch (error) {
+    const apiError = error as APIError | PostgrestError;
+    const message = apiError?.message || 'Failed to delete resource';
     console.error('[admin/resources/id] Handler error:', message);
     return NextResponse.json({ error: message }, { status: 500 });
   }

@@ -33,11 +33,11 @@ export default function EmailGateModal({ isOpen, onClose, onSubmit }: EmailGateM
     try {
       await onSubmit(email);
       onClose();
-    } catch (err) {
+    } catch {
       setError('Failed to unlock resources. Please try again.');
     } finally {
       setLoading(false);
-    }
+    };
   };
 
   return (

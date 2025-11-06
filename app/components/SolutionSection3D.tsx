@@ -19,7 +19,6 @@ function ProductCard3D({ mouseX, mouseY, isMobile, imageSrc, scale = 1.5 }: { mo
   // used inside a ClientOnly wrapper in the parent).
   // Note: useLoader must be called unconditionally, so we always call it but with a fallback
   const texture = useLoader(THREE.TextureLoader, imageSrc || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
-  const hasTexture = imageSrc && texture;
 
   useFrame((state) => {
     if (!groupRef.current) return;

@@ -2,6 +2,22 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+interface OnboardingData {
+  business_name: string;
+  full_name: string;
+  email: string;
+  business_description: string;
+  target_customers: string;
+  ai_familiarity: string;
+  top_priorities: string;
+  success_definition: string;
+  preferred_schedule: {
+    day: string;
+    time: string;
+  }[];
+  timezone: string;
+}
+
 interface SubmissionData {
   name: string;
   email: string;
@@ -11,11 +27,10 @@ interface SubmissionData {
   sprint_type: string;
   qualification_status?: string | null;
   fit_score?: number | null;
-  [key: string]: any;
 }
 
 export async function sendOnboardingNotification(
-  data: any,
+  data: OnboardingData,
   aiSummary: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
