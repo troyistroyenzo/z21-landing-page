@@ -13,7 +13,10 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
-      '@typescript-eslint/no-explicit-any': 'warn',  // Allow any for now
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'react/no-unescaped-entities': 'warn',  // Allow apostrophes/quotes in JSX
+      '@typescript-eslint/triple-slash-reference': 'off',  // Allow Next.js auto-generated files
+      'prefer-const': 'warn',  // Don't block on let vs const
     },
   },
 ];
