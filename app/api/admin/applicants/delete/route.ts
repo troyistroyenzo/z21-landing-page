@@ -29,8 +29,10 @@ export async function DELETE(request: NextRequest) {
       deleted: ids.length,
       message: `Successfully deleted ${ids.length} applicant(s)`
     });
-  } catch (error: any) {
-    const message = error?.message || 'Failed to delete applicants';
+  } catch (error: unknown) {
+    const message = (error && typeof error === 'object' && 'message' in error && typeof (error as { message?: unknown }).message === 'string')
+      ? (error as { message: string }).message
+      : 'Failed to delete applicants';
     console.error('[admin/applicants/delete] Handler error:', message);
     return NextResponse.json({ error: message }, { status: 500 });
   }

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Lock, Mail } from 'lucide-react';
 
@@ -16,7 +15,6 @@ export default function AdminAuth({ children }: AdminAuthProps) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const router = useRouter();
   const supabase = createClientComponentClient();
 
   // Check if already authenticated
@@ -86,9 +84,27 @@ export default function AdminAuth({ children }: AdminAuthProps) {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setIsAuthenticated(false);
-    router.push('/');
+    try {
+      console.log('Logging out...');
+      
+      // Call server-side logout route to properly clear cookies
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+      });
+      
+      if (!response.ok) {
+        throw new Error('Logout failed');
+      }
+      
+      console.log('Logout successful');
+      
+      // Force a hard reload to clear all state
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Even if logout API fails, force redirect and clear
+      window.location.href = '/';
+    }
   };
 
   if (loading) {

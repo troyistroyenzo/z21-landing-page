@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import AdminAuth from './components/AdminAuth';
+import AdminSidebar from './components/AdminSidebar';
 import ApplicantsChart from './components/ApplicantsChart';
+import ApplicantDetailModal from './components/ApplicantDetailModal';
 import { 
   BarChart3, 
   Users, 
@@ -19,6 +21,8 @@ import {
   TrendingUp,
   Database
 } from 'lucide-react';
+// Applicant scoring helpers (not used in this file currently)
+// import { getTierColor, getTierLabel } from '@/lib/applicantScoring';
 import { 
   useAdminStats, 
   useRecentActivity, 
@@ -31,8 +35,32 @@ import { exportToCSV, formatApplicantsForCSV, formatSubscribersForCSV } from '@/
 
 type TabType = 'overview' | 'uploads' | 'applicants' | 'subscribers' | 'resources';
 
+// Applicant type used across admin UI
+interface Applicant {
+  id: string;
+  name: string;
+  email: string;
+  business_description: string;
+  score?: number;
+  qualification_status?: string | number;
+  created_at: string;
+  phone?: string;
+  fit_score?: number;
+  fit_tier?: 'STRONG_FIT' | 'GOOD_FIT' | 'MAYBE' | 'NOT_NOW';
+  score_breakdown?: {
+    revenueScore: number;
+    aiFamiliarityScore: number;
+    timelineScore: number;
+    commitmentScore: number;
+    reasoning: string;
+  };
+  answers: Record<string, unknown>;
+}
+
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
+
+  const [selectedApplicant, setSelectedApplicant] = useState<Applicant | null>(null);
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: BarChart3, shortLabel: 'Home' },
@@ -58,42 +86,16 @@ export default function AdminPage() {
         </header>
 
         <div className="lg:flex">
-          {/* Desktop Sidebar */}
-          <aside className="hidden lg:block w-64 border-r border-zinc-800 bg-zinc-900/30 min-h-screen sticky top-0">
-            <div className="p-6">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 bg-accent/10 rounded-xl flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-accent" />
-                </div>
-                <h1 className="text-xl font-bold">Z21 Admin</h1>
-              </div>
-              <nav className="space-y-2">
-                {tabs.map((tab) => {
-                  const Icon = tab.icon;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id as TabType)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                        activeTab === tab.id
-                          ? 'bg-accent/10 text-accent border border-accent/20'
-                          : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
-                      }`}
-                    >
-                      <Icon className="w-5 h-5" />
-                      <span className="font-medium">{tab.label}</span>
-                    </button>
-                  );
-                })}
-              </nav>
-            </div>
-          </aside>
+          {/* Desktop Sidebar - Using new component */}
+          <div className="hidden lg:block">
+            <AdminSidebar activeTab={activeTab} onTabChange={(tab) => setActiveTab(tab as TabType)} />
+          </div>
 
           {/* Main Content */}
           <main className="flex-1 p-4 lg:p-6 max-w-7xl mx-auto w-full">
             {activeTab === 'overview' && <OverviewSection />}
             {activeTab === 'uploads' && <UploadsSection />}
-            {activeTab === 'applicants' && <ApplicantsSection />}
+            {activeTab === 'applicants' && <ApplicantsSection onSelectApplicant={setSelectedApplicant} />}
             {activeTab === 'subscribers' && <SubscribersSection />}
             {activeTab === 'resources' && <ResourcesSection />}
           </main>
@@ -122,6 +124,12 @@ export default function AdminPage() {
             })}
           </div>
         </nav>
+
+        {/* Applicant Detail Modal */}
+        <ApplicantDetailModal 
+          applicant={selectedApplicant}
+          onClose={() => setSelectedApplicant(null)}
+        />
       </div>
     </AdminAuth>
   );
@@ -487,8 +495,40 @@ function UploadsSection() {
 }
 
 // Applicants Section
-function ApplicantsSection() {
+function ApplicantsSection({ onSelectApplicant }: { onSelectApplicant: (applicant: Applicant) => void }) {
   const { applicants, loading, error } = useApplicants();
+  
+  // Convert fetched CTAResponse shape to local Applicant type (defensive, avoids `any`)
+  const toApplicant = (a: unknown): Applicant => {
+    const obj = a as Record<string, unknown>;
+    const id = typeof obj.id === 'string' ? obj.id : String(obj.id);
+    const name = typeof obj.name === 'string' ? obj.name : String(obj.name ?? '');
+    const email = typeof obj.email === 'string' ? obj.email : String(obj.email ?? '');
+    const business_description = typeof obj.business_description === 'string' ? obj.business_description : String(obj.business_description ?? '');
+    const score = typeof obj.score === 'number' ? obj.score : Number(obj.score ?? 0);
+    const qualification_status = typeof obj.qualification_status === 'string' ? obj.qualification_status : String(obj.qualification_status ?? '');
+    const created_at = typeof obj.created_at === 'string' ? obj.created_at : String(obj.created_at ?? new Date().toISOString());
+    const answers = (obj.responses && typeof obj.responses === 'object') ? (obj.responses as Record<string, unknown>) : {};
+    const phone = typeof obj.phone === 'string' ? obj.phone : undefined;
+    const fit_score = typeof obj.fit_score === 'number' ? obj.fit_score : undefined;
+    const fit_tier = typeof obj.fit_tier === 'string' ? (obj.fit_tier as Applicant['fit_tier']) : undefined;
+    const score_breakdown = typeof obj.score_breakdown === 'object' ? (obj.score_breakdown as Applicant['score_breakdown']) : undefined;
+
+    return {
+      id,
+      name,
+      email,
+      business_description,
+      score,
+      qualification_status,
+      created_at,
+      answers,
+      phone,
+      fit_score,
+      fit_tier,
+      score_breakdown
+    };
+  };
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -496,6 +536,10 @@ function ApplicantsSection() {
   const [sortBy, setSortBy] = useState<'date' | 'score'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [deleting, setDeleting] = useState(false);
+
+  const handleRefresh = () => {
+    window.location.reload();
+  };
 
   if (error) {
     return (
@@ -572,6 +616,16 @@ function ApplicantsSection() {
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-2xl lg:text-3xl font-bold">Applicants</h2>
         <div className="flex gap-2">
+          <button
+            onClick={handleRefresh}
+            className="p-2 bg-accent/10 text-accent border border-accent/20 rounded-lg hover:bg-accent/20 transition-colors flex items-center gap-2"
+            title="Refresh applicants"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span className="hidden lg:inline text-sm">Refresh</span>
+          </button>
           <button
             onClick={handleExport}
             disabled={filtered.length === 0}
@@ -721,7 +775,11 @@ function ApplicantsSection() {
                 const config = statusConfig[status];
 
                 return (
-                  <tr key={applicant.id} className="hover:bg-zinc-800/30">
+                  <tr 
+                    key={applicant.id} 
+                    onClick={() => onSelectApplicant(toApplicant(applicant))}
+                    className="hover:bg-zinc-800/30 cursor-pointer"
+                  >
                     <td className="px-4 py-3 text-white">{applicant.name}</td>
                     <td className="px-4 py-3 text-zinc-400">{applicant.email}</td>
                     <td className="px-4 py-3 text-zinc-400">
@@ -778,12 +836,20 @@ function ApplicantsSection() {
             const config = statusConfig[status];
 
             return (
-              <div key={applicant.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+              <div 
+                key={applicant.id} 
+                onClick={() => onSelectApplicant(toApplicant(applicant))}
+                className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 cursor-pointer hover:border-zinc-700 transition-colors"
+              >
                 <div className="flex items-start gap-3">
                   <input
                     type="checkbox"
                     checked={selectedIds.includes(applicant.id)}
-                    onChange={() => toggleSelect(applicant.id)}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      toggleSelect(applicant.id);
+                    }}
+                    onClick={(e) => e.stopPropagation()}
                     className="mt-1"
                   />
                   <div className="flex-1 min-w-0">

@@ -16,8 +16,7 @@ const securityHeaders = {
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
 };
 
-// Protected routes that require authentication
-const protectedRoutes = ['/admin', '/api/admin'];
+// Note: protected routes are handled per-route; middleware focuses on API admin paths
 const publicApiRoutes = ['/api/subscribe', '/api/cta-submit', '/api/onboarding-submit'];
 
 export async function middleware(request: NextRequest) {
@@ -39,6 +38,7 @@ export async function middleware(request: NextRequest) {
     "connect-src 'self' https://www.google-analytics.com https://vitals.vercel-insights.com https://*.supabase.co wss://*.supabase.co https://raw.githack.com https://cdn.jsdelivr.net",
     "frame-src 'self' https://form.typeform.com https://www.youtube.com https://youtube.com",
     "media-src 'self' https://www.youtube.com https://youtube.com",
+    "worker-src 'self' blob:",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
@@ -97,37 +97,34 @@ export async function middleware(request: NextRequest) {
   }
 
   // Authentication check for protected routes
-  if (protectedRoutes.some(route => pathname.startsWith(route))) {
-    // Check for auth cookie or session token
-    const authToken = request.cookies.get('supabase-auth-token');
+  // Only protect API routes - let AdminAuth component handle page authentication
+  if (pathname.startsWith('/api/admin')) {
+    // Check for any Supabase auth cookie (they use pattern: sb-{project}-auth-token)
+    const cookies = request.cookies.getAll();
+    const supabaseAuthCookie = cookies.find(cookie => 
+      cookie.name.startsWith('sb-') && cookie.name.endsWith('-auth-token')
+    );
     
-    if (!authToken) {
-      // For API routes, return 401
-      if (pathname.startsWith('/api/')) {
+    // If no Supabase auth cookie found, return 401
+    // The AdminAuth component already handles page-level authentication
+    if (!supabaseAuthCookie) {
+      return new NextResponse(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Additional admin API check using environment variables (optional)
+    const adminEmails = process.env.ADMIN_EMAILS?.split(',').map(e => e.trim()).filter(Boolean) || [];
+    if (adminEmails.length > 0) {
+      const authTokenValue = supabaseAuthCookie?.value;
+      const isAdmin = typeof authTokenValue === 'string' && adminEmails.some(email => authTokenValue.includes(email));
+      if (!isAdmin) {
         return new NextResponse(
-          JSON.stringify({ error: 'Unauthorized' }),
-          { status: 401, headers: { 'Content-Type': 'application/json' } }
+          JSON.stringify({ error: 'Forbidden' }),
+          { status: 403, headers: { 'Content-Type': 'application/json' } }
         );
       }
-      // For pages, redirect to home
-      return NextResponse.redirect(new URL('/', request.url));
-    }
-    
-    // Additional admin check using environment variables
-    if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
-      // Use ADMIN_EMAILS env var (comma separated) as a basic allowlist.
-      // Trim and filter empty values, then do a simple substring check against the token.
-      const adminEmails = process.env.ADMIN_EMAILS?.split(',').map(e => e.trim()).filter(Boolean) || [];
-      if (adminEmails.length > 0) {
-        const isAdmin = authToken && authToken.value && adminEmails.some(email => authToken.value.includes(email));
-        if (!isAdmin) {
-          return new NextResponse(
-            JSON.stringify({ error: 'Forbidden' }),
-            { status: 403, headers: { 'Content-Type': 'application/json' } }
-          );
-        }
-      }
-      // If no ADMIN_EMAILS configured, fall back to the simple existence of authToken (as before)
     }
   }
 

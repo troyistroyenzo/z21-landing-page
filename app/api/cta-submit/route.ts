@@ -2,78 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { generateAISummary } from '@/lib/openai-summary';
 import { sendSubmissionNotification, sendApplicantConfirmation } from '@/lib/resend';
-
-interface CTAFormData {
-  [key: string]: string;
-}
-
-// Calculate fit score based on weighted priorities (Max: 20 points)
-function calculateFitScore(formData: CTAFormData): { 
-  score: number; 
-  hasKnockout: boolean; 
-  status: 'strong_fit' | 'conditional' | 'not_qualified' 
-} {
-  let score = 0;
-  let hasKnockout = false;
-
-  // 1. AI KNOWLEDGE (0-5 points + 1 bonus) - HIGHEST PRIORITY
-  const aiReadiness = parseInt(formData.aiReadiness || '0');
-  if (aiReadiness >= 8) score += 5; // Already using AI daily
-  else if (aiReadiness >= 5) score += 3; // Moderate experience
-  else if (aiReadiness < 3) hasKnockout = true; // Too beginner
-
-  // Tool stack bonus
-  try {
-    const tools = JSON.parse(formData.toolStack || '[]');
-    if (tools.length >= 3) score += 1; // Bonus for using multiple tools
-  } catch (e) {}
-
-  // 2. TIME COMMITMENT (0-4 points)
-  if (formData.timeCommitment === '4-6') score += 4;
-  else if (formData.timeCommitment === '2-3') score += 2;
-  else if (formData.timeCommitment === '<2') hasKnockout = true; // Knockout
-
-  // 3. URGENCY (0-4 points)
-  if (formData.startTimeline === 'within_14') score += 4;
-  else if (formData.startTimeline === '15-30') score += 2;
-  // >30 days = 0 points (not urgent)
-
-  // 4. REVENUE (0-5 points)
-  if (formData.monthlyRevenue === '50k+') score += 5;
-  else if (formData.monthlyRevenue === '10k-50k') score += 4;
-  else if (formData.monthlyRevenue === '2k-10k') score += 3; // Minimum viable
-  else if (formData.monthlyRevenue === '<2k') score += 1;
-  // Pre-revenue = 0 points
-
-  // 5. BONUS POINTS (0-2)
-  // Clear goals
-  try {
-    const goals = JSON.parse(formData.sprintGoals || '[]');
-    if (goals.length >= 2) score += 1;
-  } catch (e) {}
-
-  // Sample data ready
-  if (formData.sampleData === 'yes') score += 1;
-  else if (formData.sampleData === 'no') hasKnockout = true; // Knockout
-
-  // Determine qualification status
-  let status: 'strong_fit' | 'conditional' | 'not_qualified';
-  if (hasKnockout) {
-    status = 'not_qualified';
-  } else if (score >= 14) {
-    status = 'strong_fit'; // 70%+ score
-  } else if (score >= 10) {
-    status = 'conditional'; // 50-69% - manual review
-  } else {
-    status = 'not_qualified'; // <50%
-  }
-
-  return { score, hasKnockout, status };
-}
+import { calculateApplicantScore } from '@/lib/applicantScoring';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    interface CTAFormData {
+      [key: string]: string;
+    }
+
+    const body = await request.json() as CTAFormData;
     console.log('Received request body:', body);
     // Back-compat: map legacy profileLink to socialHandle if present
     if (!body.socialHandle && body.profileLink) {
@@ -95,20 +32,55 @@ export async function POST(request: NextRequest) {
     // Get the source URL from headers
     const sourceUrl = request.headers.get('referer') || '';
 
-    // Calculate fit score for AI Onboarding applicants
+    // Calculate fit score for AI Onboarding applicants using new 100-point algorithm
     let fitScore = null;
+    let fitTier = null;
+    let scoreBreakdown = null;
     let hasKnockout = false;
     let qualificationStatus = null;
 
     if (body.sprintType === 'ai_onboarding') {
-      const scoring = calculateFitScore(body);
-      fitScore = scoring.score;
-      hasKnockout = scoring.hasKnockout;
-      qualificationStatus = scoring.status;
+      // Map form data to scoring factors
+      const scoringFactors = {
+        revenue: body.monthlyRevenue || 'pre_revenue',
+        aiFamiliarity: parseInt(body.aiReadiness) || 0,
+        timeline: body.startTimeline || '>30',
+        timeCommitment: body.timeCommitment || '<2'
+      };
+
+      // Calculate using new 100-point algorithm
+      const scoreResult = calculateApplicantScore(scoringFactors);
+      
+      fitScore = scoreResult.totalScore;
+      fitTier = scoreResult.tier;
+      scoreBreakdown = {
+        revenueScore: scoreResult.revenueScore,
+        aiFamiliarityScore: scoreResult.aiFamiliarityScore,
+        timelineScore: scoreResult.timelineScore,
+        commitmentScore: scoreResult.commitmentScore,
+        reasoning: scoreResult.reasoning
+      };
+
+      // Check for knockout conditions
+      if (body.sampleData === 'no') hasKnockout = true;
+      if (body.timeCommitment === '<2') hasKnockout = true;
+      
+      // Map tier to qualification status
+      if (hasKnockout) {
+        qualificationStatus = 'not_qualified';
+      } else if (scoreResult.tier === 'STRONG_FIT') {
+        qualificationStatus = 'strong_fit';
+      } else if (scoreResult.tier === 'GOOD_FIT') {
+        qualificationStatus = 'strong_fit';
+      } else if (scoreResult.tier === 'MAYBE') {
+        qualificationStatus = 'conditional';
+      } else {
+        qualificationStatus = 'not_qualified';
+      }
     }
 
     // Prepare data for Supabase (converting camelCase to snake_case)
-    const ctaData: any = {
+    const ctaData = {
       // Basic Info
       name: body.name,
       work_description: body.workDescription,
@@ -137,8 +109,10 @@ export async function POST(request: NextRequest) {
         investment_readiness: body.investmentReadiness || null,
       }),
       
-      // Scoring
+      // Scoring (new 100-point system)
       fit_score: fitScore,
+      fit_tier: fitTier,
+      score_breakdown: scoreBreakdown,
       has_knockout: hasKnockout,
       qualification_status: qualificationStatus,
       

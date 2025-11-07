@@ -16,7 +16,7 @@ interface CTAResponse {
   score: number;
   qualification_status: string;
   created_at: string;
-  responses: any;
+  responses: Record<string, unknown>;
 }
 
 interface NewsletterSubscriber {
@@ -24,7 +24,7 @@ interface NewsletterSubscriber {
   email: string;
   source: string;
   subscribed_at: string;
-  metadata: any;
+  metadata: Record<string, unknown>;
 }
 
 interface AdminStats {
@@ -154,7 +154,7 @@ export function useRecentActivity() {
 
         const merged: Activity[] = [];
 
-        recentApplicants.forEach((app: any) => {
+        recentApplicants.forEach((app: CTAResponse) => {
           merged.push({
             id: `app-${app.id}`,
             type: 'application',
@@ -164,7 +164,7 @@ export function useRecentActivity() {
           });
         });
 
-        recentSubscribers.forEach((sub: any) => {
+        recentSubscribers.forEach((sub: NewsletterSubscriber) => {
           merged.push({
             id: `sub-${sub.id}`,
             type: 'subscription',
