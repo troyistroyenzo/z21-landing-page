@@ -64,8 +64,8 @@ export async function GET(request: NextRequest) {
       limit,
       totalPages: Math.ceil((count || 0) / limit)
     });
-  } catch (error: any) {
-    const message = error?.message || 'Failed to fetch resources';
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error) || 'Failed to fetch resources';
     console.error('[resources] Handler error:', message);
     return NextResponse.json({ error: message }, { status: 500 });
   }

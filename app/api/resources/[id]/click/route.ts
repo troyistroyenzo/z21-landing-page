@@ -3,10 +3,10 @@ import { supabaseAdmin } from '@/lib/supabase';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const supabase = supabaseAdmin();
 
@@ -44,8 +44,8 @@ export async function POST(
       success: true,
       clickCount: data?.click_count || 0
     });
-  } catch (error: any) {
-    const message = error?.message || 'Failed to track click';
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error) || 'Failed to track click';
     console.error('[resources/click] Handler error:', message);
     return NextResponse.json({ error: message }, { status: 500 });
   }

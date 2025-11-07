@@ -294,8 +294,9 @@ function UploadsSection() {
         window.location.reload();
       }, 2000);
       
-    } catch (error: any) {
-      setMessage({ type: 'error', text: error.message });
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      setMessage({ type: 'error', text: msg });
     } finally {
       setSubmitting(false);
     }
@@ -386,7 +387,7 @@ function UploadsSection() {
               </label>
               <select 
                 value={type}
-                onChange={(e) => setType(e.target.value as any)}
+                onChange={(e) => setType(e.target.value as 'tool' | 'article' | 'video' | 'prompt-library' | 'course' | 'forum')}
                 className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm lg:text-base"
               >
                 <option value="tool">Tool</option>
@@ -553,8 +554,9 @@ function ApplicantsSection() {
       alert(json.message);
       setSelectedIds([]);
       window.location.reload();
-    } catch (err: any) {
-      alert('Delete failed: ' + err.message);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      alert('Delete failed: ' + msg);
     } finally {
       setDeleting(false);
     }
@@ -905,8 +907,21 @@ function SubscribersSection() {
 }
 
 // Resources Section
+interface Resource {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  type: string;
+  category: string;
+  tags?: string[];
+  featured?: boolean;
+  thumbnail?: string | null;
+  created_at?: string;
+}
+
 function ResourcesSection() {
-  const [resources, setResources] = useState<any[]>([]);
+  const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');

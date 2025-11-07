@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { 
   Search, 
   TrendingUp, 
@@ -135,7 +136,6 @@ export default function AIResourcesPage() {
   const [viewMode, setViewMode] = useState<'featured' | 'all'>('featured');
   const [showEmailGate, setShowEmailGate] = useState(false);
   const [hasAccess, setHasAccess] = useState(false);
-  const [userSession] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
 
   // Check access
   useEffect(() => {
@@ -261,8 +261,8 @@ export default function AIResourcesPage() {
                 Curated AI Tools & Resources
               </h1>
               <p className="text-lg text-zinc-400 max-w-2xl mb-6">
-                Discover the best AI tools, frameworks, and learning materials. 
-                Track what's trending in the community.
+                Discover the best AI tools, frameworks, and learning materials.
+                Track what&apos;s trending in the community.
               </p>
               
               {/* Search Bar */}
@@ -583,18 +583,18 @@ export default function AIResourcesPage() {
                 Get personalized guidance and hands-on support in our AI sprint
               </p>
               <div className="flex gap-4 justify-center">
-                <a
+                <Link
                   href="/vibe-check"
                   className="px-6 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition-all"
                 >
                   Apply for Sprint
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/"
                   className="px-6 py-3 bg-zinc-800 text-white font-semibold rounded-lg hover:bg-zinc-700 transition-all"
                 >
                   Learn More
-                </a>
+                </Link>
               </div>
             </motion.div>
           </div>

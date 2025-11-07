@@ -28,8 +28,8 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
-    const message = error?.message || 'Failed to log search';
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error) || 'Failed to log search';
     console.error('[search/log] Handler error:', message);
     return NextResponse.json({ error: message }, { status: 500 });
   }
