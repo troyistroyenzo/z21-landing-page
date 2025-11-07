@@ -227,6 +227,79 @@ function OverviewSection() {
 // Uploads Section
 function UploadsSection() {
   const [uploadType, setUploadType] = useState<'build' | 'resource'>('build');
+  
+  // Resource form state
+  const [title, setTitle] = useState('');
+  const [url, setUrl] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('Getting Started');
+  const [type, setType] = useState<'tool' | 'article' | 'video' | 'prompt-library' | 'course' | 'forum'>('tool');
+  const [tags, setTags] = useState('');
+  const [featured, setFeatured] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!title || !url || !description) {
+      setMessage({ type: 'error', text: 'Please fill in all required fields' });
+      return;
+    }
+
+    setSubmitting(true);
+    setMessage(null);
+
+    try {
+      // Generate ID from title (lowercase, replace spaces with hyphens)
+      const id = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      
+      // Parse tags
+      const tagsArray = tags.split(',').map(t => t.trim()).filter(t => t);
+
+      const response = await fetch('/api/admin/resources', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id,
+          title,
+          description,
+          url,
+          type,
+          category,
+          tags: tagsArray,
+          featured
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create resource');
+      }
+
+      setMessage({ type: 'success', text: 'Resource created successfully!' });
+      
+      // Clear form
+      setTitle('');
+      setUrl('');
+      setDescription('');
+      setCategory('Getting Started');
+      setType('tool');
+      setTags('');
+      setFeatured(false);
+      
+      // Reload page after 2 seconds to show new resource
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+      
+    } catch (error: any) {
+      setMessage({ type: 'error', text: error.message });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="space-y-4 lg:space-y-6">
@@ -251,15 +324,30 @@ function UploadsSection() {
         </button>
       </div>
 
-      <form className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 lg:p-6 space-y-4">
+      <form onSubmit={handleSubmit} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 lg:p-6 space-y-4">
         <h3 className="text-lg lg:text-xl font-bold">
           {uploadType === 'build' ? 'Add Student Build' : 'Add AI Resource'}
         </h3>
         
+        {message && (
+          <div className={`p-3 rounded-lg flex items-center gap-2 ${
+            message.type === 'success' 
+              ? 'bg-green-900/20 border border-green-800 text-green-500' 
+              : 'bg-red-900/20 border border-red-800 text-red-500'
+          }`}>
+            {message.type === 'success' ? '✓' : '✗'} {message.text}
+          </div>
+        )}
+        
         <div>
-          <label className="block text-sm font-medium text-zinc-400 mb-2">Title</label>
+          <label className="block text-sm font-medium text-zinc-400 mb-2">
+            Title <span className="text-red-500">*</span>
+          </label>
           <input
             type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
             className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm lg:text-base"
             placeholder={uploadType === 'build' ? 'AI-Powered Dashboard' : 'Claude API Guide'}
           />
@@ -279,22 +367,83 @@ function UploadsSection() {
         {uploadType === 'resource' && (
           <>
             <div>
-              <label className="block text-sm font-medium text-zinc-400 mb-2">URL</label>
+              <label className="block text-sm font-medium text-zinc-400 mb-2">
+                URL <span className="text-red-500">*</span>
+              </label>
               <input
                 type="url"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                required
                 className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm lg:text-base"
                 placeholder="https://..."
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-zinc-400 mb-2">Category</label>
-              <select className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm lg:text-base">
+              <label className="block text-sm font-medium text-zinc-400 mb-2">
+                Type <span className="text-red-500">*</span>
+              </label>
+              <select 
+                value={type}
+                onChange={(e) => setType(e.target.value as any)}
+                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm lg:text-base"
+              >
+                <option value="tool">Tool</option>
+                <option value="article">Article</option>
+                <option value="video">Video</option>
+                <option value="prompt-library">Prompt Library</option>
+                <option value="course">Course</option>
+                <option value="forum">Forum</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-zinc-400 mb-2">
+                Category <span className="text-red-500">*</span>
+              </label>
+              <select 
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm lg:text-base"
+              >
                 <option>Getting Started</option>
                 <option>Tools & Apps</option>
                 <option>ML Frameworks</option>
+                <option>Inference & Serving</option>
+                <option>Benchmarks & Evals</option>
                 <option>Learning Resources</option>
+                <option>Prompts & Templates</option>
+                <option>Research Papers</option>
+                <option>Communities</option>
+                <option>Advanced</option>
               </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-zinc-400 mb-2">
+                Tags (comma-separated)
+              </label>
+              <input
+                type="text"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm lg:text-base"
+                placeholder="free, tutorial, beginner"
+              />
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="featured"
+                checked={featured}
+                onChange={(e) => setFeatured(e.target.checked)}
+                className="w-4 h-4"
+              />
+              <label htmlFor="featured" className="text-sm text-zinc-400">
+                Featured resource
+              </label>
             </div>
           </>
         )}
@@ -311,8 +460,13 @@ function UploadsSection() {
         )}
         
         <div>
-          <label className="block text-sm font-medium text-zinc-400 mb-2">Description</label>
+          <label className="block text-sm font-medium text-zinc-400 mb-2">
+            Description <span className="text-red-500">*</span>
+          </label>
           <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
             className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm lg:text-base"
             rows={4}
             placeholder={uploadType === 'build' ? 'Built an automated dashboard that...' : 'Comprehensive guide for...'}
@@ -321,9 +475,10 @@ function UploadsSection() {
         
         <button
           type="submit"
-          className="w-full lg:w-auto px-6 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition-colors text-sm lg:text-base"
+          disabled={submitting}
+          className="w-full lg:w-auto px-6 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition-colors text-sm lg:text-base disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {uploadType === 'build' ? 'Add Build' : 'Add Resource'}
+          {submitting ? 'Adding...' : (uploadType === 'build' ? 'Add Build' : 'Add Resource')}
         </button>
       </form>
     </div>
@@ -754,6 +909,8 @@ function ResourcesSection() {
   const [resources, setResources] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     fetch('/api/admin/resources')
@@ -783,9 +940,33 @@ function ResourcesSection() {
     );
   }
 
+  const filtered = resources.filter(resource =>
+    resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    resource.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    resource.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const displayedResources = showAll ? filtered : filtered.slice(0, 12);
+
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl lg:text-3xl font-bold">Resources</h2>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-2xl lg:text-3xl font-bold">Resources</h2>
+        <span className="text-sm text-zinc-400">
+          {resources.length} total
+        </span>
+      </div>
+
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+        <input
+          type="text"
+          placeholder="Search resources..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full pl-10 pr-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 text-sm"
+        />
+      </div>
       
       {loading ? (
         <div className="space-y-3">
@@ -796,29 +977,49 @@ function ResourcesSection() {
             </div>
           ))}
         </div>
-      ) : resources.length > 0 ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-          {resources.slice(0, 12).map((resource) => (
-            <div key={resource.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
-              <h3 className="font-semibold text-white mb-1">{resource.title}</h3>
-              <p className="text-xs text-zinc-400 mb-2 line-clamp-2">{resource.description}</p>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-zinc-500">{resource.category}</span>
-                <a
-                  href={resource.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-accent text-xs hover:underline"
-                >
-                  View →
-                </a>
+      ) : filtered.length > 0 ? (
+        <>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            {displayedResources.map((resource) => (
+              <div key={resource.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+                <div className="flex items-start justify-between gap-2 mb-1">
+                  <h3 className="font-semibold text-white">{resource.title}</h3>
+                  {resource.featured && (
+                    <span className="text-xs bg-accent/10 text-accent px-2 py-0.5 rounded flex-shrink-0">
+                      Featured
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-zinc-400 mb-2 line-clamp-2">{resource.description}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-zinc-500">{resource.category}</span>
+                  <a
+                    href={resource.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-accent text-xs hover:underline"
+                  >
+                    View →
+                  </a>
+                </div>
               </div>
+            ))}
+          </div>
+          
+          {filtered.length > 12 && (
+            <div className="text-center">
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors text-sm"
+              >
+                {showAll ? `Show Less` : `Show All (${filtered.length - 12} more)`}
+              </button>
             </div>
-          ))}
-        </div>
+          )}
+        </>
       ) : (
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 text-center text-zinc-400 text-sm">
-          No resources yet
+          {searchTerm ? 'No matching resources' : 'No resources yet'}
         </div>
       )}
     </div>
