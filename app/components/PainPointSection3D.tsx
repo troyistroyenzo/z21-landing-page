@@ -2,7 +2,7 @@
 
 import React, { Suspense, useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, Box, Sphere, Octahedron, Torus, MeshDistortMaterial, Environment } from '@react-three/drei';
+import { Float, MeshDistortMaterial} from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import ClientOnly from './ClientOnly';
@@ -19,7 +19,7 @@ function PainIcon3D({ type, position, color, mouseX, mouseY }: {
   const meshRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = React.useState(false);
 
-  useFrame((state) => {
+  useFrame(() => {
     if (!meshRef.current) return;
     
     // Rotation animation
@@ -181,7 +181,7 @@ export default function PainPointSection3D() {
             The Real Problem
           </h2>
           <p className="text-xl text-emerald-200 max-w-3xl mx-auto">
-            You're drowning in AI possibilities but starving for actual implementation
+            You&apos;re drowning in AI possibilities but starving for actual implementation
           </p>
         </motion.div>
 
@@ -207,7 +207,6 @@ export default function PainPointSection3D() {
                   isMobile={isMobile}
                 />
                 
-                <Environment preset="city" />
               </Canvas>
             </Suspense>
           </ClientOnly>

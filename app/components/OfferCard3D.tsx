@@ -1,8 +1,8 @@
 'use client';
 
 import React, { Suspense, useRef, useState, useEffect, useMemo } from 'react';
-import { Canvas, useFrame, useThree, extend } from '@react-three/fiber';
-import { OrbitControls, Float, MeshDistortMaterial, PerspectiveCamera, Environment } from '@react-three/drei';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Float, MeshDistortMaterial } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
@@ -16,7 +16,7 @@ function ParticleField({ count = 100, color = '#10b981' }) {
   const dummy = useMemo(() => new THREE.Object3D(), []);
   
   const particles = useMemo(() => {
-    const temp = [];
+    const temp: Array<{ t: number; factor: number; speed: number; xFactor: number; yFactor: number; zFactor: number; mx: number; my: number }> = [];
     for (let i = 0; i < count; i++) {
       const t = Math.random() * 100;
       const factor = 20 + Math.random() * 100;
@@ -29,10 +29,10 @@ function ParticleField({ count = 100, color = '#10b981' }) {
     return temp;
   }, [count]);
 
-  useFrame((state) => {
+  useFrame(() => {
     particles.forEach((particle, i) => {
-      let { t, factor, speed, xFactor, yFactor, zFactor } = particle;
-      t = particle.t += speed / 2;
+      const { factor, speed, xFactor, yFactor, zFactor } = particle;
+  const t = particle.t += speed / 2;
       const a = Math.cos(t) + Math.sin(t * 1) / 10;
       const b = Math.sin(t) + Math.cos(t * 2) / 10;
       const s = Math.cos(t);
@@ -67,7 +67,7 @@ function EnhancedSprintRing({ mouseX, mouseY }: { mouseX: number; mouseY: number
   const meshRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
   
-  useFrame((state) => {
+  useFrame(() => {
     if (meshRef.current) {
       // Base rotation
       meshRef.current.rotation.x += 0.01;
@@ -92,6 +92,8 @@ function EnhancedSprintRing({ mouseX, mouseY }: { mouseX: number; mouseY: number
       meshRef.current.scale.z = THREE.MathUtils.lerp(meshRef.current.scale.z, targetScale, 0.1);
     }
   });
+  
+  
 
   return (
     <>
@@ -355,7 +357,8 @@ interface OfferCard3DProps {
   isPaused?: boolean;
 }
 
-export default function OfferCard3D({ offer, onOpenModal, isPaused = false }: OfferCard3DProps) {
+export default function OfferCard3D(props: OfferCard3DProps) {
+  const { offer, isPaused = false } = props;
   const [isWebGLSupported, setIsWebGLSupported] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -370,23 +373,11 @@ export default function OfferCard3D({ offer, onOpenModal, isPaused = false }: Of
         setIsWebGLSupported(false);
         trackEvent('offer_3d_fallback_used', { offer_id: offer.id });
       }
-    } catch (e) {
+    } catch {
       setIsWebGLSupported(false);
       trackEvent('offer_3d_fallback_used', { offer_id: offer.id });
     }
   }, [offer.id]);
-
-  const handleLearnMore = () => {
-    trackEvent('offer_card_click', { offer_id: offer.id });
-    onOpenModal();
-  };
-
-  const handleDirectRoute = (e: React.MouseEvent) => {
-    e.preventDefault();
-    trackEvent('offer_route_direct_click', { offer_id: offer.id, route: offer.ctaRoute });
-    window.location.href = offer.ctaRoute;
-  };
-
   const fallbackColors = {
     cohort: 'from-emerald-900 via-emerald-800 to-emerald-700',
     coaching: 'from-[#AE9370] via-[#8E7350] to-[#6E5330]',
@@ -394,7 +385,6 @@ export default function OfferCard3D({ offer, onOpenModal, isPaused = false }: Of
   };
 
   const isInactive = offer.seasonOpen === false || offer.isActive === false;
-  const isCalendlyLink = offer.ctaRoute.startsWith('http');
 
   return (
     <motion.div
@@ -458,7 +448,6 @@ export default function OfferCard3D({ offer, onOpenModal, isPaused = false }: Of
                   <EnhancedNetworkMesh mouseX={mousePosition.x} mouseY={mousePosition.y} />
                 )}
                 
-                <Environment preset="city" />
               </Canvas>
             </Suspense>
           ) : (

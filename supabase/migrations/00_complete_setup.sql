@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS cta_responses (
   -- Form fields
   name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
-  current_role VARCHAR(100) NOT NULL,
+  user_role VARCHAR(100) NOT NULL,
   biggest_challenge VARCHAR(100) NOT NULL,
   time_commitment VARCHAR(50) NOT NULL,
   specific_goal TEXT NOT NULL,
@@ -142,7 +142,7 @@ CREATE INDEX IF NOT EXISTS idx_newsletter_subscribers_created_at ON newsletter_s
 
 CREATE INDEX IF NOT EXISTS idx_cta_responses_email ON cta_responses(email);
 CREATE INDEX IF NOT EXISTS idx_cta_responses_created_at ON cta_responses(created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_cta_responses_current_role ON cta_responses(current_role);
+CREATE INDEX IF NOT EXISTS idx_cta_responses_user_role ON cta_responses(user_role);
 
 CREATE INDEX IF NOT EXISTS idx_onboarding_intake_email ON onboarding_intake(email);
 CREATE INDEX IF NOT EXISTS idx_onboarding_intake_created_at ON onboarding_intake(created_at DESC);

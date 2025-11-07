@@ -68,15 +68,15 @@ const Header = () => {
                   {item.label}
                 </motion.a>
               ) : (
-                <Link key={item.label} href={item.href} legacyBehavior>
-                  <motion.a
+                <motion.div key={item.label} whileHover={{ y: -1 }}>
+                  <Link 
+                    href={item.href}
                     className="hover:text-foreground transition-colors duration-200 text-base lg:text-lg font-medium"
                     style={{ color: '#AF977C' }}
-                    whileHover={{ y: -1 }}
                   >
                     {item.label}
-                  </motion.a>
-                </Link>
+                  </Link>
+                </motion.div>
               )
             ))}
             {/* Apply Now button inline with nav */}
@@ -102,7 +102,6 @@ const Header = () => {
           </motion.button>
         </div>
       </div>
-
       {/* Mobile Menu - Centered content */}
       <AnimatePresence>
         {isMobileMenuOpen && (
@@ -127,16 +126,16 @@ const Header = () => {
                     {item.label}
                   </motion.a>
                 ) : (
-                  <Link key={item.label} href={item.href} legacyBehavior>
-                    <motion.a
+                  <motion.div key={item.label} whileHover={{ scale: 1.05 }}>
+                    <Link 
+                      href={item.href}
                       className="block text-center hover:text-foreground transition-colors duration-200 py-3 text-lg font-medium"
                       style={{ color: '#AF977C' }}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      whileHover={{ scale: 1.05 }}
                     >
                       {item.label}
-                    </motion.a>
-                  </Link>
+                    </Link>
+                  </motion.div>
                 )
               ))}
               {/* <div className="pt-4">

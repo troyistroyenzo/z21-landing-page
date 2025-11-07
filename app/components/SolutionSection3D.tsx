@@ -2,7 +2,7 @@
 
 import React, { Suspense, useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, RoundedBox, MeshDistortMaterial, Environment } from '@react-three/drei';
+import { Float, RoundedBox, MeshDistortMaterial  } from '@react-three/drei';
 import { useLoader } from '@react-three/fiber';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
@@ -216,7 +216,6 @@ export default function SolutionSection3D() {
                     scale={1.5}
                   />
                   
-                  <Environment preset="city" />
                 </Canvas>
               </Suspense>
             </ClientOnly>

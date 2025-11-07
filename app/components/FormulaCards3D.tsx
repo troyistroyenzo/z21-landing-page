@@ -2,7 +2,7 @@
 
 import React, { Suspense, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, RoundedBox, Sphere, Torus, Cone, Environment, Text, Cylinder, MeshDistortMaterial } from '@react-three/drei';
+import { Float, RoundedBox, Sphere, Torus, Cone, Text, Cylinder, MeshDistortMaterial } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import ClientOnly from './ClientOnly';
@@ -146,6 +146,12 @@ function RocketIcon({ isHovered }: { isHovered: boolean }) {
 }
 
 // Simplified and cleaner 3D Card
+interface FormulaCardData {
+  number: string;
+  title: string;
+  description: string;
+}
+
 function FormulaCard3D({ 
   card, 
   index, 
@@ -154,7 +160,7 @@ function FormulaCard3D({
   mouseY,
   isMobile 
 }: { 
-  card: any; 
+  card: FormulaCardData; 
   index: number; 
   position: [number, number, number];
   mouseX: number;
@@ -373,7 +379,6 @@ export default function FormulaCards3D() {
                 
                 <BackgroundParticles />
                 
-                <Environment preset="apartment" />
               </Canvas>
             </Suspense>
           </ClientOnly>

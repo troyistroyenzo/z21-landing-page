@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Lock } from 'lucide-react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { Lock, Mail } from 'lucide-react';
 
 interface AdminAuthProps {
   children: React.ReactNode;
@@ -10,38 +11,82 @@ interface AdminAuthProps {
 
 export default function AdminAuth({ children }: AdminAuthProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const router = useRouter();
+  const supabase = createClientComponentClient();
 
   // Check if already authenticated
   useEffect(() => {
-    const authToken = sessionStorage.getItem('admin_auth');
-    if (authToken === 'authenticated') {
-      setIsAuthenticated(true);
-    }
-    setLoading(false);
-  }, []);
+    const checkAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session?.user?.email) {
+          // Check if user is an admin using environment variable
+          const adminEmailsString = process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'yortozne@gmail.com';
+          const adminEmails = adminEmailsString.split(',').map(email => email.trim());
+          
+          if (adminEmails.includes(session.user.email)) {
+            setIsAuthenticated(true);
+          } else {
+            setError('Access denied. Admin privileges required.');
+            await supabase.auth.signOut();
+          }
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleLogin = (e: React.FormEvent) => {
+    checkAuth();
+  }, [supabase]);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoggingIn(true);
+    setError('');
     
-    // Simple password check - in production, use proper auth
-    const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'z21admin2025';
-    
-    if (password === ADMIN_PASSWORD) {
-      sessionStorage.setItem('admin_auth', 'authenticated');
-      setIsAuthenticated(true);
-      setError('');
-    } else {
-      setError('Invalid password');
-      setPassword('');
+    try {
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        throw signInError;
+      }
+
+      if (data.user?.email) {
+        // Check if user is an admin using environment variable
+        const adminEmailsString = process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'yortozne@gmail.com';
+        const adminEmails = adminEmailsString.split(',').map(email => email.trim());
+        
+        if (adminEmails.includes(data.user.email)) {
+          setIsAuthenticated(true);
+        } else {
+          setError('Access denied. Admin privileges required.');
+          await supabase.auth.signOut();
+        }
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Login failed');
+      }
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
-  const handleLogout = () => {
-    sessionStorage.removeItem('admin_auth');
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     setIsAuthenticated(false);
     router.push('/');
   };
@@ -64,30 +109,51 @@ export default function AdminAuth({ children }: AdminAuthProps) {
             </div>
           </div>
           
-          <h1 className="text-2xl font-bold text-white text-center mb-2">Admin Access</h1>
-          <p className="text-zinc-400 text-center mb-6">Enter password to continue</p>
+          <h1 className="text-2xl font-bold text-white text-center mb-2">Admin Login</h1>
+          <p className="text-zinc-400 text-center mb-6">Sign in with your admin account</p>
           
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-accent transition-colors"
-                autoFocus
-              />
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Admin Email"
+                  className="w-full pl-10 pr-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-accent transition-colors"
+                  required
+                  autoFocus
+                />
+              </div>
+            </div>
+            
+            <div>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                  className="w-full pl-10 pr-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-accent transition-colors"
+                  required
+                />
+              </div>
             </div>
             
             {error && (
-              <p className="text-red-500 text-sm">{error}</p>
+              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                <p className="text-red-400 text-sm">{error}</p>
+              </div>
             )}
             
             <button
               type="submit"
-              className="w-full py-3 bg-accent text-white font-semibold rounded-xl hover:bg-accent/90 transition-all"
+              disabled={isLoggingIn}
+              className="w-full py-3 bg-accent text-white font-semibold rounded-xl hover:bg-accent/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Access Dashboard
+              {isLoggingIn ? 'Signing In...' : 'Sign In'}
             </button>
           </form>
           

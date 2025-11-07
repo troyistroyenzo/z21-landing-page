@@ -97,10 +97,10 @@ SELECT
 
 -- Test 6: Check table structures (sample columns)
 SELECT 
-  'cta_responses.current_role' as column_check,
+  'cta_responses.user_role' as column_check,
   CASE WHEN EXISTS (
     SELECT 1 FROM information_schema.columns 
-    WHERE table_name = 'cta_responses' AND column_name = 'current_role'
+    WHERE table_name = 'cta_responses' AND column_name = 'user_role'
   ) THEN '✅ COLUMN EXISTS' ELSE '❌ COLUMN MISSING' END as status
 
 UNION ALL

@@ -1,8 +1,8 @@
 'use client';
 
-import React, { Suspense, useRef, useMemo, useEffect, useState } from 'react';
+import React, { Suspense, useRef, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Float, Environment } from '@react-three/drei';
+import { Float  } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import ClientOnly from './ClientOnly';
@@ -11,7 +11,6 @@ import {
   getThreePerformanceSettings,
   useInViewport,
   useVisibilityControl,
-  useOptimizedMousePosition,
   throttle
 } from '@/lib/performanceUtils';
 
@@ -45,7 +44,7 @@ function ParticleField({ count = 2000, isMobile = false }: { count?: number; isM
       }
     }
     return arr;
-  }, []);
+  }, [particleCount]);
   
   useFrame((state) => {
     if (!points.current || isMobile) return; // Skip animations on mobile
@@ -154,7 +153,6 @@ export default function Hero3D() {
   const deviceInfo = useDeviceDetection();
   const { isInView, hasBeenInView } = useInViewport(sectionRef as React.RefObject<HTMLElement>);
   const isPageVisible = useVisibilityControl();
-  const mousePosition = useOptimizedMousePosition();
   const threeSettings = getThreePerformanceSettings(deviceInfo);
   
   // Control rendering based on visibility
@@ -246,7 +244,6 @@ export default function Hero3D() {
                 {!deviceInfo.isMobile && <FloatingShapes />}
               
               <CameraController />
-              <Environment preset="city" />
               </Canvas>
             </Suspense>
           )}

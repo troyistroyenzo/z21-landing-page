@@ -29,16 +29,16 @@ export async function middleware(request: NextRequest) {
     response.headers.set(key, value);
   });
 
-  // Content Security Policy
+  // Content Security Policy - Updated for production compatibility
   const csp = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://vercel.live https://cdn.vercel-insights.com",
-    "style-src 'self' 'unsafe-inline'",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://vercel.live https://cdn.vercel-insights.com https://va.vercel-scripts.com",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com",
     "img-src 'self' data: https: blob:",
-    "font-src 'self' data:",
-    "connect-src 'self' https://www.google-analytics.com https://vitals.vercel-insights.com https://*.supabase.co wss://*.supabase.co",
-    "frame-src 'self' https://form.typeform.com",
-    "media-src 'self' https://www.youtube.com",
+    "font-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com",
+    "connect-src 'self' https://www.google-analytics.com https://vitals.vercel-insights.com https://*.supabase.co wss://*.supabase.co https://raw.githack.com https://cdn.jsdelivr.net",
+    "frame-src 'self' https://form.typeform.com https://www.youtube.com https://youtube.com",
+    "media-src 'self' https://www.youtube.com https://youtube.com",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
@@ -50,6 +50,14 @@ export async function middleware(request: NextRequest) {
 
   // Rate limiting for API routes
   if (pathname.startsWith('/api/')) {
+    // If route is explicitly public, skip rate limiting (mark headers and return)
+    if (publicApiRoutes.includes(pathname)) {
+      response.headers.set('X-RateLimit-Exempt', 'true');
+      response.headers.set('X-RateLimit-Limit', 'unlimited');
+      response.headers.set('X-RateLimit-Remaining', 'unlimited');
+      return response;
+    }
+
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
     const key = `${ip}:${pathname}`;
     const now = Date.now();
@@ -107,16 +115,19 @@ export async function middleware(request: NextRequest) {
     
     // Additional admin check using environment variables
     if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
-      // This is a simple check - in production, verify the JWT token properly
-      const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
-      // You would need to decode the JWT to get the email
-      // For now, we'll just check if auth token exists
-      if (!authToken) {
-        return new NextResponse(
-          JSON.stringify({ error: 'Forbidden' }),
-          { status: 403, headers: { 'Content-Type': 'application/json' } }
-        );
+      // Use ADMIN_EMAILS env var (comma separated) as a basic allowlist.
+      // Trim and filter empty values, then do a simple substring check against the token.
+      const adminEmails = process.env.ADMIN_EMAILS?.split(',').map(e => e.trim()).filter(Boolean) || [];
+      if (adminEmails.length > 0) {
+        const isAdmin = authToken && authToken.value && adminEmails.some(email => authToken.value.includes(email));
+        if (!isAdmin) {
+          return new NextResponse(
+            JSON.stringify({ error: 'Forbidden' }),
+            { status: 403, headers: { 'Content-Type': 'application/json' } }
+          );
+        }
       }
+      // If no ADMIN_EMAILS configured, fall back to the simple existence of authToken (as before)
     }
   }
 

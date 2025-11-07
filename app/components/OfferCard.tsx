@@ -12,7 +12,7 @@ function SprintRing() {
   const meshRef = useRef<THREE.Mesh>(null);
   const [rotationSpeed, setRotationSpeed] = useState(0.01);
 
-  useFrame((state, delta) => {
+  useFrame(() => {
     if (meshRef.current) {
       meshRef.current.rotation.x += rotationSpeed;
       meshRef.current.rotation.y += rotationSpeed * 0.7;
@@ -44,7 +44,7 @@ function Lighthouse() {
   const meshRef = useRef<THREE.Mesh>(null);
   const [rotationSpeed, setRotationSpeed] = useState(0.008);
 
-  useFrame((state, delta) => {
+  useFrame((state) => {
     if (meshRef.current) {
       meshRef.current.rotation.y += rotationSpeed;
       // Subtle floating effect
@@ -88,7 +88,7 @@ function NetworkMesh() {
   const groupRef = useRef<THREE.Group>(null);
   const [rotationSpeed, setRotationSpeed] = useState(0.005);
 
-  useFrame((state, delta) => {
+  useFrame((state) => {
     if (groupRef.current) {
       groupRef.current.rotation.y += rotationSpeed;
       groupRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
@@ -192,7 +192,7 @@ export default function OfferCard({ offer, onOpenModal, isPaused = false }: Offe
         setIsWebGLSupported(false);
         trackEvent('offer_3d_fallback_used', { offer_id: offer.id });
       }
-    } catch (e) {
+    } catch {
       setIsWebGLSupported(false);
       trackEvent('offer_3d_fallback_used', { offer_id: offer.id });
     }
@@ -209,15 +209,11 @@ export default function OfferCard({ offer, onOpenModal, isPaused = false }: Offe
       },
       { threshold: 0.5 }
     );
-
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
-    }
+    const el = cardRef.current;
+    if (el) observer.observe(el);
 
     return () => {
-      if (cardRef.current) {
-        observer.unobserve(cardRef.current);
-      }
+      if (el) observer.unobserve(el);
     };
   }, [offer.id, isInView]);
 
@@ -225,12 +221,7 @@ export default function OfferCard({ offer, onOpenModal, isPaused = false }: Offe
     trackEvent('offer_card_click', { offer_id: offer.id });
     onOpenModal();
   };
-
-  const handleDirectRoute = (e: React.MouseEvent) => {
-    e.preventDefault();
-    trackEvent('offer_route_direct_click', { offer_id: offer.id, route: offer.ctaRoute });
-    window.location.href = offer.ctaRoute;
-  };
+  
 
   const fallbackColors = {
     cohort: 'from-emerald-900 via-emerald-800 to-emerald-700',

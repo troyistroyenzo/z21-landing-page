@@ -1,36 +1,29 @@
 'use client';
 
-import React, { Suspense, useRef, useState, useEffect } from 'react';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
-import { Float, RoundedBox, Environment, Text, Image as DreiImage } from '@react-three/drei';
+import React, { Suspense, useRef, useState } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Float, RoundedBox, Image as DreiImage } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import ClientOnly from './ClientOnly';
-import { useMousePosition3D, useIsMobile } from './3d/MouseTracker3D';
+import { useIsMobile } from './3d/MouseTracker3D';
 
 // 3D Logo Card with actual images - ENHANCED VERSION
 function LogoCard3D({ 
   client, 
   index, 
   position, 
-  mouseX,
   isMobile 
 }: { 
   client: { name: string; logoUrl: string; alt: string };
   index: number;
   position: [number, number, number];
-  mouseX: number;
   isMobile: boolean;
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
   const orbitAngleRef = useRef(0);
   const hoverTimeRef = useRef(0);
-  
-  // Easing function
-  const easeInOutCubic = (t: number): number => {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  };
   
   useFrame((state, delta) => {
     if (!groupRef.current || isMobile) return;
@@ -40,9 +33,7 @@ function LogoCard3D({
     
     // Orbiting animation on hover with easing
     if (hovered) {
-      hoverTimeRef.current = Math.min(hoverTimeRef.current + delta, 1);
-      const progress = easeInOutCubic(hoverTimeRef.current);
-      
+  hoverTimeRef.current = Math.min(hoverTimeRef.current + delta, 1);
       // Full 360° orbit in 2 seconds
       orbitAngleRef.current = (state.clock.elapsedTime * Math.PI) % (Math.PI * 2);
       groupRef.current.rotation.y = orbitAngleRef.current * 0.5;
@@ -131,9 +122,8 @@ function LogoCard3D({
 }
 
 // Grid of Logo Cards - BETTER SPACING
-function LogoGrid({ clients, mouseX, isMobile }: { 
+function LogoGrid({ clients, isMobile }: { 
   clients: { name: string; logoUrl: string; alt: string }[];
-  mouseX: number;
   isMobile: boolean;
 }) {
   // Increased spacing for bigger cards
@@ -149,7 +139,6 @@ function LogoGrid({ clients, mouseX, isMobile }: {
           client={client}
           index={index}
           position={positions[index] || [0, 0, 0]}
-          mouseX={mouseX}
           isMobile={isMobile}
         />
       ))}
@@ -212,7 +201,6 @@ function BackgroundElements() {
 
 export default function ClientsSection3D() {
   const canvasRef = useRef<HTMLDivElement>(null);
-  const mousePosition = useMousePosition3D(canvasRef);
   const isMobile = useIsMobile();
 
   // Using actual client logos
@@ -288,12 +276,10 @@ export default function ClientsSection3D() {
                 
                 <BackgroundElements />
                 <LogoGrid
-                  clients={clients} 
-                  mouseX={mousePosition.normalized.x}
+                  clients={clients}
                   isMobile={isMobile}
                 />
                 
-                <Environment preset="apartment" />
               </Canvas>
             </Suspense>
           </ClientOnly>
@@ -311,7 +297,7 @@ export default function ClientsSection3D() {
               className="bg-black/40 backdrop-blur-sm border border-emerald-900/30 rounded-xl p-6"
               whileHover={{ y: -5, borderColor: 'rgb(16 185 129 / 0.5)' }}
             >
-              <div className="text-emerald-400 text-3xl mb-4">"</div>
+              <div className="text-emerald-400 text-3xl mb-4">&quot;</div>
               <p className="text-gray-300 mb-6 italic">{testimonial.quote}</p>
               <div>
                 <p className="text-white font-semibold">{testimonial.author}</p>

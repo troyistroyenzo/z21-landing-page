@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 
 // Throttle function for performance
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export function throttle<T extends (...args: any[]) => any>(
   func: T,
   delay: number
@@ -38,6 +39,7 @@ export function debounce<T extends (...args: any[]) => any>(
     timeout = setTimeout(() => func(...args), delay);
   };
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 // Device detection hooks
 export function useDeviceDetection() {
@@ -51,8 +53,7 @@ export function useDeviceDetection() {
 
   useEffect(() => {
     const checkDevice = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
+  const width = window.innerWidth;
       const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
       
       // Check if mobile or tablet
@@ -88,7 +89,7 @@ export function useDeviceDetection() {
             }
           }
         }
-      } catch (e) {
+      } catch {
         gpuTier = 'low';
       }
       
@@ -299,7 +300,7 @@ export function useThreeFrameLimiter(fps: number = 30) {
   
   // This hook should only be used inside a Three.js Canvas context
   try {
-     
+    
     useFrame((state, delta) => {
       clock.current.delta += delta;
       clock.current.shouldUpdate = false;
@@ -310,7 +311,7 @@ export function useThreeFrameLimiter(fps: number = 30) {
         clock.current.shouldUpdate = true;
       }
     });
-  } catch (e) {
+  } catch {
     // Not in a Three.js context, return dummy values
     console.warn('useThreeFrameLimiter must be used inside a Three.js Canvas');
   }

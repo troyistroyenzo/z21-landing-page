@@ -1,8 +1,8 @@
 'use client';
 
 import React, { Suspense, useRef, useMemo } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Float, Sphere, Box, Line, Environment, MeshDistortMaterial } from '@react-three/drei';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Float, Sphere, Line, MeshDistortMaterial } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import ClientOnly from './ClientOnly';
@@ -11,15 +11,11 @@ import { useMousePosition3D, useIsMobile } from './3d/MouseTracker3D';
 // Timeline Node Component
 function TimelineNode({ 
   position, 
-  index, 
-  title, 
   isActive,
   mouseX,
   mouseY 
 }: { 
   position: [number, number, number];
-  index: number;
-  title: string;
   isActive: boolean;
   mouseX: number;
   mouseY: number;
@@ -131,17 +127,17 @@ function EnergyPulse({ path }: { path: THREE.CatmullRomCurve3 }) {
 
 // Main 3D Timeline Scene
 function Timeline3D({ mouseX, mouseY, isMobile }: { mouseX: number; mouseY: number; isMobile: boolean }) {
-  const milestones = [
+  const milestones = useMemo(() => [
     { position: [-3, 2, 0] as [number, number, number], title: "Week 1-2", active: true },
     { position: [-1, 0.5, 0] as [number, number, number], title: "Week 3-4", active: false },
     { position: [1, -0.5, 0] as [number, number, number], title: "Week 5", active: false },
     { position: [3, 1, 0] as [number, number, number], title: "Week 6", active: false },
-  ];
+  ], []);
 
   const pathCurve = useMemo(() => {
     const points = milestones.map(m => new THREE.Vector3(...m.position));
     return new THREE.CatmullRomCurve3(points);
-  }, []);
+  }, [milestones]);
 
   return (
     <>
@@ -153,8 +149,6 @@ function Timeline3D({ mouseX, mouseY, isMobile }: { mouseX: number; mouseY: numb
         <TimelineNode
           key={index}
           position={milestone.position}
-          index={index}
-          title={milestone.title}
           isActive={milestone.active}
           mouseX={isMobile ? 0 : mouseX}
           mouseY={isMobile ? 0 : mouseY}
@@ -258,7 +252,6 @@ export default function RoadmapSection3D() {
                   isMobile={isMobile}
                 />
                 
-                <Environment preset="city" />
               </Canvas>
             </Suspense>
           </ClientOnly>
