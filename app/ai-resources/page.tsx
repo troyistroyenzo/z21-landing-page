@@ -457,7 +457,7 @@ export default function AIResourcesPage() {
                           
                           {/* Tags */}
                           {resource.tags && resource.tags.length > 0 && (
-                            <div className="flex flex-wrap gap-2 mb-4">
+                            <div className="flex flex-wrap gap-2 mb-3">
                               {resource.tags.map(tag => (
                                 <span 
                                   key={tag} 
@@ -469,38 +469,37 @@ export default function AIResourcesPage() {
                             </div>
                           )}
                           
-                          {/* Stats and CTA */}
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-6 text-sm text-zinc-400">
-                              <span className="flex items-center gap-2">
-                                <MousePointerClick className="w-5 h-5" />
-                                <span className="font-semibold text-white">{resource.click_count || 0}</span> clicks
-                              </span>
-                              <span className="flex items-center gap-2">
-                                <Eye className="w-5 h-5" />
-                                <span className="font-semibold text-white">{resource.view_count || 0}</span> views
-                              </span>
-                              <span className={`px-3 py-1.5 ${colors.bg} ${colors.text} rounded-lg text-sm font-medium`}>
-                                {resource.category}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-3">
-                              {resource.rich_content ? (
-                                <button
-                                  onClick={() => setSelectedResource(resource)}
-                                  className="px-5 py-3 bg-zinc-800 text-white font-semibold rounded-lg hover:bg-zinc-700 transition-all"
-                                >
-                                  Details
-                                </button>
-                              ) : null}
+                          {/* Clicks */}
+                          <div className="flex items-center gap-2 text-sm text-zinc-400 mb-3">
+                            <MousePointerClick className="w-4 h-4" />
+                            <span className="font-semibold text-white">{resource.click_count || 0}</span>
+                            <span>clicks</span>
+                          </div>
+                          
+                          {/* Category Badge */}
+                          <div className="mb-4">
+                            <span className={`inline-block px-3 py-1.5 ${colors.bg} ${colors.text} rounded-lg text-sm font-medium`}>
+                              {resource.category}
+                            </span>
+                          </div>
+                          
+                          {/* Action Buttons */}
+                          <div className="flex flex-col sm:flex-row gap-3">
+                            {resource.rich_content && (
                               <button
-                                onClick={() => handleResourceClick(resource)}
-                                className="px-6 py-3 bg-gradient-to-r from-accent to-green-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-accent/50 transition-all flex items-center gap-2 group"
+                                onClick={() => setSelectedResource(resource)}
+                                className="w-full sm:w-auto px-6 py-3 bg-zinc-800 text-white font-semibold rounded-lg hover:bg-zinc-700 transition-all"
                               >
-                                Explore
-                                <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                Details
                               </button>
-                            </div>
+                            )}
+                            <button
+                              onClick={() => handleResourceClick(resource)}
+                              className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-accent to-green-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-accent/50 transition-all flex items-center justify-center gap-2 group"
+                            >
+                              Explore
+                              <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -550,21 +549,16 @@ export default function AIResourcesPage() {
                         </p>
                         
                         {/* Footer */}
-                        <div className="space-y-3">
-                          {/* Stats */}
-                          <div className="flex items-center gap-4 text-xs text-zinc-500">
-                            <span className="flex items-center gap-1">
-                              <MousePointerClick className="w-3.5 h-3.5" />
-                              {resource.click_count || 0}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Eye className="w-3.5 h-3.5" />
-                              {resource.view_count || 0}
-                            </span>
+                        <div className="space-y-2">
+                          {/* Clicks only */}
+                          <div className="flex items-center gap-1.5 text-xs text-zinc-400">
+                            <MousePointerClick className="w-3.5 h-3.5" />
+                            <span className="font-semibold text-white">{resource.click_count || 0}</span>
+                            <span>clicks</span>
                           </div>
                           
                           {/* CTA Button(s) */}
-                          <div className="w-full flex flex-col sm:flex-row gap-2">
+                          <div className="w-full flex flex-col gap-2">
                             {resource.rich_content && (
                               <button
                                 onClick={() => setSelectedResource(resource)}
