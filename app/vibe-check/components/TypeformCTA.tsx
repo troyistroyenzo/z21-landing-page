@@ -268,13 +268,8 @@ export default function TypeformCTA({ onClose }: { onClose?: () => void }) {
       // Check if user is a fit AFTER successful submission
       const isNotFitResult = checkNotFit(finalData);
       
-      if (isNotFitResult) {
-        // Show "not ready" screen
-        setIsNotFit(true);
-      } else {
-        // Show success screen if they are a fit
-        setIsComplete(true);
-      }
+      // Redirect to reveal page with fit status
+      router.push(`/vibe-check/reveal?fit=${!isNotFitResult}`);
     } catch (error) {
       console.error('Submission error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong. Please try again.';

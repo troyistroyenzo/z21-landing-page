@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { id, title, description, url, type, category, tags, featured, thumbnail } = body;
+    const { id, title, description, url, type, category, tags, featured, thumbnail, rich_content } = body;
 
     if (!id || !title || !description || !url || !type || !category) {
       return NextResponse.json(
@@ -75,7 +75,8 @@ export async function POST(request: NextRequest) {
         category,
         tags: tags || [],
         featured: featured || false,
-        thumbnail: thumbnail || null
+        thumbnail: thumbnail || null,
+        rich_content: rich_content || null
       })
       .select()
       .single();

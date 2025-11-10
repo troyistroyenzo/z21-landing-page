@@ -38,6 +38,7 @@ interface Resource {
   view_count: number;
   submitted_by: string;
   last_clicked_at: string | null;
+  rich_content?: string | null;
 }
 
 const typeIcons = {
@@ -136,6 +137,7 @@ export default function AIResourcesPage() {
   const [viewMode, setViewMode] = useState<'featured' | 'all'>('featured');
   const [showEmailGate, setShowEmailGate] = useState(false);
   const [hasAccess, setHasAccess] = useState(false);
+  const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
 
   // Check access
   useEffect(() => {
@@ -482,13 +484,23 @@ export default function AIResourcesPage() {
                                 {resource.category}
                               </span>
                             </div>
-                            <button
-                              onClick={() => handleResourceClick(resource)}
-                              className="px-6 py-3 bg-gradient-to-r from-accent to-green-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-accent/50 transition-all flex items-center gap-2 group"
-                            >
-                              Explore
-                              <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                            </button>
+                            <div className="flex items-center gap-3">
+                              {resource.rich_content ? (
+                                <button
+                                  onClick={() => setSelectedResource(resource)}
+                                  className="px-5 py-3 bg-zinc-800 text-white font-semibold rounded-lg hover:bg-zinc-700 transition-all"
+                                >
+                                  Details
+                                </button>
+                              ) : null}
+                              <button
+                                onClick={() => handleResourceClick(resource)}
+                                className="px-6 py-3 bg-gradient-to-r from-accent to-green-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-accent/50 transition-all flex items-center gap-2 group"
+                              >
+                                Explore
+                                <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -551,14 +563,24 @@ export default function AIResourcesPage() {
                             </span>
                           </div>
                           
-                          {/* CTA Button */}
-                          <button
-                            onClick={() => handleResourceClick(resource)}
-                            className="w-full px-4 py-2 bg-zinc-800 text-white text-sm font-medium rounded-lg hover:bg-accent transition-colors flex items-center justify-center gap-2 group"
-                          >
-                            View Resource
-                            <ExternalLink className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                          </button>
+                          {/* CTA Button(s) */}
+                          <div className="w-full flex flex-col sm:flex-row gap-2">
+                            {resource.rich_content && (
+                              <button
+                                onClick={() => setSelectedResource(resource)}
+                                className="w-full px-4 py-2 bg-zinc-800 text-white text-sm font-medium rounded-lg hover:bg-zinc-700 transition-colors"
+                              >
+                                Details
+                              </button>
+                            )}
+                            <button
+                              onClick={() => handleResourceClick(resource)}
+                              className="w-full px-4 py-2 bg-zinc-800 text-white text-sm font-medium rounded-lg hover:bg-accent transition-colors flex items-center justify-center gap-2 group"
+                            >
+                              View Resource
+                              <ExternalLink className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </motion.div>
@@ -568,6 +590,55 @@ export default function AIResourcesPage() {
             )}
           </div>
         </section>
+
+        {/* Resource Details Modal */}
+        {selectedResource && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div
+              className="absolute inset-0 bg-black/70"
+              onClick={() => setSelectedResource(null)}
+            />
+            <div className="relative z-10 max-w-3xl w-full bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden">
+              <div className="flex items-center justify-between p-4 border-b border-zinc-800">
+                <h3 className="text-lg font-semibold">{selectedResource.title}</h3>
+                <button
+                  className="p-2 text-zinc-400 hover:text-white"
+                  onClick={() => setSelectedResource(null)}
+                  aria-label="Close"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="p-6">
+                <div className="prose prose-invert max-w-none">
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: selectedResource.rich_content || ''
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="p-4 border-t border-zinc-800 flex justify-end gap-2">
+                <button
+                  className="px-4 py-2 bg-zinc-800 rounded-lg hover:bg-zinc-700 transition-colors"
+                  onClick={() => setSelectedResource(null)}
+                >
+                  Close
+                </button>
+                <button
+                  className="px-4 py-2 bg-accent rounded-lg text-white hover:bg-accent/90 transition-colors flex items-center gap-2"
+                  onClick={() => {
+                    handleResourceClick(selectedResource);
+                    setSelectedResource(null);
+                  }}
+                >
+                  Visit
+                  <ExternalLink className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* CTA Section */}
         <section className="py-20 border-t border-zinc-800">

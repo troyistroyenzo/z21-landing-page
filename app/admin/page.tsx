@@ -5,7 +5,9 @@ import AdminAuth from './components/AdminAuth';
 import AdminSidebar from './components/AdminSidebar';
 import ApplicantsChart from './components/ApplicantsChart';
 import ApplicantDetailModal from './components/ApplicantDetailModal';
-import { 
+import RichTextEditor from './components/RichTextEditor';
+import ResourceEditModal from './components/ResourceEditModal';
+import {
   BarChart3, 
   Users, 
   Upload, 
@@ -240,6 +242,7 @@ function UploadsSection() {
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
   const [description, setDescription] = useState('');
+  const [richContent, setRichContent] = useState('');
   const [category, setCategory] = useState('Getting Started');
   const [type, setType] = useState<'tool' | 'article' | 'video' | 'prompt-library' | 'course' | 'forum'>('tool');
   const [tags, setTags] = useState('');
@@ -272,6 +275,7 @@ function UploadsSection() {
           id,
           title,
           description,
+          rich_content: richContent || null,
           url,
           type,
           category,
@@ -292,6 +296,7 @@ function UploadsSection() {
       setTitle('');
       setUrl('');
       setDescription('');
+      setRichContent('');
       setCategory('Getting Started');
       setType('tool');
       setTags('');
@@ -470,17 +475,30 @@ function UploadsSection() {
         
         <div>
           <label className="block text-sm font-medium text-zinc-400 mb-2">
-            Description <span className="text-red-500">*</span>
+            Short Description (for search/preview) <span className="text-red-500">*</span>
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
             className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm lg:text-base"
-            rows={4}
-            placeholder={uploadType === 'build' ? 'Built an automated dashboard that...' : 'Comprehensive guide for...'}
+            rows={2}
+            placeholder="Brief one-liner description for preview cards..."
           />
         </div>
+
+        {uploadType === 'resource' && (
+          <div>
+            <label className="block text-sm font-medium text-zinc-400 mb-2">
+              Detailed Content (Rich Text)
+            </label>
+            <RichTextEditor 
+              content={richContent}
+              onChange={setRichContent}
+              placeholder="Add detailed explanation with formatting, lists, code examples, links..."
+            />
+          </div>
+        )}
         
         <button
           type="submit"
@@ -580,6 +598,14 @@ function ApplicantsSection({ onSelectApplicant }: { onSelectApplicant: (applican
     setSelectedIds(prev => 
       prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
     );
+  };
+
+  const selectAll = () => {
+    if (selectedIds.length === filtered.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filtered.map(a => a.id));
+    }
   };
 
   const handleDelete = async () => {
@@ -744,6 +770,14 @@ function ApplicantsSection({ onSelectApplicant }: { onSelectApplicant: (applican
         <table className="w-full">
           <thead className="bg-zinc-800/50">
             <tr>
+              <th className="px-4 py-3 w-12">
+                <input
+                  type="checkbox"
+                  checked={filtered.length > 0 && selectedIds.length === filtered.length}
+                  onChange={selectAll}
+                  className="w-4 h-4 rounded border-zinc-600 bg-zinc-700 text-accent focus:ring-accent"
+                />
+              </th>
               <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Name</th>
               <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Email</th>
               <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Business</th>
@@ -756,6 +790,7 @@ function ApplicantsSection({ onSelectApplicant }: { onSelectApplicant: (applican
             {loading ? (
               [...Array(3)].map((_, i) => (
                 <tr key={i} className="animate-pulse">
+                  <td className="px-4 py-3"><div className="h-4 w-4 bg-zinc-800 rounded"></div></td>
                   <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-24"></div></td>
                   <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-32"></div></td>
                   <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-28"></div></td>
@@ -777,9 +812,27 @@ function ApplicantsSection({ onSelectApplicant }: { onSelectApplicant: (applican
                 return (
                   <tr 
                     key={applicant.id} 
-                    onClick={() => onSelectApplicant(toApplicant(applicant))}
+                    onClick={(e) => {
+                      // Don't select applicant if clicking checkbox
+                      const target = e.target as HTMLElement;
+                      if (target.tagName !== 'INPUT') {
+                        onSelectApplicant(toApplicant(applicant));
+                      }
+                    }}
                     className="hover:bg-zinc-800/30 cursor-pointer"
                   >
+                    <td className="px-4 py-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.includes(applicant.id)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          toggleSelect(applicant.id);
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-4 h-4 rounded border-zinc-600 bg-zinc-700 text-accent focus:ring-accent"
+                      />
+                    </td>
                     <td className="px-4 py-3 text-white">{applicant.name}</td>
                     <td className="px-4 py-3 text-zinc-400">{applicant.email}</td>
                     <td className="px-4 py-3 text-zinc-400">
@@ -803,7 +856,7 @@ function ApplicantsSection({ onSelectApplicant }: { onSelectApplicant: (applican
               })
             ) : (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-zinc-400 text-sm">
+                <td colSpan={7} className="px-4 py-8 text-center text-zinc-400 text-sm">
                   {searchTerm || statusFilter !== 'all' ? 'No matching applicants' : 'No applicants yet'}
                 </td>
               </tr>
@@ -983,6 +1036,7 @@ interface Resource {
   tags?: string[];
   featured?: boolean;
   thumbnail?: string | null;
+  rich_content?: string | null;
   created_at?: string;
 }
 
@@ -992,6 +1046,8 @@ function ResourcesSection() {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showAll, setShowAll] = useState(false);
+  const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
   useEffect(() => {
     fetch('/api/admin/resources')
@@ -1064,12 +1120,51 @@ function ResourcesSection() {
             {displayedResources.map((resource) => (
               <div key={resource.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
                 <div className="flex items-start justify-between gap-2 mb-1">
-                  <h3 className="font-semibold text-white">{resource.title}</h3>
-                  {resource.featured && (
-                    <span className="text-xs bg-accent/10 text-accent px-2 py-0.5 rounded flex-shrink-0">
-                      Featured
-                    </span>
-                  )}
+                  <h3 className="font-semibold text-white flex-1">{resource.title}</h3>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    {resource.featured && (
+                      <span className="text-xs bg-accent/10 text-accent px-2 py-0.5 rounded">
+                        Featured
+                      </span>
+                    )}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedResource(resource);
+                        setEditModalOpen(true);
+                      }}
+                      className="p-1 text-blue-400 hover:text-blue-300 hover:bg-blue-400/10 rounded transition-colors"
+                      title="Edit"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        if (confirm(`Delete "${resource.title}"?`)) {
+                          try {
+                            const res = await fetch(`/api/admin/resources/${resource.id}`, {
+                              method: 'DELETE'
+                            });
+                            if (res.ok) {
+                              setResources(prev => prev.filter(r => r.id !== resource.id));
+                            } else {
+                              const data = await res.json();
+                              alert('Delete failed: ' + data.error);
+                            }
+                          } catch (err) {
+                            alert('Delete failed: ' + (err instanceof Error ? err.message : String(err)));
+                          }
+                        }
+                      }}
+                      className="p-1 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded transition-colors"
+                      title="Delete"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
                 <p className="text-xs text-zinc-400 mb-2 line-clamp-2">{resource.description}</p>
                 <div className="flex items-center justify-between">
@@ -1102,6 +1197,20 @@ function ResourcesSection() {
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 text-center text-zinc-400 text-sm">
           {searchTerm ? 'No matching resources' : 'No resources yet'}
         </div>
+      )}
+
+      {/* Edit Modal */}
+      {editModalOpen && selectedResource && (
+        <ResourceEditModal
+          resource={selectedResource}
+          onClose={() => {
+            setEditModalOpen(false);
+            setSelectedResource(null);
+          }}
+          onSave={(updated) => {
+            setResources(prev => prev.map(r => r.id === updated.id ? updated : r));
+          }}
+        />
       )}
     </div>
   );

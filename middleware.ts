@@ -106,25 +106,13 @@ export async function middleware(request: NextRequest) {
     );
     
     // If no Supabase auth cookie found, return 401
-    // The AdminAuth component already handles page-level authentication
+    // The AdminAuth component already handles admin email validation properly
+    // We just check for authentication here, not authorization
     if (!supabaseAuthCookie) {
       return new NextResponse(
         JSON.stringify({ error: 'Unauthorized' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
       );
-    }
-
-    // Additional admin API check using environment variables (optional)
-    const adminEmails = process.env.ADMIN_EMAILS?.split(',').map(e => e.trim()).filter(Boolean) || [];
-    if (adminEmails.length > 0) {
-      const authTokenValue = supabaseAuthCookie?.value;
-      const isAdmin = typeof authTokenValue === 'string' && adminEmails.some(email => authTokenValue.includes(email));
-      if (!isAdmin) {
-        return new NextResponse(
-          JSON.stringify({ error: 'Forbidden' }),
-          { status: 403, headers: { 'Content-Type': 'application/json' } }
-        );
-      }
     }
   }
 

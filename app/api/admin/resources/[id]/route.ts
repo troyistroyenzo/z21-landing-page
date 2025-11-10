@@ -11,6 +11,7 @@ interface ResourceUpdate {
   tags?: string[];
   featured?: boolean;
   thumbnail?: string;
+  rich_content?: string | null;
   updated_at: string;
 }
 
@@ -27,8 +28,8 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params;
-    const body = await request.json();
-    const { title, description, url, type, category, tags, featured, thumbnail } = body;
+    const body = (await request.json()) as Partial<ResourceUpdate> & Record<string, unknown>;
+    const { title, description, url, type, category, tags, featured, thumbnail, rich_content } = body;
 
     const supabase = supabaseAdmin();
     
@@ -42,6 +43,7 @@ export async function PATCH(
     if (tags !== undefined) updates.tags = tags;
     if (featured !== undefined) updates.featured = featured;
     if (thumbnail !== undefined) updates.thumbnail = thumbnail;
+    if (rich_content !== undefined) updates.rich_content = rich_content ?? null;
 
     const { data, error } = await supabase
       .from('ai_resources')
