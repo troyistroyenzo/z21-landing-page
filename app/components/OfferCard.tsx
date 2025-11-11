@@ -4,7 +4,6 @@ import React, { Suspense, useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
-import { trackEvent } from '@/lib/analytics';
 import type { OfferItem } from '@/app/content/offerStack';
 
 // 3D Models for each offer type
@@ -190,11 +189,9 @@ export default function OfferCard({ offer, onOpenModal, isPaused = false }: Offe
       const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
       if (!gl) {
         setIsWebGLSupported(false);
-        trackEvent('offer_3d_fallback_used', { offer_id: offer.id });
       }
     } catch {
       setIsWebGLSupported(false);
-      trackEvent('offer_3d_fallback_used', { offer_id: offer.id });
     }
   }, [offer.id]);
 
@@ -204,7 +201,7 @@ export default function OfferCard({ offer, onOpenModal, isPaused = false }: Offe
       ([entry]) => {
         if (entry.isIntersecting && !isInView) {
           setIsInView(true);
-          trackEvent('offer_card_view', { offer_id: offer.id });
+          // Custom event tracking could be added here if needed
         }
       },
       { threshold: 0.5 }
@@ -218,7 +215,7 @@ export default function OfferCard({ offer, onOpenModal, isPaused = false }: Offe
   }, [offer.id, isInView]);
 
   const handleLearnMore = () => {
-    trackEvent('offer_card_click', { offer_id: offer.id });
+    // Custom event tracking could be added here if needed
     onOpenModal();
   };
   
