@@ -1,7 +1,6 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import './globals.css';
-import { initAnalytics } from '@/lib/analytics';
 import Script from 'next/script';
 import content from '@/app/content/z21.json';
 import { Analytics } from '@vercel/analytics/next';
