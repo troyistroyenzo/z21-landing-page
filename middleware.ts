@@ -18,6 +18,12 @@ const securityHeaders = {
 
 // Note: protected routes are handled per-route; middleware focuses on API admin paths
 const publicApiRoutes = ['/api/subscribe', '/api/cta-submit', '/api/onboarding-submit'];
+// Allow unauthenticated GET access for specific admin analytics timeline endpoints (read-only)
+const publicAdminGetRoutes = new Set([
+  '/api/admin/page-views/timeline',
+  '/api/admin/subscribers/timeline',
+  '/api/admin/applicants/timeline'
+]);
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
@@ -99,6 +105,10 @@ export async function middleware(request: NextRequest) {
   // Authentication check for protected routes
   // Only protect API routes - let AdminAuth component handle page authentication
   if (pathname.startsWith('/api/admin')) {
+    // Whitelist certain read-only analytics endpoints for GET without auth (for dashboards/monitoring)
+    if (request.method === 'GET' && publicAdminGetRoutes.has(pathname)) {
+      return response;
+    }
     // Check for any Supabase auth cookie (they use pattern: sb-{project}-auth-token)
     const cookies = request.cookies.getAll();
     const supabaseAuthCookie = cookies.find(cookie => 

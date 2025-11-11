@@ -10,7 +10,9 @@ import {
   BookOpen,
   Sparkles,
   LogOut,
-  User
+  User,
+  FileText,
+  TrendingUp
 } from 'lucide-react';
 
 interface AdminSidebarProps {
@@ -20,7 +22,9 @@ interface AdminSidebarProps {
 
 const tabs = [
   { id: 'overview', label: 'Overview', icon: BarChart3 },
+  { id: 'analytics', label: 'Analytics', icon: TrendingUp },
   { id: 'applicants', label: 'Applicants', icon: Users },
+  { id: 'intakes', label: 'Intakes', icon: FileText },
   { id: 'subscribers', label: 'Subscribers', icon: Mail },
   { id: 'resources', label: 'Resources', icon: BookOpen },
   { id: 'uploads', label: 'Upload', icon: Upload }
@@ -72,11 +76,15 @@ export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarPro
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
-          
+
+          const handleClick = () => {
+            onTabChange(tab.id);
+          };
+
           return (
             <button
               key={tab.id}
-              onClick={() => onTabChange(tab.id)}
+              onClick={handleClick}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                 isActive
                   ? 'bg-accent/10 text-accent border border-accent/20'

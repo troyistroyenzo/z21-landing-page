@@ -4,9 +4,14 @@ import { useState, useEffect } from 'react';
 import AdminAuth from './components/AdminAuth';
 import AdminSidebar from './components/AdminSidebar';
 import ApplicantsChart from './components/ApplicantsChart';
+import SubscribersChart from './components/SubscribersChart';
+import PageViewsChart from './components/PageViewsChart';
+import AnalyticsCard from './components/AnalyticsCard';
 import ApplicantDetailModal from './components/ApplicantDetailModal';
 import RichTextEditor from './components/RichTextEditor';
 import ResourceEditModal from './components/ResourceEditModal';
+import IntakeDetailModal from './components/IntakeDetailModal';
+import { generateIntakePDF } from '@/lib/pdfGenerator';
 import {
   BarChart3, 
   Users, 
@@ -21,7 +26,13 @@ import {
   Filter,
   X,
   TrendingUp,
-  Database
+  Database,
+  FileText,
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  Activity,
+  TrendingDown
 } from 'lucide-react';
 // Applicant scoring helpers (not used in this file currently)
 // import { getTierColor, getTierLabel } from '@/lib/applicantScoring';
@@ -34,8 +45,9 @@ import {
   formatTimeAgo
 } from './hooks/useAdminData';
 import { exportToCSV, formatApplicantsForCSV, formatSubscribersForCSV } from '@/lib/csvExport';
+import { formatNumber } from '@/lib/analytics';
 
-type TabType = 'overview' | 'uploads' | 'applicants' | 'subscribers' | 'resources';
+type TabType = 'overview' | 'uploads' | 'applicants' | 'intakes' | 'subscribers' | 'resources' | 'analytics';
 
 // Applicant type used across admin UI
 interface Applicant {
@@ -64,9 +76,15 @@ export default function AdminPage() {
 
   const [selectedApplicant, setSelectedApplicant] = useState<Applicant | null>(null);
 
+  const handleViewAnalytics = () => {
+    setActiveTab('analytics');
+  };
+
   const tabs = [
     { id: 'overview', label: 'Overview', icon: BarChart3, shortLabel: 'Home' },
+    { id: 'analytics', label: 'Analytics', icon: TrendingUp, shortLabel: 'Stats' },
     { id: 'applicants', label: 'Applicants', icon: Users, shortLabel: 'Apply' },
+    { id: 'intakes', label: 'Intakes', icon: FileText, shortLabel: 'Intake' },
     { id: 'subscribers', label: 'Subscribers', icon: Mail, shortLabel: 'Subs' },
     { id: 'resources', label: 'Resources', icon: BookOpen, shortLabel: 'Docs' },
     { id: 'uploads', label: 'Upload', icon: Upload, shortLabel: 'Add' }
@@ -95,9 +113,11 @@ export default function AdminPage() {
 
           {/* Main Content */}
           <main className="flex-1 p-4 lg:p-6 max-w-7xl mx-auto w-full">
-            {activeTab === 'overview' && <OverviewSection />}
+            {activeTab === 'overview' && <OverviewSection onViewAnalytics={handleViewAnalytics} />}
+            {activeTab === 'analytics' && <AnalyticsSection />}
             {activeTab === 'uploads' && <UploadsSection />}
             {activeTab === 'applicants' && <ApplicantsSection onSelectApplicant={setSelectedApplicant} />}
+            {activeTab === 'intakes' && <IntakesSection />}
             {activeTab === 'subscribers' && <SubscribersSection />}
             {activeTab === 'resources' && <ResourcesSection />}
           </main>
@@ -137,8 +157,257 @@ export default function AdminPage() {
   );
 }
 
+// Analytics Section
+function AnalyticsSection() {
+  const [days, setDays] = useState(7);
+  const [summary, setSummary] = useState<{
+    visitors: { value: number; change: number };
+    pageViews: { value: number; change: number };
+    bounceRate: { value: number; change: number };
+    days: number;
+  } | null>(null);
+  const [pages, setPages] = useState<Array<{ path: string; views: number; visitors: number }>>([]);
+  const [timeline, setTimeline] = useState<Array<{ date: string; count: number; displayDate: string }>>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, [days]);
+
+  const fetchAnalytics = async () => {
+    setLoading(true);
+    try {
+      const [summaryRes, pagesRes, timelineRes] = await Promise.all([
+        fetch(`/api/admin/analytics/summary?days=${days}`),
+        fetch(`/api/admin/analytics/pages?days=${days}`),
+        fetch(`/api/admin/analytics/timeline?days=${days}`)
+      ]);
+
+      const summaryData = await summaryRes.json();
+      const pagesData = await pagesRes.json();
+      const timelineData = await timelineRes.json();
+
+      setSummary(summaryData);
+      setPages(pagesData.pages || []);
+      setTimeline(timelineData.timeline || []);
+    } catch (error) {
+      console.error('Failed to fetch analytics:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const maxValue = Math.max(...timeline.map(d => d.count), 1);
+
+  return (
+    <div className="space-y-4 lg:space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl lg:text-3xl font-bold">Web Analytics</h2>
+        
+        {/* Time Range Selector */}
+        <div className="flex items-center gap-2 bg-zinc-900 rounded-lg px-4 py-2 border border-zinc-800">
+          <button
+            onClick={() => setDays(Math.max(7, days - 7))}
+            className="p-1 hover:bg-zinc-800 rounded"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <span className="px-2 min-w-[100px] text-center text-sm">
+            Last {days} Days
+          </span>
+          <button
+            onClick={() => setDays(Math.min(90, days + 7))}
+            className="p-1 hover:bg-zinc-800 rounded"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+        {/* Visitors */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 lg:p-6">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-zinc-400 text-sm">Visitors</span>
+            <Users className="w-5 h-5 text-zinc-500" />
+          </div>
+          <div className="flex items-end gap-3">
+            <span className="text-2xl lg:text-3xl font-bold">
+              {loading ? '-' : formatNumber(summary?.visitors?.value ?? 0)}
+            </span>
+            {summary && summary.visitors?.change !== 0 && (
+              <span 
+                className={`flex items-center text-sm ${
+                  summary.visitors.change > 0 ? 'text-green-500' : 'text-red-500'
+                }`}
+              >
+                {summary.visitors.change > 0 ? (
+                  <TrendingUp className="w-4 h-4 mr-1" />
+                ) : (
+                  <TrendingDown className="w-4 h-4 mr-1" />
+                )}
+                {Math.abs(summary.visitors.change)}%
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Page Views */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 lg:p-6">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-zinc-400 text-sm">Page Views</span>
+            <Eye className="w-5 h-5 text-zinc-500" />
+          </div>
+          <div className="flex items-end gap-3">
+            <span className="text-2xl lg:text-3xl font-bold">
+              {loading ? '-' : formatNumber(summary?.pageViews?.value ?? 0)}
+            </span>
+            {summary && summary.pageViews?.change !== 0 && (
+              <span 
+                className={`flex items-center text-sm ${
+                  summary.pageViews.change > 0 ? 'text-green-500' : 'text-red-500'
+                }`}
+              >
+                {summary.pageViews.change > 0 ? (
+                  <TrendingUp className="w-4 h-4 mr-1" />
+                ) : (
+                  <TrendingDown className="w-4 h-4 mr-1" />
+                )}
+                {Math.abs(summary.pageViews.change)}%
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Bounce Rate */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 lg:p-6">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-zinc-400 text-sm">Bounce Rate</span>
+            <Activity className="w-5 h-5 text-zinc-500" />
+          </div>
+          <div className="flex items-end gap-3">
+            <span className="text-2xl lg:text-3xl font-bold">
+              {loading ? '-' : `${summary?.bounceRate?.value ?? 0}%`}
+            </span>
+            {summary && summary.bounceRate?.change !== 0 && (
+              <span 
+                className={`flex items-center text-sm ${
+                  summary.bounceRate.change < 0 ? 'text-green-500' : 'text-red-500'
+                }`}
+              >
+                {summary.bounceRate.change > 0 ? (
+                  <TrendingUp className="w-4 h-4 mr-1" />
+                ) : (
+                  <TrendingDown className="w-4 h-4 mr-1" />
+                )}
+                {Math.abs(summary.bounceRate.change)}%
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Timeline Chart */}
+      <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 lg:p-6">
+        <h3 className="text-lg font-semibold mb-4">Page Views</h3>
+        <div className="h-64 flex items-end gap-1">
+          {loading ? (
+            <div className="w-full h-full flex items-center justify-center text-zinc-500 text-sm">
+              Loading...
+            </div>
+          ) : timeline.length > 0 ? (
+            timeline.map((data, index) => (
+              <div
+                key={data.date}
+                className="flex-1 flex flex-col items-center gap-2"
+                title={`${data.displayDate}: ${data.count} views`}
+              >
+                <div 
+                  className="w-full bg-blue-600 rounded-t hover:bg-blue-500 transition-colors relative"
+                  style={{ 
+                    height: `${(data.count / maxValue) * 100}%`,
+                    minHeight: data.count > 0 ? '2px' : '0'
+                  }}
+                />
+                {index % Math.ceil(timeline.length / 7) === 0 && (
+                  <span className="text-xs text-zinc-500 mt-2">
+                    {data.displayDate}
+                  </span>
+                )}
+              </div>
+            ))
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-zinc-500 text-sm">
+              No data available
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Tables Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+        {/* Pages Table */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 lg:p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">Pages</h3>
+            <span className="text-sm text-zinc-400">VISITORS</span>
+          </div>
+          {loading ? (
+            <div className="space-y-2">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="h-10 bg-zinc-800 rounded animate-pulse" />
+              ))}
+            </div>
+          ) : pages.length > 0 ? (
+            <div className="space-y-2">
+              {pages.map((page) => (
+                <div
+                  key={page.path}
+                  className="flex items-center justify-between py-2 px-3 hover:bg-zinc-800 rounded transition-colors"
+                >
+                  <span className="text-sm truncate flex-1 mr-4">
+                    {page.path}
+                  </span>
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm text-zinc-400">
+                      {page.views} views
+                    </span>
+                    <span className="text-sm font-medium">
+                      {formatNumber(page.visitors)}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-zinc-500 py-8 text-sm">
+              No page data available
+            </div>
+          )}
+        </div>
+
+        {/* Referrers Table */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 lg:p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">Referrers</h3>
+            <span className="text-sm text-zinc-400">VISITORS</span>
+          </div>
+          <div className="text-center text-zinc-500 py-8">
+            <p className="text-sm">Referrer tracking coming soon</p>
+            <p className="text-xs mt-2">
+              This will show where your traffic comes from
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Overview Section
-function OverviewSection() {
+function OverviewSection({ onViewAnalytics }: { onViewAnalytics?: () => void }) {
   const { stats, loading: statsLoading, error: statsError } = useAdminStats();
   const { activities, loading: activityLoading, error: activityError } = useRecentActivity();
 
@@ -196,6 +465,15 @@ function OverviewSection() {
       <div className="hidden lg:block">
         <ApplicantsChart />
       </div>
+
+      {/* Subscribers and Page Views */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-6">
+        <SubscribersChart />
+        <PageViewsChart />
+      </div>
+
+      {/* Web Analytics Card */}
+      <AnalyticsCard onViewAnalytics={onViewAnalytics} />
 
       {/* Recent Activity */}
       <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 lg:p-6">
@@ -933,10 +1211,280 @@ function ApplicantsSection({ onSelectApplicant }: { onSelectApplicant: (applican
   );
 }
 
+/** Intakes (Onboarding) Section inside /admin */
+function IntakesSection() {
+  const [intakes, setIntakes] = useState<Array<{
+    id: string;
+    full_name: string;
+    business_name: string;
+    email: string;
+    website_link?: string;
+    business_description: string;
+    target_customers: string;
+    current_tools?: any;
+    lead_contact_method: string;
+    follow_up_process: string;
+    top_priorities: string;
+    success_definition: string;
+    ai_familiarity: string;
+    preferred_schedule?: any;
+    timezone: string;
+    team_members?: string;
+    existing_workflows?: string;
+    case_study_consent: string;
+    additional_notes?: string;
+    created_at: string;
+    source_url?: string;
+    metadata?: any;
+  }>>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [familiarityFilter, setFamiliarityFilter] = useState<string>('all');
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedIntake, setSelectedIntake] = useState<any | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        setLoading(true);
+        const res = await fetch('/api/admin/intakes');
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to load intakes');
+        setIntakes(data.intakes || []);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Failed to load intakes');
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  if (error) {
+    return (
+      <div className="space-y-4">
+        <h2 className="text-2xl lg:text-3xl font-bold">Onboarding Intakes</h2>
+        <div className="flex items-center gap-3 p-4 bg-red-900/20 border border-red-800 rounded-xl">
+          <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+          <div>
+            <p className="text-red-500 font-semibold text-sm">Error loading intakes</p>
+            <p className="text-red-400 text-xs">{error}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const filtered = intakes.filter((i) => {
+    const matchesSearch =
+      i.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      i.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      i.email.toLowerCase().includes(searchTerm.toLowerCase());
+    if (!matchesSearch) return false;
+    if (familiarityFilter === 'all') return true;
+    return (i.ai_familiarity || '').toLowerCase() === familiarityFilter.toLowerCase();
+  });
+
+  const familiarityLevels = Array.from(new Set(intakes.map((i) => i.ai_familiarity).filter(Boolean)));
+
+  const aiFamiliarityBadge = (level: string) => {
+    const colors: Record<string, string> = {
+      newbie: 'bg-zinc-500/10 text-zinc-400',
+      beginner: 'bg-blue-500/10 text-blue-400',
+      intermediate: 'bg-green-500/10 text-green-400',
+      advanced: 'bg-purple-500/10 text-purple-400'
+    };
+    return (
+      <span className={`px-2 py-1 rounded text-xs font-medium ${colors[level?.toLowerCase()] || 'bg-zinc-500/10 text-zinc-400'}`}>
+        {level}
+      </span>
+    );
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-2xl lg:text-3xl font-bold">Onboarding Intakes</h2>
+        <button
+          onClick={() => location.reload()}
+          className="p-2 bg-accent/10 text-accent border border-accent/20 rounded-lg hover:bg-accent/20 transition-colors flex items-center gap-2"
+          title="Refresh intakes"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span className="hidden lg:inline text-sm">Refresh</span>
+        </button>
+      </div>
+
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+        <input
+          type="text"
+          placeholder="Search by name, business, or email..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full pl-10 pr-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 text-sm"
+        />
+      </div>
+
+      <div className="flex gap-2">
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className="flex-1 lg:hidden flex items-center justify-center gap-2 px-4 py-2.5 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-400 text-sm"
+        >
+          <Filter className="w-4 h-4" />
+          Filters
+          {familiarityFilter !== 'all' && <span className="w-2 h-2 bg-accent rounded-full"></span>}
+        </button>
+
+        <div className="hidden lg:flex gap-2 flex-1">
+          <select
+            value={familiarityFilter}
+            onChange={(e) => setFamiliarityFilter(e.target.value)}
+            className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm"
+          >
+            <option value="all">All AI Familiarity</option>
+            {familiarityLevels.map((lvl) => (
+              <option key={lvl} value={lvl}>
+                {lvl}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* Desktop Table */}
+      <div className="hidden lg:block bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+        <table className="w-full">
+          <thead className="bg-zinc-800/50">
+            <tr>
+              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Name</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Business</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Email</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">AI Familiarity</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Submitted</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-zinc-800">
+            {loading ? (
+              [...Array(3)].map((_, i) => (
+                <tr key={i} className="animate-pulse">
+                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-32"></div></td>
+                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-28"></div></td>
+                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-40"></div></td>
+                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-20"></div></td>
+                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-24"></div></td>
+                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-16"></div></td>
+                </tr>
+              ))
+            ) : filtered.length > 0 ? (
+              filtered.map((intake) => (
+                <tr
+                  key={intake.id}
+                  className="hover:bg-zinc-800/30 cursor-pointer"
+                  onClick={() => setSelectedIntake(intake)}
+                >
+                  <td className="px-4 py-3 text-white font-medium">{intake.full_name}</td>
+                  <td className="px-4 py-3 text-zinc-400">{intake.business_name}</td>
+                  <td className="px-4 py-3 text-zinc-400">{intake.email}</td>
+                  <td className="px-4 py-3">{aiFamiliarityBadge(intake.ai_familiarity)}</td>
+                  <td className="px-4 py-3 text-zinc-400">{formatTimeAgo(intake.created_at)}</td>
+                  <td className="px-4 py-3">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        generateIntakePDF(intake);
+                      }}
+                      className="p-1.5 text-blue-400 hover:text-blue-300 hover:bg-blue-400/10 rounded transition-colors"
+                      title="Download PDF"
+                    >
+                      <Download className="w-4 h-4" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-zinc-400 text-sm">
+                  {searchTerm || familiarityFilter !== 'all' ? 'No matching intakes' : 'No intakes yet'}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Mobile Cards */}
+      <div className="lg:hidden space-y-3">
+        {loading ? (
+          [...Array(3)].map((_, i) => (
+            <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 animate-pulse">
+              <div className="h-4 bg-zinc-800 rounded w-32 mb-2"></div>
+              <div className="h-3 bg-zinc-800 rounded w-48 mb-3"></div>
+              <div className="flex gap-2">
+                <div className="h-6 bg-zinc-800 rounded w-20"></div>
+                <div className="h-6 bg-zinc-800 rounded w-16"></div>
+              </div>
+            </div>
+          ))
+        ) : filtered.length > 0 ? (
+          filtered.map((intake) => (
+            <div
+              key={intake.id}
+              onClick={() => setSelectedIntake(intake)}
+              className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 cursor-pointer hover:border-zinc-700 transition-colors"
+            >
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-white truncate">{intake.full_name}</h3>
+                  <p className="text-sm text-zinc-400 truncate">{intake.business_name}</p>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    generateIntakePDF(intake);
+                  }}
+                  className="p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-400/10 rounded transition-colors flex-shrink-0"
+                  title="Download PDF"
+                >
+                  <Download className="w-4 h-4" />
+                </button>
+              </div>
+              <p className="text-sm text-zinc-500 truncate mb-2">{intake.email}</p>
+              <div className="flex items-center gap-2 flex-wrap">
+                {aiFamiliarityBadge(intake.ai_familiarity)}
+                <span className="text-xs text-zinc-500">{formatTimeAgo(intake.created_at)}</span>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 text-center text-zinc-400 text-sm">
+            {searchTerm || familiarityFilter !== 'all' ? 'No matching intakes' : 'No intakes yet'}
+          </div>
+        )}
+      </div>
+
+      {/* Detail Modal */}
+      <IntakeDetailModal intake={selectedIntake} onClose={() => setSelectedIntake(null)} />
+    </div>
+  );
+}
+
 // Subscribers Section
 function SubscribersSection() {
   const { subscribers, loading, error } = useSubscribers();
   const [searchTerm, setSearchTerm] = useState('');
+  const [sourceFilter, setSourceFilter] = useState<string>('all');
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [deleting, setDeleting] = useState(false);
+  const [expandedMetadata, setExpandedMetadata] = useState<string | null>(null);
+
+  const handleRefresh = () => {
+    window.location.reload();
+  };
 
   if (error) {
     return (
@@ -953,27 +1501,98 @@ function SubscribersSection() {
     );
   }
 
-  const filtered = subscribers.filter(sub =>
-    sub.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filtered = subscribers.filter(sub => {
+    const matchesSearch = sub.email.toLowerCase().includes(searchTerm.toLowerCase());
+    if (!matchesSearch) return false;
+    
+    if (sourceFilter === 'all') return true;
+    return sub.source === sourceFilter;
+  });
+
+  // Get unique sources for filter
+  const sources = Array.from(new Set(subscribers.map(s => s.source)));
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
+  const selectAll = () => {
+    if (selectedIds.length === filtered.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filtered.map(s => s.id));
+    }
+  };
+
+  const handleDelete = async () => {
+    if (selectedIds.length === 0) return;
+    if (!confirm(`Delete ${selectedIds.length} subscriber(s)?`)) return;
+
+    setDeleting(true);
+    try {
+      const res = await fetch('/api/admin/subscribers/delete', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: selectedIds })
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error);
+      alert(json.message);
+      setSelectedIds([]);
+      window.location.reload();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      alert('Delete failed: ' + msg);
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const handleExport = () => {
     const formatted = formatSubscribersForCSV(filtered);
     exportToCSV(formatted, `subscribers-${new Date().toISOString().split('T')[0]}.csv`);
   };
 
+  const toggleMetadata = (id: string) => {
+    setExpandedMetadata(expandedMetadata === id ? null : id);
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-2xl lg:text-3xl font-bold">Subscribers</h2>
-        <button
-          onClick={handleExport}
-          disabled={filtered.length === 0}
-          className="p-2 lg:px-4 lg:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
-        >
-          <Download className="w-4 h-4" />
-          <span className="hidden lg:inline text-sm">Export</span>
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleRefresh}
+            className="p-2 bg-accent/10 text-accent border border-accent/20 rounded-lg hover:bg-accent/20 transition-colors flex items-center gap-2"
+            title="Refresh subscribers"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span className="hidden lg:inline text-sm">Refresh</span>
+          </button>
+          <button
+            onClick={handleExport}
+            disabled={filtered.length === 0}
+            className="p-2 lg:px-4 lg:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+          >
+            <Download className="w-4 h-4" />
+            <span className="hidden lg:inline text-sm">Export</span>
+          </button>
+          {selectedIds.length > 0 && (
+            <button
+              onClick={handleDelete}
+              disabled={deleting}
+              className="p-2 lg:px-4 lg:py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 flex items-center gap-2"
+            >
+              <Trash2 className="w-4 h-4" />
+              <span className="hidden lg:inline text-sm">({selectedIds.length})</span>
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="relative">
@@ -987,40 +1606,229 @@ function SubscribersSection() {
         />
       </div>
 
-      {loading ? (
-        <div className="space-y-3">
-          {[...Array(3)].map((_, i) => (
+      <div className="flex gap-2">
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className="flex-1 lg:hidden flex items-center justify-center gap-2 px-4 py-2.5 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-400 text-sm"
+        >
+          <Filter className="w-4 h-4" />
+          Filters
+          {sourceFilter !== 'all' && (
+            <span className="w-2 h-2 bg-accent rounded-full"></span>
+          )}
+        </button>
+
+        <div className="hidden lg:flex gap-2 flex-1">
+          <select
+            value={sourceFilter}
+            onChange={(e) => setSourceFilter(e.target.value)}
+            className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm"
+          >
+            <option value="all">All Sources</option>
+            {sources.map(source => (
+              <option key={source} value={source}>{source}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {showFilters && (
+        <div className="lg:hidden bg-zinc-900 border border-zinc-800 rounded-xl p-4 space-y-3">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="font-semibold">Filters</h3>
+            <button onClick={() => setShowFilters(false)}>
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <div>
+            <label className="block text-sm text-zinc-400 mb-2">Source</label>
+            <select
+              value={sourceFilter}
+              onChange={(e) => setSourceFilter(e.target.value)}
+              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm"
+            >
+              <option value="all">All Sources</option>
+              {sources.map(source => (
+                <option key={source} value={source}>{source}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      )}
+
+      {/* Desktop Table */}
+      <div className="hidden lg:block bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+        <table className="w-full">
+          <thead className="bg-zinc-800/50">
+            <tr>
+              <th className="px-4 py-3 w-12">
+                <input
+                  type="checkbox"
+                  checked={filtered.length > 0 && selectedIds.length === filtered.length}
+                  onChange={selectAll}
+                  className="w-4 h-4 rounded border-zinc-600 bg-zinc-700 text-accent focus:ring-accent"
+                />
+              </th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Email</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Source</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Subscribed</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-zinc-400">Metadata</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-zinc-800">
+            {loading ? (
+              [...Array(3)].map((_, i) => (
+                <tr key={i} className="animate-pulse">
+                  <td className="px-4 py-3"><div className="h-4 w-4 bg-zinc-800 rounded"></div></td>
+                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-48"></div></td>
+                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-24"></div></td>
+                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-32"></div></td>
+                  <td className="px-4 py-3"><div className="h-4 bg-zinc-800 rounded w-20"></div></td>
+                </tr>
+              ))
+            ) : filtered.length > 0 ? (
+              filtered.map((subscriber) => {
+                const hasMetadata = subscriber.metadata && Object.keys(subscriber.metadata).length > 0;
+                return (
+                  <tr key={subscriber.id} className="hover:bg-zinc-800/30">
+                    <td className="px-4 py-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.includes(subscriber.id)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          toggleSelect(subscriber.id);
+                        }}
+                        className="w-4 h-4 rounded border-zinc-600 bg-zinc-700 text-accent focus:ring-accent"
+                      />
+                    </td>
+                    <td className="px-4 py-3 text-white">{subscriber.email}</td>
+                    <td className="px-4 py-3">
+                      <span className="px-2 py-1 bg-accent/10 text-accent text-xs font-medium rounded">
+                        {subscriber.source}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-zinc-400">
+                      {formatTimeAgo(subscriber.subscribed_at)}
+                    </td>
+                    <td className="px-4 py-3">
+                      {hasMetadata ? (
+                        <button
+                          onClick={() => toggleMetadata(subscriber.id)}
+                          className="px-2 py-1 bg-blue-500/10 text-blue-400 text-xs rounded hover:bg-blue-500/20 transition-colors"
+                        >
+                          {expandedMetadata === subscriber.id ? 'Hide' : 'View'} ({Object.keys(subscriber.metadata).length})
+                        </button>
+                      ) : (
+                        <span className="text-xs text-zinc-500">None</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan={5} className="px-4 py-8 text-center text-zinc-400 text-sm">
+                  {searchTerm || sourceFilter !== 'all' ? 'No matching subscribers' : 'No subscribers yet'}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Expanded Metadata View */}
+      {expandedMetadata && (
+        <div className="hidden lg:block bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-semibold">Subscriber Metadata</h3>
+            <button
+              onClick={() => setExpandedMetadata(null)}
+              className="text-zinc-400 hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          {(() => {
+            const sub = filtered.find(s => s.id === expandedMetadata);
+            if (!sub) return null;
+            return (
+              <div className="space-y-2">
+                <div className="text-sm">
+                  <span className="text-zinc-400">Email: </span>
+                  <span className="text-white">{sub.email}</span>
+                </div>
+                <div className="bg-zinc-800 rounded p-3">
+                  <pre className="text-xs text-zinc-300 overflow-x-auto">
+                    {JSON.stringify(sub.metadata, null, 2)}
+                  </pre>
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+      )}
+
+      {/* Mobile Cards */}
+      <div className="lg:hidden space-y-3">
+        {loading ? (
+          [...Array(3)].map((_, i) => (
             <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 animate-pulse">
               <div className="h-4 bg-zinc-800 rounded w-48 mb-2"></div>
               <div className="h-3 bg-zinc-800 rounded w-24"></div>
             </div>
-          ))}
-        </div>
-      ) : filtered.length > 0 ? (
-        <div className="space-y-3">
-          {filtered.map((subscriber) => (
-            <div key={subscriber.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex-1 min-w-0">
-                  <p className="text-white font-medium truncate">{subscriber.email}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="px-2 py-1 bg-accent/10 text-accent text-xs rounded">
-                      {subscriber.source}
-                    </span>
-                    <span className="text-xs text-zinc-500">
-                      {new Date(subscriber.subscribed_at).toLocaleDateString()}
-                    </span>
+          ))
+        ) : filtered.length > 0 ? (
+          filtered.map((subscriber) => {
+            const hasMetadata = subscriber.metadata && Object.keys(subscriber.metadata).length > 0;
+            return (
+              <div key={subscriber.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.includes(subscriber.id)}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      toggleSelect(subscriber.id);
+                    }}
+                    className="mt-1"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white font-medium truncate">{subscriber.email}</p>
+                    <div className="flex items-center gap-2 mt-1 flex-wrap">
+                      <span className="px-2 py-1 bg-accent/10 text-accent text-xs rounded">
+                        {subscriber.source}
+                      </span>
+                      <span className="text-xs text-zinc-500">
+                        {formatTimeAgo(subscriber.subscribed_at)}
+                      </span>
+                    </div>
+                    {hasMetadata && (
+                      <button
+                        onClick={() => toggleMetadata(subscriber.id)}
+                        className="mt-2 px-2 py-1 bg-blue-500/10 text-blue-400 text-xs rounded"
+                      >
+                        {expandedMetadata === subscriber.id ? '▼' : '▶'} Metadata ({Object.keys(subscriber.metadata).length})
+                      </button>
+                    )}
+                    {expandedMetadata === subscriber.id && (
+                      <div className="mt-2 bg-zinc-800 rounded p-2">
+                        <pre className="text-xs text-zinc-300 overflow-x-auto">
+                          {JSON.stringify(subscriber.metadata, null, 2)}
+                        </pre>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 text-center text-zinc-400 text-sm">
-          {searchTerm ? 'No matching subscribers' : 'No subscribers yet'}
-        </div>
-      )}
+            );
+          })
+        ) : (
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 text-center text-zinc-400 text-sm">
+            {searchTerm || sourceFilter !== 'all' ? 'No matching subscribers' : 'No subscribers yet'}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

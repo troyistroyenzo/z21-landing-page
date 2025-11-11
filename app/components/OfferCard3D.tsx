@@ -6,7 +6,6 @@ import { Float, MeshDistortMaterial } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
-import { trackEvent } from '@/lib/analytics';
 import type { OfferItem } from '@/app/content/offerStack';
 import ClientOnly from './ClientOnly';
 
@@ -371,11 +370,9 @@ export default function OfferCard3D(props: OfferCard3DProps) {
       const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
       if (!gl) {
         setIsWebGLSupported(false);
-        trackEvent('offer_3d_fallback_used', { offer_id: offer.id });
       }
     } catch {
       setIsWebGLSupported(false);
-      trackEvent('offer_3d_fallback_used', { offer_id: offer.id });
     }
   }, [offer.id]);
   const fallbackColors = {

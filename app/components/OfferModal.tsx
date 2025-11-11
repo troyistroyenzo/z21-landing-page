@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
-import { trackEvent } from '@/lib/analytics';
 import type { OfferItem } from '@/app/content/offerStack';
 
 interface OfferModalProps {
@@ -14,19 +13,6 @@ interface OfferModalProps {
 }
 
 export default function OfferModal({ offer, isOpen, onClose }: OfferModalProps) {
-  useEffect(() => {
-    if (isOpen) {
-      trackEvent('offer_modal_view', { offer_id: offer.id });
-    }
-  }, [isOpen, offer.id]);
-
-  const handleCtaClick = () => {
-    trackEvent('offer_cta_click', { 
-      offer_id: offer.id, 
-      cta_route: offer.ctaRoute 
-    });
-  };
-
   // Determine dynamic CTA labels based on availability
   const getCtaLabel = () => {
     if (offer.id === 'cohort' && offer.seasonOpen === false) {
@@ -186,7 +172,6 @@ export default function OfferModal({ offer, isOpen, onClose }: OfferModalProps) 
                   {/* CTA Button */}
                   <motion.a
                     href={getCtaRoute()}
-                    onClick={handleCtaClick}
                     className="block w-full sm:w-auto text-center px-8 py-4 bg-tan text-emerald-900 
                              rounded-lg font-bold text-lg hover:bg-tan/90 transition-colors
                              focus:outline-none focus:ring-2 focus:ring-tan focus:ring-offset-2 
