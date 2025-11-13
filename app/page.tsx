@@ -51,39 +51,30 @@ const PageLoading = () => (
 
 export default function Home() {
   useEffect(() => {
-    // Defer Lenis initialization to improve initial load
-    const initLenis = () => {
-      const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: 'vertical',
-        gestureOrientation: 'vertical',
-        smoothWheel: true,
-        wheelMultiplier: 1,
-        touchMultiplier: 2,
-        infinite: false,
-      });
+    // Initialize Lenis immediately but with optimized settings
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
+      infinite: false,
+      // Performance optimizations
+      lerp: 0.1, // Smoother interpolation
+      syncTouch: true, // Better mobile performance
+    });
 
-      function raf(time: number) {
-        lenis.raf(time);
-        requestAnimationFrame(raf);
-      }
-
+    function raf(time: number) {
+      lenis.raf(time);
       requestAnimationFrame(raf);
+    }
 
-      return lenis;
-    };
-
-    // Initialize after a delay to not block initial render
-    const timeoutId = setTimeout(() => {
-      const lenis = initLenis();
-      return () => {
-        lenis.destroy();
-      };
-    }, 1000);
+    requestAnimationFrame(raf);
 
     return () => {
-      clearTimeout(timeoutId);
+      lenis.destroy();
     };
   }, []);
 

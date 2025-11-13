@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRightIcon, LightningBoltIcon, PersonIcon, TargetIcon } from '@radix-ui/react-icons';
 import Button from './ui/Button';
@@ -23,23 +24,23 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Parallax Background */}
+      {/* Optimized Parallax Background with Next.js Image */}
       <motion.div
-        className="absolute inset-0 bg-cover bg-center md:bg-center bg-no-repeat"
-        style={{
-          backgroundImage: "url('https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/_R655433.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTQzMGYtOWVkOC1iNzY3YzU1NDM5YzMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvX1I2NTU0MzMuanBnIiwiaWF0IjoxNzU4NzY1Mzc1LCJleHAiOjE3OTAzMDEzNzV9.hhiKdRf-H2t5XPjSS3Qn3wqJ183rfUqkvbbtDW5Kpsw')",
-          backgroundPosition: '-10rem',
-          y: backgroundY,
-        }}
-      />
-      {/* Mobile background position adjustment */}
-      <style jsx>{`
-        @media (max-width: 768px) {
-          section {
-            background-position: 55% center !important;
-          }
-        }
-      `}</style>
+        className="absolute inset-0"
+        style={{ y: backgroundY }}
+      >
+        <Image
+          src="https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/_R655433.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTQzMGYtOWVkOC1iNzY3YzU1NDM5YzMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvX1I2NTU0MzMuanBnIiwiaWF0IjoxNzU4NzY1Mzc1LCJleHAiOjE3OTAzMDEzNzV9.hhiKdRf-H2t5XPjSS3Qn3wqJ183rfUqkvbbtDW5Kpsw"
+          alt="Z21 Hero Background"
+          fill
+          priority
+          quality={85}
+          sizes="100vw"
+          className="object-cover object-[55%_center] md:object-[center_-10rem]"
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwABmQA/9k="
+        />
+      </motion.div>
       
       <motion.div 
         className="relative z-10 flex flex-col items-center justify-center w-full px-4 md:px-6 py-32 mt-24"

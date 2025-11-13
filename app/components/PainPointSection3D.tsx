@@ -96,7 +96,7 @@ function PainPointsScene({ mouseX, mouseY, isMobile }: { mouseX: number; mouseY:
 }
 
 // Floating particles
-function FloatingParticles({ count = 30 }: { count?: number }) {
+function FloatingParticles({ count = 10 }: { count?: number }) {
   const mesh = useRef<THREE.InstancedMesh>(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
   
@@ -193,14 +193,14 @@ export default function PainPointSection3D() {
             <Suspense fallback={null}>
               <Canvas
                 camera={{ position: [0, 0, 6], fov: 50 }}
-                dpr={[1, 2]}
+                dpr={isMobile ? [0.5, 1] : [1, 2]}
                 className="w-full h-full"
               >
                 <ambientLight intensity={0.3} />
                 <directionalLight position={[10, 10, 5]} intensity={0.5} />
                 <directionalLight position={[-10, -10, -5]} intensity={0.3} />
                 
-                <FloatingParticles count={isMobile ? 15 : 30} />
+                <FloatingParticles count={isMobile ? 5 : 10} />
                 <PainPointsScene 
                   mouseX={mousePosition.normalized.x} 
                   mouseY={mousePosition.normalized.y}
