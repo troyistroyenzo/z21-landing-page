@@ -5,6 +5,7 @@ import Script from 'next/script';
 import content from '@/app/content/z21.json';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { AnalyticsTracker } from '@/app/components/AnalyticsTracker';
 
 export const metadata: Metadata = {
   title: content.seo.title,
@@ -124,6 +125,7 @@ export default function RootLayout({
         <meta name="twitter:image" content="https://kldpzpnipovkkwzvstrm.supabase.co/storage/v1/object/sign/photos/Z21%20Launchpad.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80OGMwZGRhNC1iYWNkLTQzMGYtOWVkOC1iNzY3YzU1NDM5YzMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwaG90b3MvWjIxIExhdW5jaHBhZC5wbmciLCJpYXQiOjE3NTkyMTA3NTYsImV4cCI6MTc5MDc0Njc1Nn0.bRnPFrPoqngX4p5ZEkMxxMMvPtnM62STkni0yARdSHA" />
       </head>
       <body className="font-sans antialiased selection:bg-accent/10">
+        <AnalyticsTracker />
         {children}
         <Analytics />
         <SpeedInsights />

@@ -39,8 +39,8 @@ async function hashString(str: string): Promise<string> {
 
 // Track a page view
 export async function trackPageView(path: string) {
-  // Don't track in development or admin pages
-  if (process.env.NODE_ENV === 'development') return;
+  // Don't track in development or admin pages (unless explicitly enabled)
+  if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_ENABLE_DEV_ANALYTICS !== 'true') return;
   if (path.startsWith('/admin')) return;
   
   try {
