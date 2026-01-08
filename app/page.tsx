@@ -38,6 +38,12 @@ const RoadmapTimeline = dynamic(() => import('./components/RoadmapTimeline'), {
   ssr: false,
   loading: () => <div className="min-h-screen" />
 });
+
+const WorkshopShowcase3D = dynamic(() => import('./components/WorkshopShowcase3D'), {
+  ssr: false,
+  loading: () => <div className="min-h-screen" />
+});
+
 // Loading component
 const PageLoading = () => (
   <div className="min-h-screen bg-background flex items-center justify-center">
@@ -95,6 +101,7 @@ export default function Home() {
         <ProblemSection />
         <TrapSection />
         <SolutionSection3D />
+        <WorkshopShowcase3D />
         <ClientsSection />
         <StorySection />
         <FormulaCards3D />
