@@ -22,9 +22,9 @@ export interface OfferItem {
 export const offerStack: OfferItem[] = [
   {
     id: 'coaching',
-    title: '1:1 Coaching',
-    subtitle: 'Private advisory with focused shipping.',
-    cardSubtitle: 'Private advisory to ship one big objective.',
+    title: 'Solo',
+    subtitle: 'For operators / founders',
+    cardSubtitle: 'For operators / founders.',
     targets: [
       'Founders and creators who want private guidance or sensitive context'
     ],
@@ -47,9 +47,9 @@ export const offerStack: OfferItem[] = [
   },
   {
     id: 'workshop',
-    title: 'B2B Workshops',
-    subtitle: 'Team enablement with production workflows.',
-    cardSubtitle: 'Install 1–2 production workflows with your team.',
+    title: 'Teams',
+    subtitle: 'For startup smb teams',
+    cardSubtitle: 'For startup SMB teams.',
     targets: [
       'Internal teams (Finance, Ops, Sales, Marketing, Product/IT)'
     ],
@@ -80,9 +80,9 @@ export const offerStack: OfferItem[] = [
   },
   {
     id: 'cohort',
-    title: 'Z21 Cohort',
-    subtitle: 'Application only. Capped seats.',
-    cardSubtitle: 'Ship an AI revenue system in 6 weeks.',
+    title: 'Cohort',
+    subtitle: 'Group session with live sprint in 6 weeks',
+    cardSubtitle: 'Group session with live sprint in 6 weeks.',
     targets: [
       'Founders',
       'Builders',
