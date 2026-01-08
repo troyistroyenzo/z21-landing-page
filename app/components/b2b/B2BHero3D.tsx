@@ -296,25 +296,6 @@ export default function B2BHero3D() {
               you get a <span className="text-emerald-400 font-semibold">free 60-min follow-up build</span> for your team.
             </p>
           </motion.div>
-          
-          {/* CTA Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 2.2 }}
-          >
-            <motion.a
-              href="https://calendly.com/your-handle/ai-onboarding-fit-check-10min"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block px-10 py-5 rounded-lg font-semibold text-lg transition-all shadow-lg hover:shadow-xl"
-              style={{ backgroundColor: '#AE9370' }}
-              whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(174, 147, 112, 0.5)' }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span className="text-emerald-900">Apply now → 10-min fit check</span>
-            </motion.a>
-          </motion.div>
         </motion.div>
         
         {/* Scroll Indicator */}

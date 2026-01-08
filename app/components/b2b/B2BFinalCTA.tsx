@@ -118,7 +118,7 @@ export default function B2BFinalCTA() {
 
           {/* CTA Button */}
           <motion.a
-            href="https://calendly.com/your-handle/ai-onboarding-fit-check-10min"
+            href="https://calendly.com/troyenzo/30min?month=2026-01"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block px-12 py-6 rounded-xl font-bold text-xl transition-all shadow-2xl hover:shadow-3xl transform"

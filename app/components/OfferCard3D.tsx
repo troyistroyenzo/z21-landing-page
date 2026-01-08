@@ -499,7 +499,7 @@ export default function OfferCard3D(props: OfferCard3DProps) {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Learn more
+              Learn More
             </motion.a>
 
             <a

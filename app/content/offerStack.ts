@@ -23,8 +23,8 @@ export const offerStack: OfferItem[] = [
   {
     id: 'coaching',
     title: 'Solo',
-    subtitle: 'For operators / founders',
-    cardSubtitle: 'For operators / founders.',
+    subtitle: 'For solo operators & founders',
+    cardSubtitle: 'For operators & founders.',
     targets: [
       'Founders and creators who want private guidance or sensitive context'
     ],
@@ -39,7 +39,7 @@ export const offerStack: OfferItem[] = [
       'Fixed cost package'
     ],
     pricing: 'Fixed package price.',
-    ctaLabel: 'Apply now (see if you qualify)',
+    ctaLabel: 'Apply now ',
     ctaRoute: '/vibe-check',
     dmKeywords: ['COACH', '1ON1'],
     acceptingClients: true,
@@ -48,8 +48,8 @@ export const offerStack: OfferItem[] = [
   {
     id: 'workshop',
     title: 'Teams',
-    subtitle: 'For startup smb teams',
-    cardSubtitle: 'For startup SMB teams.',
+    subtitle: 'For startup smb and lean teams',
+    cardSubtitle: 'For startup SMB and lean teams.',
     targets: [
       'Internal teams (Finance, Ops, Sales, Marketing, Product/IT)'
     ],
@@ -68,7 +68,7 @@ export const offerStack: OfferItem[] = [
       'Variable pricing depending on demand'
     ],
     pricing: 'Variable by scope and demand.',
-    ctaLabel: 'Request as Demo',
+    ctaLabel: 'Learn more',
     ctaRoute: 'https://calendly.com/troyenzo/30min',
     dmKeywords: ['BUILD', 'TEAM'],
     workshopTopics: [
