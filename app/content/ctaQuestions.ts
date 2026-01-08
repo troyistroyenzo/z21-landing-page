@@ -119,21 +119,6 @@ export const ctaQuestions: Question[] = [
     }
   },
 
-  // SECTION 2 — Path Choice (Branch)
-  {
-    id: 'sprintType',
-    type: 'select',
-    label: "Which sprint are you applying for?",
-    options: [
-      { value: 'ai_onboarding', label: 'AI Onboarding (how to integrate AI into your workflow)' },
-      { value: 'personal_branding', label: 'Personal Branding (clarity, offers, and content engine)' }
-    ],
-    validation: {
-      required: true,
-      errorMessage: 'Please select a sprint'
-    }
-  },
-
   // SECTION 2 — Experience & Context
   {
     id: 'experienceLevel',
@@ -148,9 +133,6 @@ export const ctaQuestions: Question[] = [
     validation: {
       required: true,
       errorMessage: 'Please select an option'
-    },
-    conditionalLogic: {
-      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
     }
   },
   {
@@ -171,9 +153,6 @@ export const ctaQuestions: Question[] = [
       required: true,
       errorMessage: 'Please select at least one area'
     },
-    conditionalLogic: {
-      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
-    },
     scoring: {
       weight: 2
     }
@@ -192,9 +171,6 @@ export const ctaQuestions: Question[] = [
     validation: {
       required: true,
       errorMessage: 'Please select an option'
-    },
-    conditionalLogic: {
-      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
     },
     scoring: {
       weight: 2
@@ -219,9 +195,6 @@ export const ctaQuestions: Question[] = [
       required: true,
       errorMessage: 'Please select at least one goal'
     },
-    conditionalLogic: {
-      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
-    },
     scoring: {
       weight: 2
     }
@@ -238,9 +211,6 @@ export const ctaQuestions: Question[] = [
     validation: {
       required: true,
       errorMessage: 'Please select your time commitment'
-    },
-    conditionalLogic: {
-      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
     },
     scoring: {
       weight: 2
@@ -259,9 +229,6 @@ export const ctaQuestions: Question[] = [
       required: true,
       errorMessage: 'Please select a timeline'
     },
-    conditionalLogic: {
-      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
-    },
     scoring: {
       weight: 2
     }
@@ -278,9 +245,6 @@ export const ctaQuestions: Question[] = [
     step: 1,
     validation: {
       required: true
-    },
-    conditionalLogic: {
-      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
     },
     scoring: {
       weight: 2
@@ -300,10 +264,7 @@ export const ctaQuestions: Question[] = [
       { value: 'workspace', label: 'Google Workspace / M365' },
       { value: 'communication', label: 'Slack / Discord / CRM' },
       { value: 'other', label: 'Other' }
-    ],
-    conditionalLogic: {
-      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
-    }
+    ]
   },
   {
     id: 'focusAreas',
@@ -320,9 +281,6 @@ export const ctaQuestions: Question[] = [
     validation: {
       required: true,
       errorMessage: 'Please select at least one focus area'
-    },
-    conditionalLogic: {
-      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
     },
     scoring: {
       weight: 2
@@ -342,9 +300,6 @@ export const ctaQuestions: Question[] = [
       knockout: true,
       errorMessage: 'Sample data is required to proceed'
     },
-    conditionalLogic: {
-      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
-    },
     scoring: {
       weight: 2
     }
@@ -362,9 +317,6 @@ export const ctaQuestions: Question[] = [
       required: true,
       errorMessage: 'Please select an option'
     },
-    conditionalLogic: {
-      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
-    },
     scoring: {
       weight: 2
     }
@@ -375,18 +327,15 @@ export const ctaQuestions: Question[] = [
     id: 'investmentReadiness',
     type: 'select',
     label: "Finally, just so we're aligned on investment...",
-    description: "The 1:1 AI Onboarding Sprint (4 weeks, 1–2 calls/week)",
+    description: "The 1:1 AI Onboarding Sprint is $600 upfront (4 weeks, 8 live calls, all materials delivered on day 1)",
     options: [
-      { value: 'ready', label: 'Ready to invest' },
-      { value: 'installment', label: 'Prefer installments' },
-      { value: 'tight', label: 'Funds are tight (not a fit right now)' }
+      { value: 'ready', label: 'Ready to invest $600 upfront' },
+      { value: 'need_budget', label: 'Need to check budget first' },
+      { value: 'not_ready', label: 'Not ready to invest right now' }
     ],
     validation: {
       required: true,
       errorMessage: 'Please select an option'
-    },
-    conditionalLogic: {
-      showIf: { questionId: 'sprintType', value: 'ai_onboarding' }
     },
     scoring: {
       weight: 2
